@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum FocusedField{
+enum PersonalInformationEnum{
     case name
     case surname
 }
@@ -18,7 +18,7 @@ struct PersonalInformationView: View {
     @State var surname: String = ""
     @State var selectedTitle: String = ""
     @State var showTitleSheet: Bool = false
-    @FocusState var focusName: FocusedField?
+    @FocusState var focusName: PersonalInformationEnum?
     @Environment(\.dismiss) var dismiss
     
     
@@ -139,10 +139,6 @@ struct PersonalInformationView: View {
             .sheet(isPresented: $showTitleSheet) {
                 VStack(spacing: 16) {
                     
-                    Capsule()
-                        .frame(width: 40, height: 5)
-                        .foregroundColor(.gray.opacity(0.4))
-                        .padding(.top, 8)
                     
                     Text("Ünvan Seçiniz")
                         .font(.title2)

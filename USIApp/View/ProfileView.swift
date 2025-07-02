@@ -90,7 +90,8 @@ struct ProfileView: View {
                                     .padding(.vertical , 4)
                                 
                                 NavigationLink(destination: {
-                                    ContentView()
+                                    ContactInfoView()
+                                        .navigationBarBackButtonHidden()
                                 }, label: {
                                     HStack {
                                         Image(systemName: "phone.circle.fill")
