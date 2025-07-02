@@ -161,7 +161,8 @@ struct ProfileView: View {
                             VStack {
                                 
                                 NavigationLink {
-                                    ContentView()
+                                    FirmView()
+                                        .navigationBarBackButtonHidden()
                                 } label: {
                                     HStack {
                                         Image(systemName: "building.2.fill")
@@ -182,7 +183,8 @@ struct ProfileView: View {
                                     .padding(.vertical , 4)
                                 
                                 NavigationLink {
-                                    ContentView()
+                                    FirmView()
+                                        .navigationBarBackButtonHidden()
                                 } label: {
                                     HStack {
                                         Image(systemName: "desktopcomputer")

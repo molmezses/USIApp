@@ -47,7 +47,14 @@ struct AcademicBackView: View {
                     VStack(spacing: 20){
                             Spacer()
                         
-
+                        
+                        HStack {
+                            Text("Akedemik geçmişinizi giriniz.")
+                                .font(.headline)
+                            Spacer()
+                        }
+                        .padding(.leading)
+                        
                         TextEditor(text: $description)
                             .frame(height: UIScreen.main.bounds.height * 0.4)
                             .padding(12)
