@@ -1,3 +1,4 @@
+
 //
 //  AcedemicianLoginView.swift
 //  USIApp
@@ -9,7 +10,6 @@ import SwiftUI
 
 struct AcedemicianLoginView: View {
     
-    
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var viewModel : AcedemicianLoginViewModel
     @State var navigate: Bool = false
@@ -17,9 +17,8 @@ struct AcedemicianLoginView: View {
     @FocusState var focusedField: Bool
     
     var body: some View {
-        NavigationStack{
+        NavigationStack {
             VStack {
-                
                 
                 HeaderView()
                 
@@ -27,10 +26,12 @@ struct AcedemicianLoginView: View {
                 
                 VStack(spacing: 30){
                     Spacer()
+                    
                     Text("Sicil numaranızı giriniz")
                         .foregroundStyle(.black)
                         .font(.title2)
                         .fontWeight(.semibold)
+                    
                     TextField("sicil numarası", text: $viewModel.sicil)
                         .font(.headline)
                         .frame(height: 55)
@@ -40,10 +41,14 @@ struct AcedemicianLoginView: View {
                         .multilineTextAlignment(.leading)
                         .keyboardType(.numberPad)
                         .focused($focusedField)
+                    
                     VStack {
                         Button {
-                            viewModel.sicilValidate() ? navigate.toggle() : showAlert.toggle()
-                            print("\(viewModel.errorMessage)")
+                            if viewModel.sicilValidate() {
+                                navigate = true
+                            } else {
+                                showAlert = true
+                            }
                         } label: {
                             Text("Giriş yap")
                                 .font(.headline)
@@ -53,7 +58,7 @@ struct AcedemicianLoginView: View {
                                 .background(Color("sari"))
                                 .mask(RoundedRectangle(cornerRadius: 10))
                         }
-                            
+                        
                         Text("Geri dön")
                             .font(.headline)
                             .foregroundStyle(Color("sari"))
@@ -66,7 +71,6 @@ struct AcedemicianLoginView: View {
                             .onTapGesture {
                                 dismiss()
                             }
-                            
                     }
                     .alert(isPresented: $showAlert) {
                         Alert(title: Text("Hata"),
@@ -83,8 +87,6 @@ struct AcedemicianLoginView: View {
                     focusedField = false
                 }
                 
-                
-                
                 Spacer()
                 
                 FooterView()
@@ -95,7 +97,7 @@ struct AcedemicianLoginView: View {
                 focusedField = false
             }
             .navigationDestination(isPresented: $navigate) {
-                ProfileView(navPage: .bos)
+                ProfileView()
                     .navigationBarBackButtonHidden()
             }
         }
