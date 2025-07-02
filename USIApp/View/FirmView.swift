@@ -20,7 +20,7 @@ struct FirmView: View {
     @State var firmList: [(name: String, area: String)] = [
         (name: "OpenAI", area: "Gelişmiş yapay zeka ve makine öğrenimi çözümleri üretmektedir."),
         (name: "ABC Teknoloji", area: "Mobil uygulama geliştirme ve yazılım danışmanlığı sunmaktadır."),
-        (name: "XYZ İnşaat", area: "Yüksek katlı bina projeleri ve modern yapı tasarımları gerçekleştirmektedir."),
+        (name: "XYZ İnşaat", area: "Yüksek katlı bina projeleri ve modern yapı tasarımları gerçekleştirmektedir.."),
         (name: "Beta Sağlık", area: "Hastane ekipmanları ve medikal cihaz üretimi konusunda faaliyet gösterir."),
         (name: "Delta Eğitim", area: "Öğrenci koçluğu, sınav hazırlık kursları ve eğitim danışmanlığı sağlar."),
         (name: "Eco Enerji", area: "Güneş enerjisi, rüzgar türbinleri ve yenilenebilir enerji sistemleri geliştirir.")
