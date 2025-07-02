@@ -113,7 +113,8 @@ struct ProfileView: View {
                                 
                                 
                                 NavigationLink {
-                                    ContentView()
+                                    AcademicBackView()
+                                        .navigationBarBackButtonHidden()
                                 } label: {
                                     HStack {
                                         Image(systemName: "clock.badge.fill")
