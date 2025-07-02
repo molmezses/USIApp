@@ -7,15 +7,20 @@
 
 import SwiftUI
 
+enum FocusedField{
+    case name
+    case surname
+}
+
 struct PersonalInformationView: View {
     
-    @State var backButton : Bool = false
     @State var name: String = ""
     @State var surname: String = ""
     @State var selectedTitle: String = ""
-    
     @State var showTitleSheet: Bool = false
-    @FocusState var focusName: Bool
+    @FocusState var focusName: FocusedField?
+    @Environment(\.dismiss) var dismiss
+    
     
     let titles = ["Araştırma Görevlisi", "Öğretim Görevlisi", "Doktor ", "Doçent", "Profesör"]
     
@@ -25,12 +30,16 @@ struct PersonalInformationView: View {
                 
                 // Başlık Alanı
                 HStack {
-                    Image(systemName: "chevron.left")
-                        .imageScale(.large)
-                        .padding(.leading)
-                        .onTapGesture {
-                            backButton = true
-                        }
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .imageScale(.large)
+                            .padding(.leading)
+                            .foregroundStyle(.black)
+                    }
+
+                        
                     Spacer()
                     Text("Kişisel Bilgiler")
                         .font(.headline)
@@ -63,7 +72,7 @@ struct PersonalInformationView: View {
                             .mask(RoundedRectangle(cornerRadius: 10))
                             .multilineTextAlignment(.leading)
                             .keyboardType(.default)
-                            .focused($focusName)
+                            .focused($focusName, equals: .name)
                             .padding(.horizontal)
                         
                         
@@ -77,7 +86,7 @@ struct PersonalInformationView: View {
                             .mask(RoundedRectangle(cornerRadius: 10))
                             .multilineTextAlignment(.leading)
                             .keyboardType(.default)
-                            .focused($focusName)
+                            .focused($focusName, equals: .surname)
                             .padding(.horizontal)
                         
                         Text("Ünvanınızı Seçiniz")
@@ -88,7 +97,6 @@ struct PersonalInformationView: View {
                         // Ünvan Seçimi
                         Button {
                             showTitleSheet = true
-                            focusName = false
                         } label: {
                             HStack {
                                 Text(selectedTitle.isEmpty ? "Ünvan Seçiniz" : selectedTitle)
@@ -125,12 +133,8 @@ struct PersonalInformationView: View {
                     }
                 }
                 .onTapGesture {
-                    focusName = false
+                    focusName = .none
                 }
-            }
-            .navigationDestination(isPresented: $backButton) {
-                ProfileView()
-                    .navigationBarBackButtonHidden()
             }
             .sheet(isPresented: $showTitleSheet) {
                 VStack(spacing: 16) {
