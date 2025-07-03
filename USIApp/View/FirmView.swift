@@ -18,7 +18,7 @@ struct FirmView: View {
     @State var firmWorkArea: String = ""
     
     @State var firmList: [(name: String, area: String)] = [
-        (name: "OpenAI", area: "Gelişmiş yapay zeka ve makine öğrenimi çözümleri üretmektedir."),
+        (name: "OpenAI", area: "Gelişmiş yapay zeka ve makine öğrenimi çözümleri Gelişmiş yapay zeka ve makine öğrenimi çözümleri üretmektedirGelişmiş yapay zeka ve makine öğrenimi çözümleri üretmektedirGelişmiş yapay zeka ve makine öğrenimi çözümleri üretmektedirGelişmiş yapay zeka ve makine öğrenimi çözümleri üretmektedirüretmektedir."),
         (name: "ABC Teknoloji", area: "Mobil uygulama geliştirme ve yazılım danışmanlığı sunmaktadır."),
         (name: "XYZ İnşaat", area: "Yüksek katlı bina projeleri ve modern yapı tasarımları gerçekleştirmektedir.."),
         (name: "Beta Sağlık", area: "Hastane ekipmanları ve medikal cihaz üretimi konusunda faaliyet gösterir."),
@@ -46,7 +46,7 @@ struct FirmView: View {
 
                         
                     Spacer()
-                    Text("Akademik Geçmiş")
+                    Text("Firma Bilgisi Ve Çalışma alanı")
                         .font(.headline)
                         .fontWeight(.semibold)
                         .padding()
@@ -79,20 +79,20 @@ struct FirmView: View {
                                 .padding(.horizontal)
                                 .focused($focusedField , equals: .firmWorkArea)
                             
-                            Button("Ekle") {
+                            Button {
                                 guard !firmName.isEmpty, !firmWorkArea.isEmpty else { return }
                                 firmList.append((name: firmName, area: firmWorkArea))
                                 firmName = ""
                                 firmWorkArea = ""
-                                
-
+                            } label: {
+                                Text("Ekle")
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 50)
+                                    .background(Color("usi"))
+                                    .foregroundColor(.white)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .padding(.horizontal)
                             }
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 50)
-                            .background(Color("usi"))
-                            .foregroundColor(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                            .padding(.horizontal)
                         }
                         
                         Divider().padding(.top)
@@ -115,7 +115,6 @@ struct FirmView: View {
                                     }
                                     Spacer()
                                 }
-                                .frame(height: 80)
                             }
                             .onDelete(perform: deleteItems)
                         }
