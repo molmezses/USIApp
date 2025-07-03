@@ -209,7 +209,8 @@ struct ProfileView: View {
                             
                             VStack {
                                 NavigationLink {
-                                    ContentView()
+                                    ExpertAreaView()
+                                        .navigationBarBackButtonHidden()
                                 } label: {
                                     HStack {
                                         Image(systemName: "graduationcap.fill")
