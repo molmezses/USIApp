@@ -56,8 +56,14 @@ struct PrevConsultanView: View {
                     VStack {
                         
                         HStack {
-                            Text("Önceki danışmanlık bilgilerinizi giriniz")
-                                .font(.headline)
+                            VStack {
+                                Text("Önceki danışmanlık bilgilerinizi giriniz")
+                                    .font(.headline)
+                                Text("Lütfen verileri tek bir şekilde girip ekle butonuna basınız.")
+                                    .font(.footnote)
+                                    .foregroundStyle(Color(.gray))
+                                    .padding(.leading)
+                            }
                             Spacer()
                         }
                         .padding(.leading)

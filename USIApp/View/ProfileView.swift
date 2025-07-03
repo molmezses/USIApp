@@ -278,6 +278,7 @@ struct ProfileView: View {
                                     .padding(.vertical , 4)
                                 NavigationLink {
                                     GiveEducationView()
+                                        .navigationBarBackButtonHidden()
                                 } label: {
                                     HStack {
                                         Image(systemName: "books.vertical.fill")
@@ -298,6 +299,7 @@ struct ProfileView: View {
                                 
                                 NavigationLink {
                                     PreEducationView()
+                                        .navigationBarBackButtonHidden()
                                 } label: {
                                     HStack {
                                         Image(systemName: "person.crop.rectangle.stack.fill")
