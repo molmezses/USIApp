@@ -25,7 +25,8 @@ struct AcademicBackView: View {
                         Image(systemName: "chevron.left")
                             .imageScale(.large)
                             .padding(.leading)
-                            .foregroundStyle(.black)
+                            .foregroundStyle(.white)
+                        
                     }
 
                         
@@ -38,19 +39,25 @@ struct AcademicBackView: View {
                     Image(systemName: "chevron.left")
                         .imageScale(.large)
                         .padding(.leading)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color("usi"))
                 }
+                .background(Color("usi"))
+                .foregroundStyle(.white)
                 
                 ZStack {
                     Color(.systemGroupedBackground).ignoresSafeArea()
                     
                     VStack(spacing: 20){
                             Spacer()
-                        
-                        
                         HStack {
-                            Text("Akedemik geçmişinizi giriniz.")
-                                .font(.headline)
+                            VStack {
+                                Text("Akedemik geçmişinizi giriniz.")
+                                    .font(.headline)
+                                Text("Lütfen verileri tek bir şekilde girip ekle butonuna basınız.")
+                                    .font(.footnote)
+                                    .foregroundStyle(Color(.gray))
+                                    .padding(.leading)
+                            }
                             Spacer()
                         }
                         .padding(.leading)

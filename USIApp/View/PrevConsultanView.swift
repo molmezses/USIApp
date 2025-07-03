@@ -1,19 +1,21 @@
 //
-//  ExpertAreaView.swift
+//  PrevConsultanView.swift
 //  USIApp
 //
 //  Created by Mustafa Ölmezses on 3.07.2025.
 //
 
+
 import SwiftUI
 
-struct ExpertAreaView: View {
+struct PrevConsultanView: View {
     
     @Environment(\.dismiss) var dismiss
-    @State var expertDesc: String = ""
     
-    @State var expertList: [String] = [
-        "Öğrenci koçluğu, sınav hazırlık kursları ve eğitim danışmanlığı Güneş enerjisi" , "GGüneş enerjisi, rüzgar türbinleri ve yenilenebilir enerji"
+    @State var prevConsultanDesc: String = ""
+    
+    @State var prevConsultanList: [String] = [
+        "Öğrenci koçluğu, sınav hazırlık kursları" , "eğitim danışmanlığı Güneş enerjisi" , "GGüneş enerjisi, rüzgar türbinleri ve yenilenebilir enerji"
     ]
 
     @FocusState var focusedField: Bool
@@ -31,17 +33,15 @@ struct ExpertAreaView: View {
                             .imageScale(.large)
                             .padding(.leading)
                             .foregroundStyle(.white)
-
                     }
 
                         
                     Spacer()
-                    Text("Uzmanlık Alanları")
+                    Text("Daha Önceki Danışmanlıklar")
                         .font(.headline)
                         .fontWeight(.semibold)
                         .padding()
                         .foregroundStyle(.white)
-
                     Spacer()
                     Image(systemName: "chevron.left")
                         .imageScale(.large)
@@ -54,20 +54,15 @@ struct ExpertAreaView: View {
                     Color(.systemGroupedBackground).ignoresSafeArea()
                     
                     VStack {
+                        
                         HStack {
-                            VStack {
-                                Text("Uzmanlık alanlarınızı giriniz")
-                                    .font(.headline)
-                                Text("Lütfen verileri tek bir şekilde girip ekle butonuna basınız.")
-                                    .font(.footnote)
-                                    .foregroundStyle(Color(.gray))
-                                    .padding(.leading)
-                            }
+                            Text("Önceki danışmanlık bilgilerinizi giriniz")
+                                .font(.headline)
                             Spacer()
                         }
                         .padding(.leading)
                         
-                        TextEditor(text: $expertDesc)
+                        TextEditor(text: $prevConsultanDesc)
                             .frame(height: UIScreen.main.bounds.height * 0.1)
                             .padding(12)
                             .background(
@@ -83,9 +78,9 @@ struct ExpertAreaView: View {
                             .focused($focusedField)
                         
                         Button {
-                            guard !expertDesc.isEmpty else { return }
-                            expertList.append(expertDesc)
-                            expertDesc = ""
+                            guard !prevConsultanDesc.isEmpty else { return }
+                            prevConsultanList.append(prevConsultanDesc)
+                            prevConsultanDesc = ""
                         } label: {
                             Text("Ekle")
                                 .frame(maxWidth: .infinity)
@@ -100,7 +95,7 @@ struct ExpertAreaView: View {
                         
                         Divider().padding(.top)
                         HStack {
-                            Text("Uzmanlık alanları")
+                            Text("Daha Önceki Danışmanlıklar")
                                 .font(.title2)
                                 Spacer()
                            
@@ -109,10 +104,10 @@ struct ExpertAreaView: View {
                         
                         // Liste
                         List {
-                            ForEach(expertList , id: \.self) { expert in
+                            ForEach(prevConsultanList , id: \.self) { consultan in
                                 HStack {
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text(expert)
+                                        Text(consultan)
                                     }
                                     Spacer()
                                 }
@@ -136,11 +131,11 @@ struct ExpertAreaView: View {
     
     // Silme Fonksiyonu
     func deleteItems(at offsets: IndexSet) {
-        expertList.remove(atOffsets: offsets)
+        prevConsultanList.remove(atOffsets: offsets)
     }
     
 }
 
 #Preview {
-    ExpertAreaView()
+    PrevConsultanView()
 }

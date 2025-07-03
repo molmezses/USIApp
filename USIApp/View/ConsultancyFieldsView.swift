@@ -39,7 +39,7 @@ struct ConsultancyFieldView: View {
                         Image(systemName: "chevron.left")
                             .imageScale(.large)
                             .padding(.leading)
-                            .foregroundStyle(.black)
+                            .foregroundStyle(.white)
                     }
 
                         
@@ -48,12 +48,16 @@ struct ConsultancyFieldView: View {
                         .font(.headline)
                         .fontWeight(.semibold)
                         .padding()
+                        .foregroundStyle(.white)
                     Spacer()
                     Image(systemName: "chevron.left")
                         .imageScale(.large)
                         .padding(.leading)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color("usi"))
                 }
+                .background(Color("usi"))
+                
+                
                 
                 ZStack {
                     Color(.systemGroupedBackground).ignoresSafeArea()
@@ -62,8 +66,15 @@ struct ConsultancyFieldView: View {
                         VStack(spacing: 18){
                             
                             HStack {
-                                Text("Verebileceğiniz danışmanlık konularını giriniz.")
-                                    .font(.headline)
+                                VStack {
+                                    Text("Verebileceğiniz danışmanlık konularını giriniz.")
+                                        .font(.headline)
+                                    Text("Lütfen verileri tek bir şekilde girip ekle butonuna basınız.")
+                                        .font(.footnote)
+                                        .foregroundStyle(Color(.gray))
+                                        .padding(.leading)
+                                }
+
                                 Spacer()
                             }
                             .padding(.leading)

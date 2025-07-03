@@ -138,7 +138,7 @@ struct ContactInfoView: View {
                         Image(systemName: "chevron.left")
                             .imageScale(.large)
                             .padding(.leading)
-                            .foregroundStyle(.black)
+                            .foregroundStyle(.white)
                     }
                         
                     Spacer()
@@ -146,12 +146,15 @@ struct ContactInfoView: View {
                         .font(.headline)
                         .fontWeight(.semibold)
                         .padding()
+                        .foregroundStyle(.white)
+
                     Spacer()
                     Image(systemName: "chevron.left")
                         .imageScale(.large)
                         .padding(.leading)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color("usi"))
                 }
+                .background(Color("usi"))
                 
                 ZStack {
                     Color(.systemGroupedBackground).ignoresSafeArea()

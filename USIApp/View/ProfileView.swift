@@ -17,10 +17,17 @@ struct ProfileView: View {
     var body: some View {
         NavigationStack{
             VStack(spacing: 0) {
-                Text("Hesabım")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                    .padding()
+                HStack {
+                    Spacer()
+                    Text("Hesabım")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .padding()
+                        .foregroundStyle(.white)
+                    Spacer()
+                }
+                .background(Color("usi"))
+                    
                 ZStack {
                     Color(.systemGroupedBackground).ignoresSafeArea()
                     
@@ -229,7 +236,8 @@ struct ProfileView: View {
                                 Divider()
                                     .padding(.vertical , 4)
                                 NavigationLink {
-                                    ContentView()
+                                    ConsultancyFieldView()
+                                        .navigationBarBackButtonHidden()
                                 } label: {
                                     HStack {
                                         Image(systemName: "document.circle.fill")
@@ -249,7 +257,8 @@ struct ProfileView: View {
                                     .padding(.vertical , 4)
                                 
                                 NavigationLink {
-                                    ContentView()
+                                    PrevConsultanView()
+                                        .navigationBarBackButtonHidden()
                                 } label: {
                                     HStack {
                                         Image(systemName: "clock.badge.fill")

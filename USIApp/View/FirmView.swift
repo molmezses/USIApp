@@ -41,7 +41,7 @@ struct FirmView: View {
                         Image(systemName: "chevron.left")
                             .imageScale(.large)
                             .padding(.leading)
-                            .foregroundStyle(.black)
+                            .foregroundStyle(.white)
                     }
 
                         
@@ -50,12 +50,14 @@ struct FirmView: View {
                         .font(.headline)
                         .fontWeight(.semibold)
                         .padding()
+                        .foregroundStyle(.white)
                     Spacer()
                     Image(systemName: "chevron.left")
                         .imageScale(.large)
                         .padding(.leading)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color("usi"))
                 }
+                .background(Color("usi"))
                 
                 ZStack {
                     Color(.systemGroupedBackground).ignoresSafeArea()
