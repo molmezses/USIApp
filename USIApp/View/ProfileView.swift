@@ -277,7 +277,7 @@ struct ProfileView: View {
                                 Divider()
                                     .padding(.vertical , 4)
                                 NavigationLink {
-                                    ContentView()
+                                    GiveEducationView()
                                 } label: {
                                     HStack {
                                         Image(systemName: "books.vertical.fill")
@@ -297,7 +297,7 @@ struct ProfileView: View {
                                     .padding(.vertical , 4)
                                 
                                 NavigationLink {
-                                    ContentView()
+                                    PreEducationView()
                                 } label: {
                                     HStack {
                                         Image(systemName: "person.crop.rectangle.stack.fill")

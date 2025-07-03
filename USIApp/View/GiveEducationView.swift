@@ -55,8 +55,15 @@ struct GiveEducationView: View {
                     VStack {
                         
                         HStack {
-                            Text("Verebileceğiniz Eğitimleri giriniz")
-                                .font(.headline)
+                            
+                            VStack {
+                                Text("Verebileceğiniz Eğitimleri giriniz")
+                                    .font(.headline)
+                                Text("Lütfen verileri tek bir şekilde girip ekle butonuna basınız.")
+                                    .font(.footnote)
+                                    .foregroundStyle(Color(.gray))
+                                    .padding(.leading)
+                            }
                             Spacer()
                         }
                         .padding(.leading)
