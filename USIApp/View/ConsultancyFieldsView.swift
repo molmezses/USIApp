@@ -60,6 +60,14 @@ struct ConsultancyFieldView: View {
                     
                     VStack {
                         VStack(spacing: 18){
+                            
+                            HStack {
+                                Text("Verebileceğiniz danışmanlık konularını giriniz.")
+                                    .font(.headline)
+                                Spacer()
+                            }
+                            .padding(.leading)
+                            
                             // Ekleme Alanı
                             TextEditor(text: $consultancyDesc)
                                 .frame(height: UIScreen.main.bounds.height * 0.1)

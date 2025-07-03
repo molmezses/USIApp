@@ -94,8 +94,9 @@ struct ExpertAreaView: View {
                             Text("Uzmanlık alanları")
                                 .font(.title2)
                                 Spacer()
+                           
                         }
-                        .padding(.leading)
+                        .padding(.horizontal)
                         
                         // Liste
                         List {
@@ -110,6 +111,7 @@ struct ExpertAreaView: View {
                             .onDelete(perform: deleteItems)
                         }
                         .listStyle(SidebarListStyle())
+                        
                         
                         Spacer()
                     }
@@ -127,6 +129,7 @@ struct ExpertAreaView: View {
     func deleteItems(at offsets: IndexSet) {
         expertList.remove(atOffsets: offsets)
     }
+    
 }
 
 #Preview {
