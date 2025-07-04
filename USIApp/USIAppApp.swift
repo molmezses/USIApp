@@ -11,8 +11,10 @@ import SwiftUI
 struct USIAppApp: App {
     var body: some Scene {
         WindowGroup {
-            ProfileView()
+            AcademicianTabView()
                 .environmentObject(AcedemicianLoginViewModel())
+                .environmentObject(ProfileViewModel())
+
         }
     }
 }

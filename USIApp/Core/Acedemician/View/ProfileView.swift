@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import Foundation
 
 struct ProfileView: View {
     
     @State var name: String = ""
     @State var ortakProje : Bool = true
-    @State var navDestination : Bool = false
+    @State var showImagePicker : Bool = false
+    @EnvironmentObject var viewModel : ProfileViewModel
 
     
     var body: some View {
@@ -35,13 +37,13 @@ struct ProfileView: View {
                         VStack(alignment: .leading, spacing: 0) {
                             HStack {
                                 Spacer()
-                                Image("ben")
+                                Image(uiImage: viewModel.profileImage ?? UIImage(named: "ben")!)
                                     .resizable()
                                     .frame(width: 140, height: 140)
                                     .clipShape(Circle())
                                     .overlay(alignment: .bottomTrailing) {
                                         Button {
-                                            
+                                            showImagePicker.toggle()
                                         } label: {
                                             Image(systemName: "plus")
                                                 .imageScale(.large)
@@ -51,6 +53,9 @@ struct ProfileView: View {
                                                 .mask(Circle())
                                         }
 
+                                    }
+                                    .onTapGesture {
+                                        showImagePicker.toggle()
                                     }
                                 Spacer()
                             }
@@ -328,10 +333,19 @@ struct ProfileView: View {
                     .padding(.top)
                 }
             }
+            .sheet(isPresented: $showImagePicker) {
+                    ImagePicker { image in
+                    if let selected = image {
+                    viewModel.saveProfileImage(selected)
+                        print("seçildi")
+                    }
+                }
+            }
         }
     }
 }
 
 #Preview {
     ProfileView()
+        .environmentObject(ProfileViewModel())
 }
