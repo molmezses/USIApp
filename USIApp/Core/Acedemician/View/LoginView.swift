@@ -69,5 +69,5 @@ struct LoginView: View {
 
 #Preview {
     LoginView()
-        .environmentObject(AcedemicianLoginViewModel())
+        .environmentObject(AcedemicianViewModel())
 }

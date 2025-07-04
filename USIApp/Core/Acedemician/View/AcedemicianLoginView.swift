@@ -11,7 +11,7 @@ import SwiftUI
 struct AcedemicianLoginView: View {
     
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var viewModel : AcedemicianLoginViewModel
+    @EnvironmentObject var viewModel : AcedemicianViewModel
     @State var navigate: Bool = false
     @State var showAlert : Bool = false
     @FocusState var focusedField: Bool
@@ -27,12 +27,18 @@ struct AcedemicianLoginView: View {
                 VStack(spacing: 30){
                     Spacer()
                     
-                    Text("Sicil numaranızı giriniz")
-                        .foregroundStyle(.black)
-                        .font(.title2)
-                        .fontWeight(.semibold)
                     
-                    TextField("sicil numarası", text: $viewModel.sicil)
+                    TextField("Üniversite Mailiniz :", text: $viewModel.email)
+                        .font(.headline)
+                        .frame(height: 55)
+                        .padding(.horizontal)
+                        .background(Color(.tertiarySystemGroupedBackground))
+                        .mask(RoundedRectangle(cornerRadius: 10))
+                        .multilineTextAlignment(.leading)
+                        .keyboardType(.numberPad)
+                        .focused($focusedField)
+                    
+                    SecureField("Şifrenizi giriniz:", text: $viewModel.password)
                         .font(.headline)
                         .frame(height: 55)
                         .padding(.horizontal)
@@ -44,7 +50,7 @@ struct AcedemicianLoginView: View {
                     
                     VStack {
                         Button {
-                            if viewModel.sicilValidate() {
+                            if viewModel.validateAuth() {
                                 navigate = true
                             } else {
                                 showAlert = true
@@ -71,6 +77,20 @@ struct AcedemicianLoginView: View {
                             .onTapGesture {
                                 dismiss()
                             }
+                        Spacer()
+                        HStack {
+                            Text("Daha önce kayıt olmadın mı?")
+                            NavigationLink {
+                                AcademicianRegisterView()
+                                    .navigationBarBackButtonHidden()
+                            } label: {
+                                Text("Kayıt Ol")
+                                    .foregroundStyle(Color("sari"))
+                                    .font(.headline)
+                                    .fontWeight(.semibold)
+                            }
+
+                        }
                     }
                     .alert(isPresented: $showAlert) {
                         Alert(title: Text("Hata"),
@@ -78,8 +98,7 @@ struct AcedemicianLoginView: View {
                               dismissButton: .default(Text("Tamam")))
                     }
                     
-                    Spacer()
-                    Spacer()
+                    
                 }
                 .padding(30)
                 .multilineTextAlignment(.center)
@@ -107,5 +126,5 @@ struct AcedemicianLoginView: View {
 
 #Preview {
     AcedemicianLoginView()
-        .environmentObject(AcedemicianLoginViewModel())
+        .environmentObject(AcedemicianViewModel())
 }

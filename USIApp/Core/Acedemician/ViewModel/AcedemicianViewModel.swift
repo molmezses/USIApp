@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Firebase
+import FirebaseAuth
 
 class AcedemicianViewModel: ObservableObject {
     
@@ -28,13 +30,28 @@ class AcedemicianViewModel: ObservableObject {
               return false
           }
         
-        if password == passwordAgain{
+        if !(password == passwordAgain){
             errorMessage = "Şifreler uyuşmuyor."
             return false
         }
           
           return true 
       }
+    
+    func register() {
+           
+        Auth.auth().createUser(withEmail: email, password: password) { result, error in
+            if let error = error {
+                DispatchQueue.main.async {
+                    self.errorMessage = "Hata: \(error.localizedDescription)"
+                }
+            } else {
+                DispatchQueue.main.async {
+                    print("Kayıt başarılı")
+                }
+            }
+        }
+    }
     
     
 }
