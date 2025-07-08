@@ -25,6 +25,8 @@ class AuthViewModel: ObservableObject {
     @Published var program: String = ""
     @Published var resimURL: String = ""
     
+    @Published var isLoggedIn: Bool = false
+    
     init() {
         getCurrentUser()
         
@@ -34,6 +36,7 @@ class AuthViewModel: ObservableObject {
                 self?.currentUser = user
                 if user != nil {
                     self?.fetchAcademicianInfo()
+                    self?.isLoggedIn = user != nil
                 }
             }
         }
@@ -152,8 +155,9 @@ class AuthViewModel: ObservableObject {
     func loginUser(email: String, password: String, completion: @escaping (Result<User, Error>) -> Void) {
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
             if let error = error {
-                completion(.failure(error))
+                self?.isLoggedIn = false
                 self?.errorMessage = "\(error.localizedDescription)"
+                completion(.failure(error))
                 return
             }
             
@@ -161,6 +165,7 @@ class AuthViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     self?.currentUser = user
                     self?.fetchAcademicianInfo()
+                    self?.isLoggedIn = true
                 }
                 completion(.success(user))
             }
@@ -177,7 +182,9 @@ class AuthViewModel: ObservableObject {
                 self.email = ""
                 self.bolum = ""
                 self.resimURL = ""
+                self.isLoggedIn = false
             }
+            
             print("Çıkış yapıldı.")
         } catch {
             print("Çıkış hatası: \(error.localizedDescription)")
