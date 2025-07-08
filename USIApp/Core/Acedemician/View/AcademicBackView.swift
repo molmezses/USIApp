@@ -11,6 +11,7 @@ struct AcademicBackView: View {
     
     @Environment(\.dismiss) var dismiss
     @State private var description: String = ""
+    @FocusState var focusedField: Bool
 
     
     var body: some View {
@@ -43,6 +44,9 @@ struct AcademicBackView: View {
                 }
                 .background(Color("usi"))
                 .foregroundStyle(.white)
+                .onTapGesture {
+                    focusedField = false
+                }
                 
                 ZStack {
                     Color(.systemGroupedBackground).ignoresSafeArea()
@@ -63,7 +67,7 @@ struct AcademicBackView: View {
                         .padding(.leading)
                         
                         TextEditor(text: $description)
-                            .frame(height: UIScreen.main.bounds.height * 0.4)
+                            .frame(height: UIScreen.main.bounds.height * 0.3)
                             .padding(12)
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
@@ -75,6 +79,7 @@ struct AcademicBackView: View {
                                     .stroke(Color.gray.opacity(0.3), lineWidth: 1)
                             )
                             .padding(.horizontal)
+                            .focused($focusedField)
 
 
                         
@@ -98,7 +103,11 @@ struct AcademicBackView: View {
                         Spacer()
                     }
                 }
+                .onTapGesture {
+                    focusedField = false
+                }
             }
+            
         }
     }
 }
