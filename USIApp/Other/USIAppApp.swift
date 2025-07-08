@@ -25,7 +25,7 @@ struct USIAppApp: App {
     var body: some Scene {
         WindowGroup {
             LoginView()
-                .environmentObject(AcedemicianViewModel())
+                .environmentObject(AuthViewModel())
                 .environmentObject(ProfileViewModel())
 
         }

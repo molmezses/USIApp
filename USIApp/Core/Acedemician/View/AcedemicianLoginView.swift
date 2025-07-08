@@ -7,11 +7,12 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct AcedemicianLoginView: View {
     
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var viewModel : AcedemicianViewModel
+    @EnvironmentObject var viewModel : AuthViewModel
     @State var navigate: Bool = false
     @State var showAlert : Bool = false
     @FocusState var focusedField: Bool
@@ -34,24 +35,40 @@ struct AcedemicianLoginView: View {
                         .padding(.horizontal)
                         .background(Color(.tertiarySystemGroupedBackground))
                         .mask(RoundedRectangle(cornerRadius: 10))
+                        .keyboardType(.emailAddress)
                         .multilineTextAlignment(.leading)
-                        .keyboardType(.numberPad)
                         .focused($focusedField)
                     
-                    SecureField("Şifrenizi giriniz:", text: $viewModel.password)
+                    SecureFieldWithButton(title: "Şifrenizi giriniz", text: $viewModel.loginPassword)
                         .font(.headline)
                         .frame(height: 55)
                         .padding(.horizontal)
                         .background(Color(.tertiarySystemGroupedBackground))
                         .mask(RoundedRectangle(cornerRadius: 10))
                         .multilineTextAlignment(.leading)
-                        .keyboardType(.numberPad)
                         .focused($focusedField)
+                        
                     
                     VStack {
                         Button {
-                            if viewModel.validateAuth() {
-                                navigate = true
+                            if viewModel.validateAuthLogin() {
+                                viewModel.loginUser(email: viewModel.email, password: viewModel.loginPassword) { result in
+                                
+                                    switch result {
+                                    case .success:
+                                        print("giriş başarılır")
+                                        viewModel.email = ""
+                                        viewModel.password = ""
+                                        viewModel.passwordAgain = ""
+                                        viewModel.loginPassword = ""
+                                        navigate = true
+                                    case .failure:
+                                        print("giriş başarızı HATA")
+                                        showAlert = true
+                                    }
+                                }
+                                
+                                
                             } else {
                                 showAlert = true
                             }
@@ -116,9 +133,13 @@ struct AcedemicianLoginView: View {
                 focusedField = false
             }
             .navigationDestination(isPresented: $navigate) {
-                ProfileView()
+                AcademicianTabView()
+                    .environmentObject(ProfileViewModel())
+                    .environmentObject(viewModel) // Zaten mevcut AuthViewModel
+                    .environmentObject(AcademicianViewModel())
                     .navigationBarBackButtonHidden()
             }
+
         }
     }
 }
@@ -126,5 +147,5 @@ struct AcedemicianLoginView: View {
 
 #Preview {
     AcedemicianLoginView()
-        .environmentObject(AcedemicianViewModel())
+        .environmentObject(AuthViewModel())
 }
