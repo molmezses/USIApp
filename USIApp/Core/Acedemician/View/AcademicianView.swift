@@ -37,10 +37,31 @@ struct AcademicianView: View {
                     VStack(spacing: 20){
                         ScrollView {
                             HStack {
-                                Image("ben")
-                                    .resizable()
-                                    .frame(width: 100, height: 100)
-                                    .clipShape(Circle())
+                                
+                                if let profileImageURL = URL(string: "https://unis.ahievran.edu.tr/app_files/2024/10/Kisi_Logo_1460_a525c00f.jpg") {
+                                    AsyncImage(url: profileImageURL) { phase in
+                                        switch phase {
+                                        case .empty:
+                                            ProgressView()
+                                                .frame(width: 100, height: 100)
+
+                                        case .success(let image):
+                                            image
+                                                .resizable()
+                                                .frame(width: 100, height: 100)
+                                                .clipShape(Circle())
+                                        case .failure(_):
+                                            Image(systemName: "person.circle.fill")
+                                                .resizable()
+                                                .frame(width: 100, height: 100)
+                                                .foregroundStyle(.gray)
+
+                                        @unknown default:
+                                            EmptyView()
+                                        }
+                                    }
+                                }
+                                    
                                 VStack(spacing: 8){
                                     Text("Arş.Görv")
                                         .frame(maxWidth: .infinity , alignment: .leading)
@@ -84,6 +105,8 @@ struct AcademicianView: View {
                                     Spacer()
                                     
                                     Toggle("", isOn: $isOn)
+                                        .tint(Color("usi"))
+                                        .foregroundStyle(Color("usi"))
                                         .disabled(true)
                                     
                                     
@@ -106,35 +129,72 @@ struct AcademicianView: View {
                                 
                                 HStack {
                                     Image(systemName: "phone.fill")
-                                        .foregroundStyle(.green)
+                                        .foregroundStyle(Color("usi"))
                                         .padding(6)
-                                        .background(Color(.green).opacity(0.2))
+                                        .background(Color("usi").opacity(0.2))
                                         .clipShape(Circle())
                                     Text("03862806059")
                                 }
                                 HStack {
                                     Image(systemName: "mail.fill")
-                                        .foregroundStyle(.green)
+                                        .foregroundStyle(Color("usi"))
                                         .padding(6)
-                                        .background(Color(.green).opacity(0.2))
+                                        .background(Color("usi").opacity(0.2))
                                         .clipShape(Circle())
                                     Text(verbatim: "basaktuna@ahievran.edu.tr")
                                 }
                                 HStack {
                                     Image(systemName: "mappin.circle.fill")
-                                        .foregroundStyle(.green)
+                                        .foregroundStyle(Color("usi"))
                                         .padding(6)
-                                        .background(Color(.green).opacity(0.2))
+                                        .background(Color("usi").opacity(0.2))
                                         .clipShape(Circle())
                                     Text(verbatim: "https://unis.ahievran.edu.tr/akedemisyen/basaktuna")
                                 }
                                 HStack {
                                     Image(systemName: "network")
-                                        .foregroundStyle(.green)
+                                        .foregroundStyle(Color("usi"))
                                         .padding(6)
-                                        .background(Color(.green).opacity(0.2))
+                                        .background(Color("usi").opacity(0.2))
                                         .clipShape(Circle())
                                     Text("03862806059")
+                                }
+                            }
+                            .padding()
+                            .background(.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            
+                            VStack(alignment: .leading){
+                                HStack {
+                                    Text("Firma Bilgisi Ve Çalışma Alanı")
+                                        .font(.headline)
+                                        .underline()
+                                        .foregroundStyle(Color("usi"))
+                                    Spacer()
+                                }
+                                
+                                HStack {
+                                    Circle()
+                                        .frame(width: 6, height: 6)
+                                        .foregroundStyle(Color("usi"))
+                                        .padding(.leading)
+                                    VStack(alignment: .leading){
+                                        Text("ABC Medya ")
+                                            .font(.headline)
+                                        Text("Yazılım , finansman ve danışmanlık")
+                                    }
+                                }
+                                
+                                HStack {
+                                    Circle()
+                                        .frame(width: 6, height: 6)
+                                        .foregroundStyle(Color("usi"))
+                                        .padding(.leading)
+                                    VStack(alignment: .leading){
+                                        Text("Nanokompozit ")
+                                            .font(.headline)
+                                        Text("Nanokompozit üretimi ve sanayisi")
+                                    }
                                 }
                             }
                             .padding()

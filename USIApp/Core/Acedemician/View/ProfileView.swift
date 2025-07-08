@@ -58,20 +58,6 @@ struct ProfileView: View {
                                                     .resizable()
                                                     .frame(width: 140, height: 140)
                                                     .clipShape(Circle())
-                                                    .overlay(alignment: .bottomTrailing) {
-                                                        Button {
-                                                            showImagePicker.toggle()
-                                                        } label: {
-                                                            Image(systemName: "plus")
-                                                                .imageScale(.large)
-                                                                .foregroundStyle(.white)
-                                                                .padding(8)
-                                                                .background(.gray)
-                                                                .mask(Circle())
-                                                        }
-
-                                                    }
-
                                             case .failure(_):
                                                 Image(systemName: "person.circle.fill")
                                                     .resizable()

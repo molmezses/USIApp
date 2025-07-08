@@ -11,7 +11,6 @@ import FirebaseAuth
 
 class AcademicianViewModel: ObservableObject {
     
-    
 
 }
 
