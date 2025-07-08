@@ -14,17 +14,17 @@ struct AcademicianTabView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             
-            ContentView()
+            AcademicianView()
                 .tabItem {
                     Image(systemName: "house")
-                    Text("Ana Sayfa")
+                    Text("Önizleme")
                 }
                 .tag(0)
             
             ProfileView()
                 .tabItem {
                     Image(systemName: "person")
-                    Text("Profil")
+                    Text("Profilim")
                 }
                 .tag(1)
         }
