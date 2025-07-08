@@ -33,7 +33,6 @@ struct AcedemicianLoginView: View {
                         
                         
                         TextField("Üniversite Mailiniz :", text: $viewModel.email)
-                            .font(.headline)
                             .frame(height: 55)
                             .padding(.horizontal)
                             .background(Color(.tertiarySystemGroupedBackground))
@@ -43,7 +42,6 @@ struct AcedemicianLoginView: View {
                             .focused($focusedField)
                         
                         SecureFieldWithButton(title: "Şifrenizi giriniz", text: $viewModel.loginPassword)
-                            .font(.headline)
                             .frame(height: 55)
                             .padding(.horizontal)
                             .background(Color(.tertiarySystemGroupedBackground))
@@ -138,7 +136,7 @@ struct AcedemicianLoginView: View {
                 .navigationDestination(isPresented: $navigate) {
                     AcademicianTabView()
                         .environmentObject(ProfileViewModel())
-                        .environmentObject(viewModel) // Zaten mevcut AuthViewModel
+                        .environmentObject(viewModel)
                         .environmentObject(AcademicianViewModel())
                         .navigationBarBackButtonHidden()
                 }
