@@ -88,12 +88,18 @@ struct ProfileView: View {
                                     Spacer()
                                 }
                                 
+                                //MARK: AD SOYAD
                                 HStack{
                                     Spacer()
-                                    Text("\(authViewModel.adSoyad)")
-                                        .font(.title2)
-                                        .fontWeight(.semibold)
-                                        .padding(.top)
+                                    VStack {
+                                        Text("\(authViewModel.unvan)")
+                                            .font(.title2)
+                                            .fontWeight(.semibold)
+                                            .padding(.top)
+                                        Text("\(authViewModel.adSoyad)")
+                                            .font(.title2)
+                                            .fontWeight(.semibold)
+                                    }
                                     Spacer()
                                 }
                                 

@@ -24,6 +24,7 @@ class AuthViewModel: ObservableObject {
     @Published var bolum: String = ""
     @Published var program: String = ""
     @Published var resimURL: String = ""
+    @Published var unvan: String = ""
     
     @Published var isLoggedIn: Bool = false
     
@@ -148,6 +149,8 @@ class AuthViewModel: ObservableObject {
                 self?.bolum = data["bolum"] as? String ?? ""
                 self?.program = data["Program"] as? String ?? ""
                 self?.resimURL = data["resimURL"] as? String ?? ""
+                self?.unvan = data["Unvan"] as? String ?? ""
+                
             }
         }
     }
