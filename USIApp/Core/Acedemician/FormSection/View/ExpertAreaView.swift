@@ -1,21 +1,28 @@
+//
+//  ExpertAreaView.swift
+//  USIApp
+//
+//  Created by Mustafa Ölmezses on 3.07.2025.
+//
+
 import SwiftUI
 
-struct ConsultancyFieldView: View {
+struct ExpertAreaView: View {
     
     @Environment(\.dismiss) var dismiss
-    @State private var consultancyDesc: String = ""
-    @State private var consultancyList: [String] = [
-        "Gelişmiş yapay zeka ve makine öğrenimi çözümleri",
-        "Güneş enerjisi, rüzgar türbinleri ve yenilenebilir enerji sistemleri geliştirir."
-    ]
+    @State private var expertDesc: String = ""
     
+    @State private var expertList: [String] = [
+        "Öğrenci koçluğu, sınav hazırlık kursları ve eğitim danışmanlığı",
+        "Güneş enerjisi, rüzgar türbinleri ve yenilenebilir enerji"
+    ]
+
     @FocusState private var focusedField: Bool
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                
-                // Başlık
+                // Üst Başlık
                 HStack {
                     Button {
                         dismiss()
@@ -27,14 +34,15 @@ struct ConsultancyFieldView: View {
                     
                     Spacer()
                     
-                    Text("Danışmanlık Konuları")
+                    Text("Uzmanlık Alanları")
                         .font(.headline)
                         .foregroundColor(.white)
                     
                     Spacer()
                     
+                    // Simetri için boş ikon
                     Image(systemName: "chevron.left")
-                        .opacity(0) // simetri için
+                        .opacity(0)
                 }
                 .padding()
                 .background(Color("usi"))
@@ -42,18 +50,17 @@ struct ConsultancyFieldView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
                         
-                        // Açıklama
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Yeni Danışmanlık Konusu")
+                            Text("Yeni Uzmanlık Alanı")
                                 .font(.title3.bold())
-                            Text("Lütfen danışmanlık konunuzu yazıp 'Ekle' butonuna basınız.")
+                            Text("Lütfen uzmanlık alanınızı girin ve 'Ekle' tuşuna basın.")
                                 .font(.footnote)
                                 .foregroundColor(.gray)
                         }
                         .padding(.horizontal)
                         
                         // TextEditor
-                        TextEditor(text: $consultancyDesc)
+                        TextEditor(text: $expertDesc)
                             .frame(height: 100)
                             .padding(10)
                             .background(Color.white)
@@ -64,9 +71,9 @@ struct ConsultancyFieldView: View {
                         
                         // Ekle Butonu
                         Button {
-                            guard !consultancyDesc.trimmingCharacters(in: .whitespaces).isEmpty else { return }
-                            consultancyList.append(consultancyDesc)
-                            consultancyDesc = ""
+                            guard !expertDesc.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+                            expertList.append(expertDesc)
+                            expertDesc = ""
                             focusedField = false
                         } label: {
                             Text("Ekle")
@@ -80,30 +87,28 @@ struct ConsultancyFieldView: View {
                         
                         Divider().padding(.horizontal)
                         
-                        // Liste Başlık
-                        Text("Danışmanlık Konularım")
+                        // Liste
+                        Text("Eklenen Uzmanlık Alanları")
                             .font(.title3.bold())
                             .padding(.horizontal)
                         
-                        // Liste Gövdesi
-                        if consultancyList.isEmpty {
-                            Text("Henüz danışmanlık konusu eklenmedi.")
+                        if expertList.isEmpty {
+                            Text("Henüz uzmanlık alanı eklenmedi.")
                                 .foregroundColor(.gray)
                                 .font(.subheadline)
                                 .padding(.horizontal)
                         } else {
-                            ForEach(consultancyList.indices, id: \.self) { index in
+                            ForEach(expertList.indices, id: \.self) { index in
                                 HStack(alignment: .top) {
-                                    Text(consultancyList[index])
+                                    Text(expertList[index])
                                         .font(.body)
                                     
                                     Spacer()
                                     
                                     Button {
-                                        consultancyList.remove(at: index)
+                                        expertList.remove(at: index)
                                     } label: {
-                                        Image(systemName: "trash.fill")
-                                            .imageScale(.large)
+                                        Image(systemName: "trash")
                                             .foregroundColor(.red)
                                     }
                                 }
@@ -129,5 +134,5 @@ struct ConsultancyFieldView: View {
 }
 
 #Preview {
-    ConsultancyFieldView()
+    ExpertAreaView()
 }

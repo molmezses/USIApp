@@ -84,7 +84,7 @@ struct VerficationView: View {
                 AcademicianTabView()
                     .environmentObject(ProfileViewModel())
                     .environmentObject(AuthViewModel())
-                    .environmentObject(AcademicianViewModel())
+                    .environmentObject(ProfileViewModel())
                     .navigationBarBackButtonHidden()
             }
         }

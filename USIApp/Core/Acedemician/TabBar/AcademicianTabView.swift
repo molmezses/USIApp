@@ -36,7 +36,6 @@ struct AcademicianTabView: View {
     AcademicianTabView()
         .environmentObject(ProfileViewModel())
         .environmentObject(AuthViewModel())
-        .environmentObject(AcademicianViewModel())
 }
 
 

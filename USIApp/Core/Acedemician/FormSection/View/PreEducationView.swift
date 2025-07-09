@@ -1,21 +1,29 @@
+//
+//  PreEducationView.swift
+//  USIApp
+//
+//  Created by Mustafa Ölmezses on 3.07.2025.
+//
+
 import SwiftUI
 
-struct ConsultancyFieldView: View {
+struct PreEducationView: View {
     
     @Environment(\.dismiss) var dismiss
-    @State private var consultancyDesc: String = ""
-    @State private var consultancyList: [String] = [
-        "Gelişmiş yapay zeka ve makine öğrenimi çözümleri",
-        "Güneş enerjisi, rüzgar türbinleri ve yenilenebilir enerji sistemleri geliştirir."
-    ]
+    @FocusState private var isInputFocused: Bool
     
-    @FocusState private var focusedField: Bool
+    @State private var preEducationDesc: String = ""
+    @State private var preEducationList: [String] = [
+        "Öğrenci koçluğu, sınav hazırlık kursları",
+        "Eğitim danışmanlığı, güneş enerjisi",
+        "Rüzgar türbinleri ve yenilenebilir enerji"
+    ]
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
                 
-                // Başlık
+                // Üst Başlık
                 HStack {
                     Button {
                         dismiss()
@@ -27,7 +35,7 @@ struct ConsultancyFieldView: View {
                     
                     Spacer()
                     
-                    Text("Danışmanlık Konuları")
+                    Text("Önceki Verdiğiniz Eğitimler")
                         .font(.headline)
                         .foregroundColor(.white)
                     
@@ -44,30 +52,33 @@ struct ConsultancyFieldView: View {
                         
                         // Açıklama
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Yeni Danışmanlık Konusu")
+                            Text("Geçmiş Eğitim Bilgisi")
                                 .font(.title3.bold())
-                            Text("Lütfen danışmanlık konunuzu yazıp 'Ekle' butonuna basınız.")
+                            Text("Daha önce verdiğiniz eğitimleri yazıp 'Ekle' butonuna basınız.")
                                 .font(.footnote)
                                 .foregroundColor(.gray)
                         }
                         .padding(.horizontal)
                         
                         // TextEditor
-                        TextEditor(text: $consultancyDesc)
+                        TextEditor(text: $preEducationDesc)
                             .frame(height: 100)
                             .padding(10)
                             .background(Color.white)
                             .cornerRadius(12)
-                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.gray.opacity(0.3)))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color.gray.opacity(0.3))
+                            )
                             .padding(.horizontal)
-                            .focused($focusedField)
+                            .focused($isInputFocused)
                         
                         // Ekle Butonu
                         Button {
-                            guard !consultancyDesc.trimmingCharacters(in: .whitespaces).isEmpty else { return }
-                            consultancyList.append(consultancyDesc)
-                            consultancyDesc = ""
-                            focusedField = false
+                            guard !preEducationDesc.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+                            preEducationList.append(preEducationDesc)
+                            preEducationDesc = ""
+                            isInputFocused = false
                         } label: {
                             Text("Ekle")
                                 .frame(maxWidth: .infinity)
@@ -81,30 +92,36 @@ struct ConsultancyFieldView: View {
                         Divider().padding(.horizontal)
                         
                         // Liste Başlık
-                        Text("Danışmanlık Konularım")
+                        Text("Eklenen Eğitimler")
                             .font(.title3.bold())
                             .padding(.horizontal)
                         
-                        // Liste Gövdesi
-                        if consultancyList.isEmpty {
-                            Text("Henüz danışmanlık konusu eklenmedi.")
-                                .foregroundColor(.gray)
-                                .font(.subheadline)
-                                .padding(.horizontal)
+                        if preEducationList.isEmpty {
+                            VStack(spacing: 12) {
+                                Image(systemName: "book.closed")
+                                    .font(.system(size: 40))
+                                    .foregroundColor(.gray.opacity(0.5))
+                                Text("Henüz eğitim eklenmedi.")
+                                    .foregroundColor(.gray)
+                                    .font(.subheadline)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 40)
                         } else {
-                            ForEach(consultancyList.indices, id: \.self) { index in
+                            ForEach(preEducationList.indices, id: \.self) { index in
                                 HStack(alignment: .top) {
-                                    Text(consultancyList[index])
-                                        .font(.body)
+                                    Text(preEducationList[index])
+                                        .lineLimit(nil)
+                                        .padding(.vertical, 8)
                                     
                                     Spacer()
                                     
                                     Button {
-                                        consultancyList.remove(at: index)
+                                        preEducationList.remove(at: index)
                                     } label: {
-                                        Image(systemName: "trash.fill")
-                                            .imageScale(.large)
+                                        Image(systemName: "trash")
                                             .foregroundColor(.red)
+                                            .imageScale(.large)
                                     }
                                 }
                                 .padding()
@@ -121,7 +138,7 @@ struct ConsultancyFieldView: View {
                 }
                 .background(Color(.systemGroupedBackground))
                 .onTapGesture {
-                    focusedField = false
+                    isInputFocused = false
                 }
             }
         }
@@ -129,5 +146,6 @@ struct ConsultancyFieldView: View {
 }
 
 #Preview {
-    ConsultancyFieldView()
+    PreEducationView()
 }
+

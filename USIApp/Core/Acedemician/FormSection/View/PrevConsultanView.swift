@@ -1,12 +1,20 @@
+//
+//  PrevConsultanView.swift
+//  USIApp
+//
+//  Created by Mustafa Ölmezses on 3.07.2025.
+//
+
 import SwiftUI
 
-struct ConsultancyFieldView: View {
+struct PrevConsultanView: View {
     
     @Environment(\.dismiss) var dismiss
-    @State private var consultancyDesc: String = ""
-    @State private var consultancyList: [String] = [
-        "Gelişmiş yapay zeka ve makine öğrenimi çözümleri",
-        "Güneş enerjisi, rüzgar türbinleri ve yenilenebilir enerji sistemleri geliştirir."
+    @State private var prevConsultanDesc: String = ""
+    @State private var prevConsultanList: [String] = [
+        "Öğrenci koçluğu, sınav hazırlık kursları",
+        "Eğitim danışmanlığı, güneş enerjisi",
+        "Güneş enerjisi, rüzgar türbinleri ve yenilenebilir enerji"
     ]
     
     @FocusState private var focusedField: Bool
@@ -15,7 +23,7 @@ struct ConsultancyFieldView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 
-                // Başlık
+                // Üst Başlık
                 HStack {
                     Button {
                         dismiss()
@@ -27,7 +35,7 @@ struct ConsultancyFieldView: View {
                     
                     Spacer()
                     
-                    Text("Danışmanlık Konuları")
+                    Text("Geçmiş Danışmanlıklar")
                         .font(.headline)
                         .foregroundColor(.white)
                     
@@ -44,16 +52,16 @@ struct ConsultancyFieldView: View {
                         
                         // Açıklama
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Yeni Danışmanlık Konusu")
+                            Text("Geçmiş Danışmanlık Bilgisi")
                                 .font(.title3.bold())
-                            Text("Lütfen danışmanlık konunuzu yazıp 'Ekle' butonuna basınız.")
+                            Text("Lütfen geçmiş danışmanlık bilginizi yazıp 'Ekle' butonuna basınız.")
                                 .font(.footnote)
                                 .foregroundColor(.gray)
                         }
                         .padding(.horizontal)
                         
                         // TextEditor
-                        TextEditor(text: $consultancyDesc)
+                        TextEditor(text: $prevConsultanDesc)
                             .frame(height: 100)
                             .padding(10)
                             .background(Color.white)
@@ -64,9 +72,9 @@ struct ConsultancyFieldView: View {
                         
                         // Ekle Butonu
                         Button {
-                            guard !consultancyDesc.trimmingCharacters(in: .whitespaces).isEmpty else { return }
-                            consultancyList.append(consultancyDesc)
-                            consultancyDesc = ""
+                            guard !prevConsultanDesc.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+                            prevConsultanList.append(prevConsultanDesc)
+                            prevConsultanDesc = ""
                             focusedField = false
                         } label: {
                             Text("Ekle")
@@ -80,27 +88,27 @@ struct ConsultancyFieldView: View {
                         
                         Divider().padding(.horizontal)
                         
-                        // Liste Başlık
-                        Text("Danışmanlık Konularım")
+                        // Liste Başlığı
+                        Text("Önceki Danışmanlıklar")
                             .font(.title3.bold())
                             .padding(.horizontal)
                         
-                        // Liste Gövdesi
-                        if consultancyList.isEmpty {
-                            Text("Henüz danışmanlık konusu eklenmedi.")
+                        // Liste
+                        if prevConsultanList.isEmpty {
+                            Text("Henüz danışmanlık bilgisi eklenmedi.")
                                 .foregroundColor(.gray)
                                 .font(.subheadline)
                                 .padding(.horizontal)
                         } else {
-                            ForEach(consultancyList.indices, id: \.self) { index in
+                            ForEach(prevConsultanList.indices, id: \.self) { index in
                                 HStack(alignment: .top) {
-                                    Text(consultancyList[index])
+                                    Text(prevConsultanList[index])
                                         .font(.body)
                                     
                                     Spacer()
                                     
                                     Button {
-                                        consultancyList.remove(at: index)
+                                        prevConsultanList.remove(at: index)
                                     } label: {
                                         Image(systemName: "trash.fill")
                                             .imageScale(.large)
@@ -129,5 +137,5 @@ struct ConsultancyFieldView: View {
 }
 
 #Preview {
-    ConsultancyFieldView()
+    PrevConsultanView()
 }

@@ -137,7 +137,6 @@ struct AcedemicianLoginView: View {
                     AcademicianTabView()
                         .environmentObject(ProfileViewModel())
                         .environmentObject(viewModel)
-                        .environmentObject(AcademicianViewModel())
                         .navigationBarBackButtonHidden()
                 }
             }
@@ -145,7 +144,6 @@ struct AcedemicianLoginView: View {
                 AcademicianTabView()
                     .environmentObject(ProfileViewModel())
                     .environmentObject(viewModel)
-                    .environmentObject(AcademicianViewModel())
                     .navigationBarBackButtonHidden()
             }
         }
