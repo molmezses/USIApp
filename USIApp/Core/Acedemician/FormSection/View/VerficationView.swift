@@ -10,7 +10,6 @@ import SwiftUI
 struct VerficationView: View {
     
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var viewModel : AuthViewModel
     @State private var navigate = false
     @State private var showAlert = false
     @FocusState private var focusedField: Bool
@@ -38,14 +37,7 @@ struct VerficationView: View {
                     
                     VStack {
                         Button {
-                            viewModel.checkVerificationStatus()
-                            
-                            if viewModel.isEmailVerified {
-                                navigate = true
-                            } else {
-                                viewModel.errorMessage = "Hesabın henüz doğrulanmamış. Lütfen mail kutunu kontrol et."
-                                showAlert = true
-                            }
+                          //DOĞRULAMA BUTIBNU
                             
                         } label: {
                             Text("Hesabımı Doğruladım")
@@ -58,11 +50,6 @@ struct VerficationView: View {
                         }
                         
                         Spacer()
-                    }
-                    .alert(isPresented: $showAlert) {
-                        Alert(title: Text("Uyarı"),
-                              message: Text(viewModel.errorMessage),
-                              dismissButton: .default(Text("Tamam")))
                     }
                 }
                 .padding(30)
@@ -80,13 +67,6 @@ struct VerficationView: View {
             .onTapGesture {
                 focusedField = false
             }
-            .navigationDestination(isPresented: $navigate) {
-                AcademicianTabView()
-                    .environmentObject(ProfileViewModel())
-                    .environmentObject(AuthViewModel())
-                    .environmentObject(ProfileViewModel())
-                    .navigationBarBackButtonHidden()
-            }
         }
     }
 }
@@ -94,6 +74,5 @@ struct VerficationView: View {
 
 #Preview {
     VerficationView()
-        .environmentObject(AuthViewModel())
 }
 

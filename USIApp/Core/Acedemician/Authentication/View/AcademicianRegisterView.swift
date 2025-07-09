@@ -11,10 +11,11 @@ import SwiftUI
 struct AcademicianRegisterView: View {
     
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var viewModel : AuthViewModel
     @State private var navigate = false
     @State private var showAlert = false
     @FocusState private var focusedField: Bool
+    @State var name: String = ""
+    
     
     var body: some View {
         NavigationStack {
@@ -27,7 +28,7 @@ struct AcademicianRegisterView: View {
                 VStack(spacing: 30) {
                     Spacer()
                     
-                    TextField("Üniversite Mailiniz :", text: $viewModel.email)
+                    TextField("Üniversite Mailiniz :", text: $name)
                         .autocorrectionDisabled()
                         .frame(height: 55)
                         .padding(.horizontal)
@@ -37,7 +38,7 @@ struct AcademicianRegisterView: View {
                         .keyboardType(.emailAddress)
                         .focused($focusedField)
                     
-                    SecureFieldWithButton(title: "Şifrenizi giriniz:", text: $viewModel.password)
+                    SecureFieldWithButton(title: "Şifrenizi giriniz:", text: $name)
                         .frame(height: 55)
                         .padding(.horizontal)
                         .background(Color(.tertiarySystemGroupedBackground))
@@ -45,7 +46,7 @@ struct AcademicianRegisterView: View {
                         .multilineTextAlignment(.leading)
                         .focused($focusedField)
                     
-                    SecureFieldWithButton(title: "Şifrenizi tekrar giriniz:", text: $viewModel.passwordAgain)
+                    SecureFieldWithButton(title: "Şifrenizi tekrar giriniz:", text: $name)
                         .frame(height: 55)
                         .autocorrectionDisabled()
                         .padding(.horizontal)
@@ -56,19 +57,7 @@ struct AcademicianRegisterView: View {
                     
                     VStack {
                         Button {
-                            if viewModel.validateAuthRegister() {
-                                viewModel.register { result in
-                                    switch result {
-                                    case .success:
-                                        clearFields()
-                                        navigate = true
-                                    case .failure:
-                                        showAlert = true
-                                    }
-                                }
-                            } else {
-                                showAlert = true
-                            }
+                            //kayot olma butonu
                         } label: {
                             Text("Kayıt Ol")
                                 .font(.headline)
@@ -93,11 +82,6 @@ struct AcademicianRegisterView: View {
                             }
                         Spacer()
                     }
-                    .alert(isPresented: $showAlert) {
-                        Alert(title: Text("Hata"),
-                              message: Text(viewModel.errorMessage),
-                              dismissButton: .default(Text("Tamam")))
-                    }
                 }
                 .padding(30)
                 .multilineTextAlignment(.center)
@@ -119,17 +103,10 @@ struct AcademicianRegisterView: View {
             }
         }
     }
-    
-    private func clearFields() {
-        viewModel.email = ""
-        viewModel.password = ""
-        viewModel.passwordAgain = ""
-    }
 }
 
 
 
 #Preview {
     AcademicianRegisterView()
-        .environmentObject(AuthViewModel())
 }

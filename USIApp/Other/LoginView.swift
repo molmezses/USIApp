@@ -60,7 +60,7 @@ struct LoginView: View {
                 
                 FooterView()
                 
-
+                
             }
             .ignoresSafeArea()
         }
@@ -69,5 +69,4 @@ struct LoginView: View {
 
 #Preview {
     LoginView()
-        .environmentObject(AuthViewModel())
 }
