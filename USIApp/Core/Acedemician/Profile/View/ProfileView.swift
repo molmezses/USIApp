@@ -45,10 +45,29 @@ struct ProfileView: View {
                             HStack {
                                 Spacer()
                                 
-                                Image("ben")
-                                    .resizable()
+                                if let urlString = viewModel.academicianInfo?.photo,
+                                   let url = URL(string: urlString) {
+                                    AsyncImage(url: url) { phase in
+                                        if let image = phase.image {
+                                            image
+                                                .resizable()
+                                                .frame(width: 140, height: 140)
+                                                .clipShape(Circle())
+                                        } else if phase.error != nil {
+                                            Image(systemName: "person.crop.circle.badge.exclamationmark")
+                                        } else {
+                                            ProgressView()
+                                        }
+                                    }
                                     .frame(width: 140, height: 140)
                                     .clipShape(Circle())
+                                } else {
+                                    Image(systemName: "person.circle")
+                                        .resizable()
+                                        .frame(width: 140, height: 140)
+                                        .clipShape(Circle())
+                                }
+                                    
                                 
                                 Spacer()
                             }
@@ -57,11 +76,11 @@ struct ProfileView: View {
                             HStack{
                                 Spacer()
                                 VStack {
-                                    Text("authViewModel.unvan")
+                                    Text(viewModel.academicianInfo?.unvan ?? "Unvan bulunamadı")
                                         .font(.title2)
                                         .fontWeight(.semibold)
                                         .padding(.top)
-                                    Text("authViewModel.adSoyad")
+                                    Text(viewModel.academicianInfo?.adSoyad ?? "Ad soyad Bulunamadı")
                                         .font(.title2)
                                         .fontWeight(.semibold)
                                 }
@@ -70,7 +89,7 @@ struct ProfileView: View {
                             
                             HStack{
                                 Spacer()
-                                Text("mustaaa@gmail.com")
+                                Text(viewModel.academicianInfo?.email ?? "mail Bulunamadı")
                                     .font(.headline)
                                     .foregroundStyle(.gray)
                                 Spacer()

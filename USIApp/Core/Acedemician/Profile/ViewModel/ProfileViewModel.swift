@@ -51,11 +51,11 @@ class ProfileViewModel: ObservableObject {
             
             let info = AcademicianInfo(id: document.documentID,
                                        email: data["Email"] as? String ?? "Hata Email AcademicianInfo",
-                                       unvan: data["Unvan"] as? String ?? "Hata Program AcademicianInfo",
-                                       program: data["Program"] as? String ?? "Hata Unvan AcademicianInfo",
-                                       photo: data["resimURL"] as? String ?? "Hata adSoyad AcademicianInfo",
+                                       unvan: data["Unvan"] as? String ?? "Hata unvan AcademicianInfo",
+                                       program: data["Program"] as? String ?? "Hata program AcademicianInfo",
+                                       photo: data["resimURL"] as? String ?? "Hata photo AcademicianInfo",
                                        bolum: data["bolum"] as? String ?? "Hata bolum AcademicianInfo",
-                                       adSoyad: data["adSoyad"] as? String ?? "Hata resimURL AcademicianInfo"
+                                       adSoyad: data["adSoyad"] as? String ?? "Hata adSoyad AcademicianInfo"
             )
             
             completion(.success(info))
