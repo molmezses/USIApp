@@ -349,7 +349,16 @@ struct ProfileView: View {
                 viewModel.fetchAcademicianDocumentById(byEmail: authViewModel.userSession?.email ?? "") { result in
                     switch result {
                     case .success(let id):
-                        print("Belge başarıyla çekildi Belge id : \(id)")
+                        viewModel.fetchAcademicianInfo(byId: id) { result in
+                            switch result {
+                            case .success(let info):
+                                DispatchQueue.main.async {
+                                    viewModel.academicianInfo = info
+                                }
+                            case .failure(let error):
+                                print("Hata : Veri çekme hatası \(error.localizedDescription)")
+                            }
+                        }
                     case .failure(let error):
                         print("hata :\(error.localizedDescription)")
                     }

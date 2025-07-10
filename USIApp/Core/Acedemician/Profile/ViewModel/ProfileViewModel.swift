@@ -10,6 +10,8 @@ import FirebaseFirestore
 
 class ProfileViewModel: ObservableObject {
     
+    @Published var academicianInfo: AcademicianInfo?
+    
     func fetchAcademicianDocumentById(byEmail email:String , completion: @escaping (Result<String , Error>) -> Void) {
         let db = Firestore.firestore()
         
@@ -49,11 +51,11 @@ class ProfileViewModel: ObservableObject {
             
             let info = AcademicianInfo(id: document.documentID,
                                        email: data["Email"] as? String ?? "Hata Email AcademicianInfo",
-                                       unvan: data["Program"] as? String ?? "Hata Program AcademicianInfo",
-                                       program: data["Unvan"] as? String ?? "Hata Unvan AcademicianInfo",
-                                       photo: data["adSoyad"] as? String ?? "Hata adSoyad AcademicianInfo",
+                                       unvan: data["Unvan"] as? String ?? "Hata Program AcademicianInfo",
+                                       program: data["Program"] as? String ?? "Hata Unvan AcademicianInfo",
+                                       photo: data["resimURL"] as? String ?? "Hata adSoyad AcademicianInfo",
                                        bolum: data["bolum"] as? String ?? "Hata bolum AcademicianInfo",
-                                       adSoyad: data["resimURL"] as? String ?? "Hata resimURL AcademicianInfo"
+                                       adSoyad: data["adSoyad"] as? String ?? "Hata resimURL AcademicianInfo"
             )
             
             completion(.success(info))
