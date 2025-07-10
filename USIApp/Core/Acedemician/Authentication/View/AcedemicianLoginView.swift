@@ -13,9 +13,7 @@ struct AcedemicianLoginView: View {
     
     @Environment(\.dismiss) var dismiss
     @State var navigate: Bool = false
-    @State var showAlert : Bool = false
     @FocusState var focusedField: Bool
-    @State var name: String = ""
     @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject var viewModel = LoginViewModel()
     
@@ -103,6 +101,11 @@ struct AcedemicianLoginView: View {
                     FooterView()
                     
                 }
+                .alert("Hata", isPresented: $viewModel.showAlert, actions: {
+                    Button("Tamam" , role: .cancel){}
+                }, message :{
+                    Text("\(viewModel.errorMessage)")
+                })
                 .ignoresSafeArea()
                 .onTapGesture {
                     focusedField = false
