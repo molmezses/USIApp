@@ -10,6 +10,7 @@ import SwiftUI
 struct AcademicianTabView: View {
     
     @State private var selectedTab = 1
+    @EnvironmentObject var authViewModel : AuthViewModel
     
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -20,6 +21,7 @@ struct AcademicianTabView: View {
                     Text("Önizleme")
                 }
                 .tag(0)
+                .environmentObject(authViewModel)
             
             ProfileView()
                 .tabItem {
@@ -27,6 +29,7 @@ struct AcademicianTabView: View {
                     Text("Profilim")
                 }
                 .tag(1)
+                .environmentObject(authViewModel)
         }
         .tint(Color("usi"))
     }
@@ -34,6 +37,7 @@ struct AcademicianTabView: View {
 
 #Preview {
     AcademicianTabView()
+        .environmentObject(AuthViewModel())
     
 }
 

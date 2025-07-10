@@ -17,6 +17,7 @@ struct ProfileView: View {
     @State var ortakProje : Bool = true
     @State var showImagePicker : Bool = false
     @State var navSignOut : Bool = false
+    @EnvironmentObject var authViewModel : AuthViewModel
     
     
     
@@ -327,7 +328,7 @@ struct ProfileView: View {
                             HStack {
                                 Spacer()
                                 Button {
-                                    //çıkış yap
+                                    authViewModel.logOut()
                                 } label: {
                                     Text("Çıkış yap")
                                         .foregroundStyle(.red)
@@ -353,5 +354,6 @@ struct ProfileView: View {
 
 #Preview {
     ProfileView()
+        .environmentObject(AuthViewModel())
     
 }
