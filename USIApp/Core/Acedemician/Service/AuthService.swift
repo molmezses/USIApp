@@ -31,20 +31,25 @@ final class AuthService{
         }
     }
     
-    func register(email: String , password: String , completion: @escaping (Result<UserSession , Error>) -> Void) {
+    func register(email: String , password: String , completion: @escaping (Result<Void , Error>) -> Void) {
         Auth.auth().createUser(withEmail: email, password: password) { result, error in
-            if let error = error{
+            if let error = error {
+                print("HATA1")
                 return completion(.failure(error))
             }
-            
-            guard let user = result?.user else{
-                return completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey : "User not found"])))
-            }
-            
-            let session = UserSession(id: user.uid, email: user.email ?? "Mail yok")
-            completion(.success(session))
+
+            result?.user.sendEmailVerification(completion: { error in
+                if let error = error {
+                    print("HATA2")
+                    completion(.failure(error))
+                } else {
+                    print("HATA3")
+                    completion(.success(()))
+                }
+            })
         }
     }
+
     
     func logOut() throws{
         do {

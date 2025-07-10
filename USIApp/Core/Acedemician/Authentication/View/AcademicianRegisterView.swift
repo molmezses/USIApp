@@ -11,11 +11,10 @@ import SwiftUI
 struct AcademicianRegisterView: View {
     
     @Environment(\.dismiss) var dismiss
-    @State private var navigate = false
     @State private var showAlert = false
     @FocusState private var focusedField: Bool
-    @State var name: String = ""
-    
+    @StateObject var viewModel = RegisterViewModel()
+    @EnvironmentObject var authViewModel : AuthViewModel
     
     var body: some View {
         NavigationStack {
@@ -28,7 +27,7 @@ struct AcademicianRegisterView: View {
                 VStack(spacing: 30) {
                     Spacer()
                     
-                    TextField("Üniversite Mailiniz :", text: $name)
+                    TextField("Üniversite Mailiniz :", text: $viewModel.email)
                         .autocorrectionDisabled()
                         .frame(height: 55)
                         .padding(.horizontal)
@@ -38,7 +37,7 @@ struct AcademicianRegisterView: View {
                         .keyboardType(.emailAddress)
                         .focused($focusedField)
                     
-                    SecureFieldWithButton(title: "Şifrenizi giriniz:", text: $name)
+                    SecureFieldWithButton(title: "Şifrenizi giriniz:", text: $viewModel.password)
                         .frame(height: 55)
                         .padding(.horizontal)
                         .background(Color(.tertiarySystemGroupedBackground))
@@ -46,7 +45,7 @@ struct AcademicianRegisterView: View {
                         .multilineTextAlignment(.leading)
                         .focused($focusedField)
                     
-                    SecureFieldWithButton(title: "Şifrenizi tekrar giriniz:", text: $name)
+                    SecureFieldWithButton(title: "Şifrenizi tekrar giriniz:", text: $viewModel.confirmPassword)
                         .frame(height: 55)
                         .autocorrectionDisabled()
                         .padding(.horizontal)
@@ -57,7 +56,7 @@ struct AcademicianRegisterView: View {
                     
                     VStack {
                         Button {
-                            //kayot olma butonu
+                            viewModel.register(authViewModel: authViewModel)
                         } label: {
                             Text("Kayıt Ol")
                                 .font(.headline)
@@ -97,7 +96,7 @@ struct AcademicianRegisterView: View {
             .onTapGesture {
                 focusedField = false
             }
-            .navigationDestination(isPresented: $navigate) {
+            .navigationDestination(isPresented: $viewModel.navigateToVerificationView) {
                 VerficationView()
                     .navigationBarBackButtonHidden()
             }
@@ -109,4 +108,6 @@ struct AcademicianRegisterView: View {
 
 #Preview {
     AcademicianRegisterView()
+        .environmentObject(AuthViewModel())
+        .environmentObject(RegisterViewModel())
 }

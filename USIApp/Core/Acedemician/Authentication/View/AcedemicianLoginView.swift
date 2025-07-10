@@ -80,6 +80,7 @@ struct AcedemicianLoginView: View {
                                 NavigationLink {
                                     AcademicianRegisterView()
                                         .navigationBarBackButtonHidden()
+                                        .environmentObject(authViewModel)
                                 } label: {
                                     Text("Kayıt Ol")
                                         .foregroundStyle(Color("sari"))

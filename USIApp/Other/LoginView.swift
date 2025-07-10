@@ -26,7 +26,7 @@ struct LoginView: View {
                         .padding(.bottom, 20)
                     
                     Button {
-                        // Sanayi girişi aksiyonu
+                        print("denemedeneme")
                     } label: {
                         Text("Sanayi Girişi")
                             .font(.headline)

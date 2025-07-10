@@ -1,0 +1,55 @@
+//
+//  RegisterViewModel.swift
+//  USIApp
+//
+//  Created by Mustafa Ölmezses on 10.07.2025.
+//
+
+import Foundation
+
+class RegisterViewModel: ObservableObject{
+    @Published var email: String = ""
+    @Published var password : String = ""
+    @Published var confirmPassword : String = ""
+    @Published var errorMessage: String? = ""
+    @Published var isLoading: Bool = false
+    @Published var navigateToVerificationView: Bool = false
+    
+    func validateEmailPassword() -> Bool {
+        if !(confirmPassword == password){
+            self.errorMessage = "Şifreler birbirleri ile uyuşmuyor"
+            print("hatay")
+            return false
+        }
+        
+        guard email.hasSuffix(".com") else {
+            self.errorMessage = "Sadece @ahievran.edu.tr uzantılı e-posta adresleri ile kayıt olabilirsiniz."
+            print("hatad")
+
+            return false
+        }
+        
+        return true
+    }
+    
+    func register(authViewModel: AuthViewModel){
+        self.isLoading = true
+        guard validateEmailPassword() else {
+            print("hatax")
+            return
+        }
+        
+        AuthService.shared.register(email: email, password: password) { result in
+            switch result{
+            case .success(_):
+                self.navigateToVerificationView = true
+            case .failure(let error):
+                self.errorMessage = error.localizedDescription
+            }
+        }
+    }
+    
+    
+
+    
+}
