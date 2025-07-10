@@ -57,7 +57,7 @@ class LoginViewModel: ObservableObject{
         case .userDisabled:
             return "Bu hesap devre dışı bırakılmış."
         default:
-            return error.localizedDescription 
+            return error.localizedDescription
         }
     }
 

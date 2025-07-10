@@ -18,6 +18,7 @@ struct ProfileView: View {
     @State var showImagePicker : Bool = false
     @State var navSignOut : Bool = false
     @EnvironmentObject var authViewModel : AuthViewModel
+    @StateObject var viewModel = ProfileViewModel()
     
     
     
@@ -342,6 +343,16 @@ struct ProfileView: View {
                         .padding(.horizontal)
                     }
                     .padding(.top)
+                }
+            }
+            .onAppear{
+                viewModel.fetchAcademicianDocumentById(byEmail: authViewModel.userSession?.email ?? "") { result in
+                    switch result {
+                    case .success(let id):
+                        print("Belge başarıyla çekildi Belge id : \(id)")
+                    case .failure(let error):
+                        print("hata :\(error.localizedDescription)")
+                    }
                 }
             }
             .navigationDestination(isPresented: $navSignOut, destination: {
