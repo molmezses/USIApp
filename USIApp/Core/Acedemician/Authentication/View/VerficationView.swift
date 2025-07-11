@@ -11,12 +11,10 @@ import FirebaseAuth
 struct VerficationView: View {
     
     @Environment(\.dismiss) var dismiss
-    @State private var navigateToProfile = false
-    @State private var showAlert = false
     @FocusState private var focusedField: Bool
     @EnvironmentObject var authViewModel: AuthViewModel
-    @State var message = ""
-    @State var isChecking: Bool = false
+    
+    @StateObject var viewModel = VerficationViewModel()
     
     
     var body: some View {
@@ -41,11 +39,11 @@ struct VerficationView: View {
                         .foregroundStyle(.gray)
                     
                     VStack {
-                        if isChecking{
+                        if viewModel.isChecking{
                             ProgressView("Kontrol Ediliyor")
                         }else{
                             Button {
-                                checkVerificationStatus()
+                                viewModel.checkVerificationStatus(authViewModel: authViewModel)
                             } label: {
                                 Text("Hesabımı Doğruladım")
                                     .font(.headline)
@@ -57,8 +55,8 @@ struct VerficationView: View {
                             }
                         }
                         
-                        if !message.isEmpty {
-                            Text(message)
+                        if !(viewModel.message.isEmpty) {
+                            Text(viewModel.message)
                                 .foregroundColor(.red)
                                 .multilineTextAlignment(.center)
                                 .padding()
@@ -84,37 +82,12 @@ struct VerficationView: View {
                 focusedField = false
             }
         }
-        .navigationDestination(isPresented: $navigateToProfile) {
+        .navigationDestination(isPresented: $viewModel.navigateToProfile) {
             AcademicianTabView()
                 .navigationBarBackButtonHidden()
         }
     }
     
-    func checkVerificationStatus(){
-        guard let user = Auth.auth().currentUser else{
-            message = "Kullanıcı oturumu bulunamadı"
-            return
-        }
-        
-        isChecking = true
-        
-        user.reload() { error in
-            isChecking = false
-            if let error = error{
-                message = "Hata : \(error.localizedDescription)"
-                return
-            }
-            
-            if user.isEmailVerified{
-                authViewModel.userSession = UserSession(id: user.uid, email: user.email ?? "Mail bulunamadı")
-                navigateToProfile = true
-            }else{
-                message = "E-posta adresiniz henüz doğrulanmamış Lütfen E-posta adresinizi Kontrol ediniz"
-            }
-            
-        }
-        
-    }
 }
 
 
