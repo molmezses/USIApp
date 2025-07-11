@@ -24,7 +24,7 @@ class ProfileViewModel: ObservableObject {
                 }
                 
                 guard let document = snapshot?.documents.first else {
-                    completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Belge bulunamadı."])))
+                    completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Belge bulunamadiiii."])))
                     return
                 }
                 
