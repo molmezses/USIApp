@@ -19,10 +19,7 @@ struct ProfileView: View {
     @State var navSignOut : Bool = false
     @EnvironmentObject var authViewModel : AuthViewModel
     @StateObject var viewModel = ProfileViewModel()
-    
-    
-    
-    
+
     var body: some View {
         NavigationStack{
             VStack(spacing: 0) {
@@ -99,6 +96,7 @@ struct ProfileView: View {
                             VStack {
                                 NavigationLink {
                                     PersonalInformationView()
+                                        .environmentObject(authViewModel)
                                         .navigationBarBackButtonHidden()
                                 } label: {
                                     HStack {
@@ -373,6 +371,7 @@ struct ProfileView: View {
                             case .success(let info):
                                 DispatchQueue.main.async {
                                     viewModel.academicianInfo = info
+                                    AuthService.shared.academicianInfo = info
                                 }
                             case .failure(let error):
                                 print("Hata : Veri çekme hatası \(error.localizedDescription)")

@@ -7,22 +7,15 @@
 
 import SwiftUI
 
-enum PersonalInformationEnum{
-    case name
-    case surname
-}
 
 struct PersonalInformationView: View {
     
-    @State var name: String = ""
-    @State var surname: String = ""
-    @State var selectedTitle: String = ""
-    @State var showTitleSheet: Bool = false
     @FocusState var focusName: PersonalInformationEnum?
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var authViewModel : AuthViewModel
+    @StateObject var viewModel = PersonalInformationViewModel()
     
     
-    let titles = ["Araştırma Görevlisi", "Öğretim Görevlisi", "Doktor ", "Doçent", "Profesör"]
     
     var body: some View {
         NavigationStack{
@@ -66,11 +59,11 @@ struct PersonalInformationView: View {
                             .padding(.horizontal)
                         
                         // İsim
-                        TextField("Adınız", text: $name)
+                        TextField("Adınız", text: $viewModel.name)
                             .font(.headline)
                             .frame(height: 55)
                             .padding(.horizontal)
-                            .background(Color(.white))
+                            .background(Color(.gray).opacity(0.2))
                             .mask(RoundedRectangle(cornerRadius: 10))
                             .multilineTextAlignment(.leading)
                             .keyboardType(.default)
@@ -80,11 +73,11 @@ struct PersonalInformationView: View {
                         
                         
                         // Soyisim
-                        TextField("Soyadınız", text: $surname)
+                        TextField("Soyadınız", text: $viewModel.surName)
                             .font(.headline)
                             .frame(height: 55)
                             .padding(.horizontal)
-                            .background(Color(.white))
+                            .background(Color(.gray).opacity(0.2))
                             .mask(RoundedRectangle(cornerRadius: 10))
                             .multilineTextAlignment(.leading)
                             .keyboardType(.default)
@@ -98,11 +91,11 @@ struct PersonalInformationView: View {
                         
                         // Ünvan Seçimi
                         Button {
-                            showTitleSheet = true
+                            viewModel.showTitleSheet = true
                         } label: {
                             HStack {
-                                Text(selectedTitle.isEmpty ? "Ünvan Seçiniz" : selectedTitle)
-                                    .foregroundStyle(selectedTitle.isEmpty ? .gray : .black)
+                                Text(viewModel.selectedTitle.isEmpty ? "Ünvan Seçiniz" : viewModel.selectedTitle)
+                                    .foregroundStyle(viewModel.selectedTitle.isEmpty ? .gray : .black)
                                 Spacer()
                                 Image(systemName: "chevron.down")
                                     .foregroundStyle(.gray)
@@ -138,7 +131,7 @@ struct PersonalInformationView: View {
                     focusName = .none
                 }
             }
-            .sheet(isPresented: $showTitleSheet) {
+            .sheet(isPresented: $viewModel.showTitleSheet) {
                 VStack(spacing: 16) {
                     
                     
@@ -149,16 +142,16 @@ struct PersonalInformationView: View {
                     
                     ScrollView {
                         VStack(spacing: 12) {
-                            ForEach(titles, id: \.self) { title in
+                            ForEach(viewModel.titles, id: \.self) { title in
                                 Button {
-                                    selectedTitle = title
-                                    showTitleSheet = false
+                                    viewModel.selectedTitle = title
+                                    viewModel.showTitleSheet = false
                                 } label: {
                                     HStack {
                                         Text(title)
                                             .foregroundStyle(.black)
                                         Spacer()
-                                        if selectedTitle == title {
+                                        if viewModel.selectedTitle == title {
                                             Image(systemName: "checkmark.circle.fill")
                                                 .foregroundStyle(Color("usi"))
                                         }
@@ -179,9 +172,15 @@ struct PersonalInformationView: View {
             }
 
         }
+        .onAppear {
+            print("bilgi : \(AuthService.shared.academicianInfo?.email ?? "yok")")
+        }
+        
     }
 }
 
 #Preview {
     PersonalInformationView()
+        .environmentObject(AuthViewModel())
+    
 }
