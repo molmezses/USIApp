@@ -39,6 +39,7 @@ struct AcedemicianLoginView: View {
                             .keyboardType(.emailAddress)
                             .multilineTextAlignment(.leading)
                             .focused($focusedField)
+                            .autocorrectionDisabled()
                         
                         SecureFieldWithButton(title: "Şifrenizi giriniz", text: $viewModel.password)
                             .frame(height: 55)

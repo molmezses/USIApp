@@ -18,14 +18,11 @@ class RegisterViewModel: ObservableObject{
     func validateEmailPassword() -> Bool {
         if !(confirmPassword == password){
             self.errorMessage = "Şifreler birbirleri ile uyuşmuyor"
-            print("hatay")
             return false
         }
         
         guard email.hasSuffix(".com") else {
             self.errorMessage = "Sadece @ahievran.edu.tr uzantılı e-posta adresleri ile kayıt olabilirsiniz."
-            print("hatad")
-
             return false
         }
         
@@ -35,7 +32,6 @@ class RegisterViewModel: ObservableObject{
     func register(authViewModel: AuthViewModel){
         self.isLoading = true
         guard validateEmailPassword() else {
-            print("hatax")
             return
         }
         
