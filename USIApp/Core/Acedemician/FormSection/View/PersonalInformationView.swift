@@ -69,6 +69,7 @@ struct PersonalInformationView: View {
                             .keyboardType(.default)
                             .focused($focusName, equals: .name)
                             .padding(.horizontal)
+                            .disabled(true)
                         
                         
                         
@@ -83,6 +84,7 @@ struct PersonalInformationView: View {
                             .keyboardType(.default)
                             .focused($focusName, equals: .surname)
                             .padding(.horizontal)
+                            .disabled(true)
                         
                         Text("Ünvanınızı Seçiniz")
                             .font(.headline)
@@ -94,8 +96,8 @@ struct PersonalInformationView: View {
                             viewModel.showTitleSheet = true
                         } label: {
                             HStack {
-                                Text(viewModel.selectedTitle.isEmpty ? "Ünvan Seçiniz" : viewModel.selectedTitle)
-                                    .foregroundStyle(viewModel.selectedTitle.isEmpty ? .gray : .black)
+                                Text(viewModel.unvan.isEmpty ? "Ünvan Seçiniz" : viewModel.unvan)
+                                    .foregroundStyle(viewModel.unvan.isEmpty ? .gray : .black)
                                 Spacer()
                                 Image(systemName: "chevron.down")
                                     .foregroundStyle(.gray)
@@ -111,9 +113,10 @@ struct PersonalInformationView: View {
                         
                         // Kaydet Butonu
                         Button {
-                            // Kayıt işlemi yapılır
+                            viewModel.updateUnvan()
+                            dismiss()
                         } label: {
-                            Text("Kaydet")
+                            Text("Güncelle")
                                 .font(.headline)
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 55)
@@ -142,16 +145,16 @@ struct PersonalInformationView: View {
                     
                     ScrollView {
                         VStack(spacing: 12) {
-                            ForEach(viewModel.titles, id: \.self) { title in
+                            ForEach(viewModel.unvanList, id: \.self) { unvan in
                                 Button {
-                                    viewModel.selectedTitle = title
+                                    viewModel.unvan = unvan
                                     viewModel.showTitleSheet = false
                                 } label: {
                                     HStack {
-                                        Text(title)
+                                        Text(unvan)
                                             .foregroundStyle(.black)
                                         Spacer()
-                                        if viewModel.selectedTitle == title {
+                                        if viewModel.unvan == unvan {
                                             Image(systemName: "checkmark.circle.fill")
                                                 .foregroundStyle(Color("usi"))
                                         }
@@ -173,7 +176,7 @@ struct PersonalInformationView: View {
 
         }
         .onAppear {
-            print("bilgi : \(AuthService.shared.academicianInfo?.email ?? "yok")")
+            viewModel.fetchInfo()
         }
         
     }

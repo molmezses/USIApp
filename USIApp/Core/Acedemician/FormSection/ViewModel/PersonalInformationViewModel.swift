@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
 
 
@@ -20,11 +21,73 @@ class PersonalInformationViewModel: ObservableObject {
     @Published var surName: String = ""
     @Published var unvan: String = ""
     @Published var showTitleSheet: Bool = false
-    @Published var selectedTitle: String = ""
-    @Published var titles = ["Araştırma Görevlisi", "Öğretim Görevlisi", "Doktor ", "Doçent", "Profesör"]
+    @Published var unvanList = ["Prof.  Dr.", "Dr.", "Doç.  Dr.", "Arş.  Gör.", "Öğr.  Gör."]
     @Published var academicianInfo: AcademicianInfo?
     
     
+    func fetchInfo() {
+        if let nameSurname = AuthService.shared.academicianInfo?.adSoyad{
+            let  reversed = String(nameSurname.reversed())
+            
+            let components = reversed.components(separatedBy: " ")
+            let firstPart = components.first ?? ""
+            let remainingPart = components.dropFirst().joined(separator: " ")
+            
+            let surName = String(firstPart.reversed())
+            let name = String(remainingPart.reversed())
+            
+            self.name = name
+            self.surName = surName
+            
+            self.unvan = unvanFormat()
+        }
+    }
+    
+    func unvanFormat() -> String{
+        let exUnvan = AuthService.shared.academicianInfo?.unvan ?? ""
+        
+        switch exUnvan {
+        case "Prof.  Dr.":
+            let newUnvan = "Profesör"
+            return newUnvan
+        case "Dr.":
+            let newUnvan = "Doktor"
+            return newUnvan
+        case "Doç.  Dr.":
+            let newUnvan = "Doçent"
+            return newUnvan
+        case "Arş.  Gör.":
+            let newUnvan = "Araştırma Görevlisi"
+            return newUnvan
+        case "Öğr.  Gör.":
+            let newUnvan = "Öğretim Görevlisi"
+            return newUnvan
+        default:
+            let newUnvan = "yok"
+            return newUnvan
+        }
+    }
+    
+    func updateUnvan(){
+        let db = Firestore.firestore()
+        AuthService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
+            switch  result {
+            case .success(let id):
+                
+                let docRef = db.collection("AcademicianInfo").document(id)
+                docRef.updateData(["Unvan" : self.unvan]){ error in
+                    if let error = error{
+                        print("HATA: \(error.localizedDescription)")
+                    }else{
+                        print("Başarılı")
+                    }
+                }
+                
+            case .failure(let error):
+                print("HATA: \(error.localizedDescription)")
+            }
+        }
+    }
     
     
 }
