@@ -25,26 +25,51 @@ class PersonalInformationViewModel: ObservableObject {
     @Published var academicianInfo: AcademicianInfo?
     
     
-    func fetchInfo() {
-        if let nameSurname = AuthService.shared.academicianInfo?.adSoyad{
-            let  reversed = String(nameSurname.reversed())
-            
-            let components = reversed.components(separatedBy: " ")
-            let firstPart = components.first ?? ""
-            let remainingPart = components.dropFirst().joined(separator: " ")
-            
-            let surName = String(firstPart.reversed())
-            let name = String(remainingPart.reversed())
-            
-            self.name = name
-            self.surName = surName
-            
-            self.unvan = unvanFormat()
+    
+    
+    
+    func loadPersonelInformation(){
+        
+        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
+            switch result {
+            case .success(let documentID):
+                
+                FirestoreService.shared.fetchAcademicianInfo(byId: documentID) { result in
+                    
+                    switch result {
+                    case .success(let info):
+                        
+                        let nameSurname = info.adSoyad
+                        let  reversed = String(nameSurname.reversed())
+                        
+                        let components = reversed.components(separatedBy: " ")
+                        let firstPart = components.first ?? ""
+                        let remainingPart = components.dropFirst().joined(separator: " ")
+                        
+                        let surName = String(firstPart.reversed())
+                        let name = String(remainingPart.reversed())
+                        
+                        self.name = name
+                        self.surName = surName
+                        
+                        self.unvan = self.unvanFormat(unvan: info.unvan)
+                        
+                        
+                    case .failure(let error):
+                        print("Hata loadAcademicianInfo : \(error.localizedDescription)")
+                    }
+                    
+                }
+                
+            case .failure(let error):
+                print("Hata loadAcademiicanInfo: \(error.localizedDescription)")
+            }
         }
+        
     }
     
-    func unvanFormat() -> String{
-        let exUnvan = AuthService.shared.academicianInfo?.unvan ?? ""
+    func unvanFormat(unvan: String) -> String{
+        let exUnvan = unvan
         
         switch exUnvan {
         case "Prof.  Dr.":

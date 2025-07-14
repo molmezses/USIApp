@@ -176,7 +176,7 @@ struct PersonalInformationView: View {
 
         }
         .onAppear {
-            viewModel.fetchInfo()
+            viewModel.loadPersonelInformation()
         }
         
     }
