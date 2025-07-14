@@ -75,7 +75,7 @@ class PersonalInformationViewModel: ObservableObject {
             case .success(let id):
                 
                 let docRef = db.collection("AcademicianInfo").document(id)
-                docRef.updateData(["Unvan" : self.unvan]){ error in
+                docRef.updateData(["unvan" : self.unvan]){ error in
                     if let error = error{
                         print("HATA: \(error.localizedDescription)")
                     }else{

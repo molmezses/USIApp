@@ -15,4 +15,21 @@ struct AcademicianInfo {
     var photo: String
     var bolum : String
     var adSoyad: String
+    var personelTel: String
+    var kurumsalTel: String
+    var il: String
+    var ilce: String
+    var webSite: String
+    var akademikGecmis: String
+    var ortakProjeTalep: Bool
+    var firmaAdi: String
+    var firmaCalismaAlani: [[String: String]]
+    var uzmanlikAlani: [String]
+    var verebilecegiDanismanlikKonuları: [String]
+    var dahaOncekiDanismanliklar: [String]
+    var verebilecegiEgitimler: [String]
+    var dahaOncekiVerdigiEgitimler: [String]
+    
 }
+
+
