@@ -19,7 +19,7 @@ struct ProfileView: View {
     @State var navSignOut : Bool = false
     @EnvironmentObject var authViewModel : AuthViewModel
     @StateObject var viewModel = ProfileViewModel()
-
+    
     var body: some View {
         NavigationStack{
             VStack(spacing: 0) {
@@ -42,8 +42,7 @@ struct ProfileView: View {
                             HStack {
                                 Spacer()
                                 
-                                if let urlString = viewModel.academicianInfo?.photo,
-                                   let url = URL(string: urlString) {
+                                if let url = URL(string: viewModel.photo) {
                                     AsyncImage(url: url) { phase in
                                         if let image = phase.image {
                                             image
@@ -64,7 +63,7 @@ struct ProfileView: View {
                                         .frame(width: 140, height: 140)
                                         .clipShape(Circle())
                                 }
-                                    
+                                
                                 
                                 Spacer()
                             }
@@ -73,11 +72,11 @@ struct ProfileView: View {
                             HStack{
                                 Spacer()
                                 VStack {
-                                    Text(viewModel.academicianInfo?.unvan ?? "Unvan bulunamadı")
+                                    Text(viewModel.unvan)
                                         .font(.title2)
                                         .fontWeight(.semibold)
                                         .padding(.top)
-                                    Text(viewModel.academicianInfo?.adSoyad ?? "Ad soyad Bulunamadı")
+                                    Text(viewModel.adSoyad)
                                         .font(.title2)
                                         .fontWeight(.semibold)
                                 }
@@ -86,7 +85,7 @@ struct ProfileView: View {
                             
                             HStack{
                                 Spacer()
-                                Text(viewModel.academicianInfo?.email ?? "mail Bulunamadı")
+                                Text(viewModel.email)
                                     .font(.headline)
                                     .foregroundStyle(.gray)
                                 Spacer()
@@ -363,24 +362,7 @@ struct ProfileView: View {
                 }
             }
             .onAppear{
-                viewModel.fetchAcademicianDocumentById(byEmail: authViewModel.userSession?.email ?? "") { result in
-                    switch result {
-                    case .success(let id):
-                        viewModel.fetchAcademicianInfo(byId: id) { result in
-                            switch result {
-                            case .success(let info):
-                                DispatchQueue.main.async {
-                                    viewModel.academicianInfo = info
-                                    AuthService.shared.academicianInfo = info
-                                }
-                            case .failure(let error):
-                                print("Hata : Veri çekme hatası \(error.localizedDescription)")
-                            }
-                        }
-                    case .failure(let error):
-                        print("hata :\(error.localizedDescription)")
-                    }
-                }
+                viewModel.loadAcademicianInfo()
             }
             .navigationDestination(isPresented: $navSignOut, destination: {
                 LoginView()

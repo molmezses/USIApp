@@ -70,7 +70,7 @@ class PersonalInformationViewModel: ObservableObject {
     
     func updateUnvan(){
         let db = Firestore.firestore()
-        AuthService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
+        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
             switch  result {
             case .success(let id):
                 

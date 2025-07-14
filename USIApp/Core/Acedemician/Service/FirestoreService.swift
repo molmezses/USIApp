@@ -98,7 +98,7 @@ class FirestoreService{
                     completion(.success(info))
                     
                     
-                case .failure(let failure):
+                case .failure(_):
                     print("Hata : Fetch Acamician Document By Id")
                 }
             }
