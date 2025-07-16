@@ -109,7 +109,7 @@ class FirestoreService{
                                                akademikGecmis: data["akademikGecmis"] as? String ?? "",
                                                ortakProjeTalep: data["ortakProjeTalep"] as? Bool ?? true,
                                                firmalar: firmalar,
-                                               uzmanlikAlani: data["uzmanlikAlani"] as? [String] ?? [""],
+                                               uzmanlikAlani: data["uzmanlikAlanlari"] as? [String] ?? [""],
                                                verebilecegiDanismanlikKonuları: data["verebilecegiDanismanlikKonuları"] as? [String] ?? [""],
                                                dahaOncekiDanismanliklar: data["dahaOncekiDanismanliklar"] as? [String] ?? [""],
                                                verebilecegiEgitimler: data["verebilecegiEgitimler"] as? [String] ?? [""],
@@ -189,6 +189,55 @@ class FirestoreService{
             }
         }
     }
+    
+    func deleteExpertArea(index: String , completion: @escaping (Error?) -> Void){
+        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
+            
+            switch result {
+            case .success(let documentID):
+                let docRef = Firestore.firestore().collection("AcademicianInfo").document(documentID)
+                docRef.updateData([
+                    "uzmanlikAlanlari" : FieldValue.arrayRemove([index])
+                ]) { error in
+                    if let error = error {
+                        print("Hataa FieldValue remove: \(error.localizedDescription)")
+                    }
+                    completion(error)
+                }
+            case .failure(let error):
+                print("Hata documentId deleteExpertArea : \(error.localizedDescription)")
+                completion(error)
+            }
+        }
+    }
+
+    
+    func addExpertiseField(expertise: String, completion: @escaping (Error?) -> Void) {
+        guard let email = AuthService.shared.getCurrentUser()?.email else {
+            print("Geçerli kullanıcı e-posta alınamadı.")
+            return
+        }
+
+        fetchAcademicianDocumentById(byEmail: email) { result in
+            switch result {
+            case .success(let id):
+                let docRef = Firestore.firestore().collection("AcademicianInfo").document(id)
+                docRef.updateData([
+                    "uzmanlikAlanlari": FieldValue.arrayUnion([expertise])
+                ]) { error in
+                    if let error = error {
+                        print("Uzmanlık alanı eklenirken hata: \(error.localizedDescription)")
+                    }
+                    completion(error)
+                }
+
+            case .failure(let error):
+                print("Belge ID alınamadı: \(error.localizedDescription)")
+                completion(error)
+            }
+        }
+    }
+
 
 
 

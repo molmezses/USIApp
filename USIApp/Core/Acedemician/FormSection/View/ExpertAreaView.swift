@@ -10,14 +10,8 @@ import SwiftUI
 struct ExpertAreaView: View {
     
     @Environment(\.dismiss) var dismiss
-    @State private var expertDesc: String = ""
-    
-    @State private var expertList: [String] = [
-        "Öğrenci koçluğu, sınav hazırlık kursları ve eğitim danışmanlığı",
-        "Güneş enerjisi, rüzgar türbinleri ve yenilenebilir enerji"
-    ]
-
     @FocusState private var focusedField: Bool
+    @StateObject var viewModel = ExpertAreaViewModel()
     
     var body: some View {
         NavigationStack {
@@ -40,7 +34,7 @@ struct ExpertAreaView: View {
                     
                     Spacer()
                     
-                    // Simetri için boş ikon
+                    
                     Image(systemName: "chevron.left")
                         .opacity(0)
                 }
@@ -60,7 +54,7 @@ struct ExpertAreaView: View {
                         .padding(.horizontal)
                         
                         // TextEditor
-                        TextEditor(text: $expertDesc)
+                        TextEditor(text: $viewModel.expertDesc)
                             .frame(height: 100)
                             .padding(10)
                             .background(Color.white)
@@ -71,10 +65,7 @@ struct ExpertAreaView: View {
                         
                         // Ekle Butonu
                         Button {
-                            guard !expertDesc.trimmingCharacters(in: .whitespaces).isEmpty else { return }
-                            expertList.append(expertDesc)
-                            expertDesc = ""
-                            focusedField = false
+                            viewModel.addExpertise()
                         } label: {
                             Text("Ekle")
                                 .frame(maxWidth: .infinity)
@@ -92,21 +83,21 @@ struct ExpertAreaView: View {
                             .font(.title3.bold())
                             .padding(.horizontal)
                         
-                        if expertList.isEmpty {
+                        if viewModel.expertList.isEmpty {
                             Text("Henüz uzmanlık alanı eklenmedi.")
                                 .foregroundColor(.gray)
                                 .font(.subheadline)
                                 .padding(.horizontal)
                         } else {
-                            ForEach(expertList.indices, id: \.self) { index in
+                            ForEach(viewModel.expertList, id: \.self) { item in
                                 HStack(alignment: .top) {
-                                    Text(expertList[index])
+                                    Text(item)
                                         .font(.body)
                                     
                                     Spacer()
                                     
                                     Button {
-                                        expertList.remove(at: index)
+                                        viewModel.deleteExpertAreaItem(item)
                                     } label: {
                                         Image(systemName: "trash")
                                             .foregroundColor(.red)
@@ -129,6 +120,9 @@ struct ExpertAreaView: View {
                     focusedField = false
                 }
             }
+        }
+        .onAppear {
+            viewModel.loadExpertArea()
         }
     }
 }
