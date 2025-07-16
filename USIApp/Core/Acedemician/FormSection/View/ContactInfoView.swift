@@ -62,7 +62,7 @@ struct ContactInfoView: View {
                             .padding(.horizontal)
                         
                         // Telefon
-                        TextField("Telefon Numaranız", text: $viewModel.telNo)
+                        TextField("Telefon Numaranız", text: $viewModel.personelTel)
                             .frame(height: 55)
                             .padding(.horizontal)
                             .background(Color(.white))
@@ -149,9 +149,10 @@ struct ContactInfoView: View {
                         
                         // Kaydet Butonu
                         Button {
-                            print("Tel: \(viewModel.telNo), Mail: \(viewModel.email), Web: \(viewModel.website), Şehir: \(viewModel.selectedCity), İlçe: \(viewModel.selectedDistrict)")
+                            print("Tel: \(viewModel.personelTel), Mail: \(viewModel.email), Web: \(viewModel.website), Şehir: \(viewModel.selectedCity), İlçe: \(viewModel.selectedDistrict)")
                             
-                            viewModel.updateContactInfo()
+                            
+                        
                         } label: {
                             Text("Kaydet")
                                 .font(.headline)
@@ -171,6 +172,9 @@ struct ContactInfoView: View {
                     focusedField = .none
                 }
             }
+        }
+        .onAppear{
+            viewModel.loadContactInfo()
         }
     }
 }

@@ -118,11 +118,10 @@ class ContactInfoViewModel: ObservableObject{
     
     @Published  var selectedCity: String = "İl"
     @Published  var selectedDistrict: String = ""
-    
-    @Published var telNo: String = ""
+    @Published var personelTel: String = ""
+    @Published var kurumsalTel : String = ""
     @Published var email: String = ""
     @Published var website: String = ""
-    @Published var kurumsalTel : String = ""
     
     
     init() {
@@ -131,7 +130,40 @@ class ContactInfoViewModel: ObservableObject{
     
     
     func updateContactInfo(){
- 
+        
+    }
+    
+    func loadContactInfo(){
+        
+        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
+            
+            switch result {
+            case .success(let documentID):
+                
+                FirestoreService.shared.fetchAcademicianInfo(byId: documentID) { result in
+                    
+                    switch result {
+                    case .success(let info):
+                        
+                        self.selectedCity = info.il
+                        self.selectedDistrict = info.ilce
+                        self.personelTel = info.personelTel
+                        self.kurumsalTel = info.kurumsalTel
+                        self.website = info.webSite
+                        
+                    case .failure(_):
+                        print("Hata : FetchAcademicianInfo LoadContact AcademicianInfo")
+
+                    }
+                    
+                }
+                
+            case .failure(_):
+                print("Hata : FetchAcademicianInfo LoadContact DocumentId")
+            }
+            
+        }
+        
     }
     
     

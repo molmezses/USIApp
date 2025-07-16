@@ -30,6 +30,7 @@ class FirestoreService{
         }
     }
     
+    
     func fetchAcademicianDocumentById(byEmail email:String , completion: @escaping (Result<String , Error>) -> Void) {
         let db = Firestore.firestore()
         
@@ -83,7 +84,7 @@ class FirestoreService{
                                                kurumsalTel: data["kurumsalTel"] as? String ?? "",
                                                il: data["il"] as? String ?? "",
                                                ilce: data["ilce"] as? String ?? "",
-                                               webSite: data["webSite"] as? String ?? "",
+                                               webSite: data["web"] as? String ?? "",
                                                akademikGecmis: data["akademikGecmis"] as? String ?? "",
                                                ortakProjeTalep: data["ortakProjeTalep"] as? Bool ?? true,
                                                firmaAdi: data["firmaAdi"] as? String ?? "",
@@ -106,6 +107,8 @@ class FirestoreService{
         }
         
     }
+    
+    
     
     
     
