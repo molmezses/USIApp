@@ -151,6 +151,8 @@ struct ContactInfoView: View {
                         Button {
                             print("Tel: \(viewModel.personelTel), Mail: \(viewModel.email), Web: \(viewModel.website), Şehir: \(viewModel.selectedCity), İlçe: \(viewModel.selectedDistrict)")
                             
+                            viewModel.updateContactInfo()
+                            dismiss()
                             
                         
                         } label: {

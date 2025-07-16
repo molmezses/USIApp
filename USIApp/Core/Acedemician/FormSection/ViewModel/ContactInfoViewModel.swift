@@ -130,7 +130,33 @@ class ContactInfoViewModel: ObservableObject{
     
     
     func updateContactInfo(){
-        
+        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email  ?? "") { result in
+            switch result{
+            case .success(let documentID):
+                
+                let data: [String: String] = [
+                                "il": self.selectedCity,
+                                "ilce": self.selectedDistrict,
+                                "web": self.website,
+                                "personelTel": self.personelTel,
+                                "kurumsalTel": self.kurumsalTel
+                            ]
+                
+                FirestoreService.shared.updateContactInfo(forDocumentId: documentID, data: data) { result in
+                    
+                    switch result{
+                    case .success(_):
+                        print("ContactInfo Updated")
+                    case .failure(_):
+                        print("Hata : ContactInfo Updated")
+                    }
+                    
+                }
+                
+            case .failure(_):
+                print("Hata : Document ID bulunamadı UpdateContactInfo")
+            }
+        }
     }
     
     func loadContactInfo(){
