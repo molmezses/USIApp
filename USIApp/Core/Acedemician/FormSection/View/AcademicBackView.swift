@@ -87,7 +87,8 @@ struct AcademicBackView: View {
                         
                         // Kaydet Butonu
                         Button {
-                            // Kayıt işlemi yapılır
+                            viewModel.updateAcademicBack()
+                            dismiss()
                         } label: {
                             Text("Kaydet")
                                 .font(.headline)

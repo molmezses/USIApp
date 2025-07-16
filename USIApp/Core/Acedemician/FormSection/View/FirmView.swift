@@ -16,18 +16,8 @@ struct FirmView: View {
     
     @Environment(\.dismiss) var dismiss
     @FocusState private var focusedField: FirmEnum?
+    @StateObject var viewModel = FirmViewModel()
     
-    @State private var firmName: String = ""
-    @State private var firmWorkArea: String = ""
-    
-    @State private var firmList: [(name: String, area: String)] = [
-        (name: "OpenAI", area: "Gelişmiş yapay zeka ve makine öğrenimi çözümleri üretmektedir."),
-        (name: "ABC Teknoloji", area: "Mobil uygulama geliştirme ve yazılım danışmanlığı sunmaktadır."),
-        (name: "XYZ İnşaat", area: "Yüksek katlı bina projeleri ve modern yapı tasarımları gerçekleştirmektedir."),
-        (name: "Beta Sağlık", area: "Hastane ekipmanları ve medikal cihaz üretimi konusunda faaliyet gösterir."),
-        (name: "Delta Eğitim", area: "Öğrenci koçluğu, sınav hazırlık kursları ve eğitim danışmanlığı sağlar."),
-        (name: "Eco Enerji", area: "Güneş enerjisi, rüzgar türbinleri ve yenilenebilir enerji sistemleri geliştirir.")
-    ]
     
     var body: some View {
         NavigationStack {
@@ -66,7 +56,7 @@ struct FirmView: View {
                                 .font(.title3.bold())
                                 .padding(.horizontal)
                             
-                            TextField("Firma Adı", text: $firmName)
+                            TextField("Firma Adı", text: $viewModel.firmName)
                                 .padding()
                                 .background(Color.white)
                                 .cornerRadius(10)
@@ -74,7 +64,7 @@ struct FirmView: View {
                                 .focused($focusedField, equals: .firmName)
                                 .padding(.horizontal)
                             
-                            TextField("Firma Çalışma Alanı", text: $firmWorkArea)
+                            TextField("Firma Çalışma Alanı", text: $viewModel.firmWorkArea)
                                 .padding()
                                 .background(Color.white)
                                 .cornerRadius(10)
@@ -83,12 +73,17 @@ struct FirmView: View {
                                 .padding(.horizontal)
                             
                             Button {
-                                guard !firmName.trimmingCharacters(in: .whitespaces).isEmpty,
-                                      !firmWorkArea.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+                                guard !viewModel.firmName.trimmingCharacters(in: .whitespaces).isEmpty,
+                                      !viewModel.firmWorkArea.trimmingCharacters(in: .whitespaces).isEmpty else { return }
                                 
-                                firmList.append((name: firmName, area: firmWorkArea))
-                                firmName = ""
-                                firmWorkArea = ""
+                                viewModel.addFirma { error in
+                                    if let error = error {
+                                                print("Ekleme hatası: \(error.localizedDescription)")
+                                            } else {
+                                                focusedField = nil
+                                            }
+                                }
+                                viewModel.loadFirmalar()
                                 focusedField = nil
                             } label: {
                                 Text("Ekle")
@@ -109,18 +104,18 @@ struct FirmView: View {
                                 .font(.title3.bold())
                                 .padding(.horizontal)
                             
-                            if firmList.isEmpty {
+                            if viewModel.firmList.isEmpty {
                                 Text("Henüz firma eklenmedi.")
                                     .foregroundColor(.gray)
                                     .padding(.horizontal)
                             } else {
-                                ForEach(firmList.indices, id: \.self) { index in
+                                ForEach(viewModel.firmList.indices, id: \.self) { index in
                                     HStack(alignment: .top) {
                                         VStack(alignment: .leading, spacing: 4) {
-                                            Text(firmList[index].name)
+                                            Text(viewModel.firmList[index].name)
                                                 .font(.headline)
                                             
-                                            Text(firmList[index].area)
+                                            Text(viewModel.firmList[index].area)
                                                 .font(.subheadline)
                                                 .foregroundColor(.secondary)
                                         }
@@ -128,7 +123,14 @@ struct FirmView: View {
                                         Spacer()
                                         
                                         Button {
-                                            firmList.remove(at: index)
+                                            viewModel.deleteFirma(at: index) { error in
+                                                if let error = error{
+                                                    print("Hata : DeleteFirm \(error.localizedDescription)")
+                                                }else{
+                                                    print("Firma Bilgisi başarıyla silindi")
+                                                }
+                                                viewModel.loadFirmalar()
+                                            }
                                         } label: {
                                             Image(systemName: "trash")
                                                 .foregroundColor(.red)
@@ -151,6 +153,9 @@ struct FirmView: View {
                     focusedField = nil
                 }
             }
+        }
+        .onAppear {
+            viewModel.loadFirmalar()
         }
     }
 }

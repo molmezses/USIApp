@@ -22,8 +22,7 @@ struct AcademicianInfo {
     var webSite: String
     var akademikGecmis: String
     var ortakProjeTalep: Bool
-    var firmaAdi: String
-    var firmaCalismaAlani: [[String: String]]
+    var firmalar: [Firma]
     var uzmanlikAlani: [String]
     var verebilecegiDanismanlikKonuları: [String]
     var dahaOncekiDanismanliklar: [String]

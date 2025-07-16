@@ -29,5 +29,36 @@ class AcademicBackViewModel: ObservableObject {
         }
     }
     
+    
+    func updateAcademicBack(){
+        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
+            
+            switch result {
+            case .success(let documentID):
+                
+                let data: [String: String] = [
+                                "akademikGecmis": self.description,
+                            ]
+                
+                FirestoreService.shared.updateAcademicBack(forDocumentId: documentID, data: data) { result in
+                    
+                    switch result {
+                    case .success(_):
+                        print("AcademicBackData Updated")
+                    case .failure(_):
+                        print("Hata: AcademicBackData Update")
+
+                    }
+                    
+                }
+                
+            case .failure(_):
+                print("Hata : UpdateAcademicBack DocumentId not found")
+
+            }
+            
+        }
+    }
+    
 
 }

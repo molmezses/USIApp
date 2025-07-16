@@ -24,7 +24,19 @@ class FirestoreService{
                 print("Hata : \(error.localizedDescription)")
                 completion(.failure(error))
             }else{
-                print("Veri başarıyla dönferildi")
+                print("Veri başarıyla Güncellendi")
+                completion(.success(()))
+            }
+        }
+    }
+    
+    func updateAcademicBack(forDocumentId documentId: String , data: [String:String] , completion: @escaping (Result<Void,Error>) -> Void){
+        db.collection("AcademicianInfo").document(documentId).updateData(data){ error in
+            if let error = error{
+                print("Hata : \(error.localizedDescription)")
+                completion(.failure(error))
+            }else{
+                print("Veri başarıyla Güncellendi")
                 completion(.success(()))
             }
         }
@@ -73,6 +85,15 @@ class FirestoreService{
                 switch result {
                 case .success(let documentId):
                     
+                    let firmaDictArray = data["firmalar"] as? [[String: Any]] ?? []
+                    let firmalar = firmaDictArray.map { dict in
+                        Firma(
+                            firmaAdi: dict["firmaAdi"] as? String ?? "",
+                            firmaCalismaAlani: dict["firmaCalismaAlani"] as? String ?? ""
+                        )
+                    }
+
+                    
                     let info = AcademicianInfo(id: documentId,
                                                email: data["email"] as? String ?? "",
                                                unvan: data["unvan"] as? String ?? "",
@@ -87,13 +108,13 @@ class FirestoreService{
                                                webSite: data["web"] as? String ?? "",
                                                akademikGecmis: data["akademikGecmis"] as? String ?? "",
                                                ortakProjeTalep: data["ortakProjeTalep"] as? Bool ?? true,
-                                               firmaAdi: data["firmaAdi"] as? String ?? "",
-                                               firmaCalismaAlani: data["firmaCalismaAlani"] as? [[String:String]] ?? [["": ""]],
+                                               firmalar: firmalar,
                                                uzmanlikAlani: data["uzmanlikAlani"] as? [String] ?? [""],
                                                verebilecegiDanismanlikKonuları: data["verebilecegiDanismanlikKonuları"] as? [String] ?? [""],
                                                dahaOncekiDanismanliklar: data["dahaOncekiDanismanliklar"] as? [String] ?? [""],
                                                verebilecegiEgitimler: data["verebilecegiEgitimler"] as? [String] ?? [""],
-                                               dahaOncekiVerdigiEgitimler: data["dahaOncekiVerdigiEgitimler"] as? [String] ?? [""]
+                                               dahaOncekiVerdigiEgitimler: data["dahaOncekiVerdigiEgitimler"] as? [String] ?? [""],
+                                               
                     )
                     
                     completion(.success(info))
@@ -107,6 +128,72 @@ class FirestoreService{
         }
         
     }
+    
+    func fetchFirmalar(forAcademicianId id: String, completion: @escaping ([(name: String, area: String)]) -> Void) {
+        let docRef = Firestore.firestore().collection("AcademicianInfo").document(id)
+        
+        docRef.getDocument { document, error in
+            if let document = document, document.exists {
+                let data = document.data()
+                let firmalarData = data?["firmalar"] as? [[String: Any]] ?? []
+                
+                let firmalar: [(name: String, area: String)] = firmalarData.map { dict in
+                    (
+                        name: dict["firmaAdi"] as? String ?? "",
+                        area: dict["firmaCalismaAlani"] as? String ?? ""
+                    )
+                }
+                
+                completion(firmalar)
+            } else {
+                print("Belge bulunamadı veya hata oluştu: \(error?.localizedDescription ?? "")")
+                completion([])
+            }
+        }
+    }
+    
+    func addFirma(forAcademicianId id: String, newFirma: Firma, completion: @escaping (Error?) -> Void) {
+        let docRef = Firestore.firestore().collection("AcademicianInfo").document(id)
+        
+        docRef.getDocument { document, error in
+            if let document = document, document.exists {
+                var firmalar = (document.data()?["firmalar"] as? [[String: Any]]) ?? []
+                firmalar.append(newFirma.toDictionary())
+                
+                docRef.updateData(["firmalar": firmalar]) { error in
+                    completion(error)
+                }
+            } else {
+                completion(error ?? NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Belge bulunamadı"]))
+            }
+        }
+    }
+    
+    func deleteFirma(firmaToDelete: Firma, completion: @escaping (Error?) -> Void) {
+        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
+            switch result {
+            case .success(let id):
+                
+                let docRef = Firestore.firestore().collection("AcademicianInfo").document(id)
+                let firmaDict = firmaToDelete.toDictionary()
+
+                docRef.updateData([
+                    "firmalar": FieldValue.arrayRemove([firmaDict])
+                ]) { error in
+                    completion(error)
+                }
+                
+                
+            case .failure(let error):
+                print("Hata documentId DeleteFirma : \(error.localizedDescription)")
+            }
+        }
+    }
+
+
+
+    
+
     
     
     
