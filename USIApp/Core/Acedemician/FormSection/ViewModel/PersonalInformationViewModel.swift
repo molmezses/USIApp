@@ -53,6 +53,7 @@ class PersonalInformationViewModel: ObservableObject {
                         self.surName = surName
                         
                         self.unvan = self.unvanFormat(unvan: info.unvan)
+                        self.academicianInfo = info
                         
                         
                     case .failure(let error):
