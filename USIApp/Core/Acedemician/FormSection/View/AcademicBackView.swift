@@ -10,8 +10,8 @@ import SwiftUI
 struct AcademicBackView: View {
     
     @Environment(\.dismiss) var dismiss
-    @State private var description: String = ""
     @FocusState var focusedField: Bool
+    @StateObject var viewModel = AcademicBackViewModel()
 
     
     var body: some View {
@@ -66,7 +66,7 @@ struct AcademicBackView: View {
                         }
                         .padding(.leading)
                         
-                        TextEditor(text: $description)
+                        TextEditor(text: $viewModel.description)
                             .frame(height: UIScreen.main.bounds.height * 0.3)
                             .padding(12)
                             .background(
@@ -108,6 +108,9 @@ struct AcademicBackView: View {
                 }
             }
             
+        }
+        .onAppear {
+            viewModel.loadAcademicBackData()
         }
     }
 }
