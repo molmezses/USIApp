@@ -110,7 +110,7 @@ class FirestoreService{
                                                ortakProjeTalep: data["ortakProjeTalep"] as? Bool ?? true,
                                                firmalar: firmalar,
                                                uzmanlikAlani: data["uzmanlikAlanlari"] as? [String] ?? [""],
-                                               verebilecegiDanismanlikKonuları: data["verebilecegiDanismanlikKonuları"] as? [String] ?? [""],
+                                               verebilecegiDanismanlikKonuları: data["verebilecegiDanismanlikKonulari"] as? [String] ?? [""],
                                                dahaOncekiDanismanliklar: data["dahaOncekiDanismanliklar"] as? [String] ?? [""],
                                                verebilecegiEgitimler: data["verebilecegiEgitimler"] as? [String] ?? [""],
                                                dahaOncekiVerdigiEgitimler: data["dahaOncekiVerdigiEgitimler"] as? [String] ?? [""],
@@ -210,7 +210,29 @@ class FirestoreService{
             }
         }
     }
-
+    
+    
+    func deleteArrayItemFirestore(fields:String , index: String , completion: @escaping (Error?) -> Void){
+        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
+            
+            switch result {
+            case .success(let documentID):
+                let docRef = Firestore.firestore().collection("AcademicianInfo").document(documentID)
+                docRef.updateData([
+                    fields : FieldValue.arrayRemove([index])
+                ]) { error in
+                    if let error = error {
+                        print("Hataa  remove: \(error.localizedDescription)")
+                    }
+                    completion(error)
+                }
+            case .failure(let error):
+                print("Hata documentId  : \(error.localizedDescription)")
+                completion(error)
+            }
+        }
+    }
+    
     
     func addExpertiseField(expertise: String, completion: @escaping (Error?) -> Void) {
         guard let email = AuthService.shared.getCurrentUser()?.email else {
@@ -227,6 +249,58 @@ class FirestoreService{
                 ]) { error in
                     if let error = error {
                         print("Uzmanlık alanı eklenirken hata: \(error.localizedDescription)")
+                    }
+                    completion(error)
+                }
+
+            case .failure(let error):
+                print("Belge ID alınamadı: \(error.localizedDescription)")
+                completion(error)
+            }
+        }
+    }
+    
+    func addConsultancyField(consultancy: String, completion: @escaping (Error?) -> Void) {
+        guard let email = AuthService.shared.getCurrentUser()?.email else {
+            print("Geçerli kullanıcı e-posta alınamadı.")
+            return
+        }
+
+        fetchAcademicianDocumentById(byEmail: email) { result in
+            switch result {
+            case .success(let id):
+                let docRef = Firestore.firestore().collection("AcademicianInfo").document(id)
+                docRef.updateData([
+                    "verebilecegiDanismanlikKonulari": FieldValue.arrayUnion([consultancy])
+                ]) { error in
+                    if let error = error {
+                        print("Verebilecği danışmanlık alanları eklenirken hata: \(error.localizedDescription)")
+                    }
+                    completion(error)
+                }
+
+            case .failure(let error):
+                print("Belge ID alınamadı: \(error.localizedDescription)")
+                completion(error)
+            }
+        }
+    }
+    
+    func addPrevConsultancyField(consultancy: String, completion: @escaping (Error?) -> Void) {
+        guard let email = AuthService.shared.getCurrentUser()?.email else {
+            print("Geçerli kullanıcı e-posta alınamadı.")
+            return
+        }
+
+        fetchAcademicianDocumentById(byEmail: email) { result in
+            switch result {
+            case .success(let id):
+                let docRef = Firestore.firestore().collection("AcademicianInfo").document(id)
+                docRef.updateData([
+                    "dahaOncekiDanismanliklar": FieldValue.arrayUnion([consultancy])
+                ]) { error in
+                    if let error = error {
+                        print("Daha önceki danışmanlık alanları eklenirken hata: \(error.localizedDescription)")
                     }
                     completion(error)
                 }

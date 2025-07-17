@@ -3,13 +3,8 @@ import SwiftUI
 struct ConsultancyFieldView: View {
     
     @Environment(\.dismiss) var dismiss
-    @State private var consultancyDesc: String = ""
-    @State private var consultancyList: [String] = [
-        "Gelişmiş yapay zeka ve makine öğrenimi çözümleri",
-        "Güneş enerjisi, rüzgar türbinleri ve yenilenebilir enerji sistemleri geliştirir."
-    ]
-    
     @FocusState private var focusedField: Bool
+    @StateObject var viewModel = ConsultancyFieldViewModel()
     
     var body: some View {
         NavigationStack {
@@ -53,7 +48,7 @@ struct ConsultancyFieldView: View {
                         .padding(.horizontal)
                         
                         // TextEditor
-                        TextEditor(text: $consultancyDesc)
+                        TextEditor(text: $viewModel.consultancyDesc)
                             .frame(height: 100)
                             .padding(10)
                             .background(Color.white)
@@ -64,10 +59,11 @@ struct ConsultancyFieldView: View {
                         
                         // Ekle Butonu
                         Button {
-                            guard !consultancyDesc.trimmingCharacters(in: .whitespaces).isEmpty else { return }
-                            consultancyList.append(consultancyDesc)
-                            consultancyDesc = ""
-                            focusedField = false
+                            guard !viewModel.consultancyDesc.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+                            viewModel.addConsultancy()
+                            viewModel.consultancyDesc = ""
+                            viewModel.loadConsultancyField()
+                            focusedField = false                            
                         } label: {
                             Text("Ekle")
                                 .frame(maxWidth: .infinity)
@@ -86,24 +82,24 @@ struct ConsultancyFieldView: View {
                             .padding(.horizontal)
                         
                         // Liste Gövdesi
-                        if consultancyList.isEmpty {
+                        if viewModel.consultancyList.isEmpty {
                             Text("Henüz danışmanlık konusu eklenmedi.")
                                 .foregroundColor(.gray)
                                 .font(.subheadline)
                                 .padding(.horizontal)
                         } else {
-                            ForEach(consultancyList.indices, id: \.self) { index in
+                            ForEach(viewModel.consultancyList, id: \.self) { item in
                                 HStack(alignment: .top) {
-                                    Text(consultancyList[index])
+                                    Text(item)
                                         .font(.body)
                                     
                                     Spacer()
                                     
                                     Button {
-                                        consultancyList.remove(at: index)
+                                        viewModel.deleteConsultancyItem(item)
+                                        viewModel.loadConsultancyField()
                                     } label: {
-                                        Image(systemName: "trash.fill")
-                                            .imageScale(.large)
+                                        Image(systemName: "trash")
                                             .foregroundColor(.red)
                                     }
                                 }
@@ -124,6 +120,9 @@ struct ConsultancyFieldView: View {
                     focusedField = false
                 }
             }
+        }
+        .onAppear{
+            viewModel.loadConsultancyField()
         }
     }
 }

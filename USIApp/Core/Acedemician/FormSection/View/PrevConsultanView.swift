@@ -10,12 +10,7 @@ import SwiftUI
 struct PrevConsultanView: View {
     
     @Environment(\.dismiss) var dismiss
-    @State private var prevConsultanDesc: String = ""
-    @State private var prevConsultanList: [String] = [
-        "Öğrenci koçluğu, sınav hazırlık kursları",
-        "Eğitim danışmanlığı, güneş enerjisi",
-        "Güneş enerjisi, rüzgar türbinleri ve yenilenebilir enerji"
-    ]
+    @StateObject var viewModel = PrevConsultanViewModel()
     
     @FocusState private var focusedField: Bool
     
@@ -61,7 +56,7 @@ struct PrevConsultanView: View {
                         .padding(.horizontal)
                         
                         // TextEditor
-                        TextEditor(text: $prevConsultanDesc)
+                        TextEditor(text: $viewModel.prevConsultanDesc)
                             .frame(height: 100)
                             .padding(10)
                             .background(Color.white)
@@ -72,9 +67,9 @@ struct PrevConsultanView: View {
                         
                         // Ekle Butonu
                         Button {
-                            guard !prevConsultanDesc.trimmingCharacters(in: .whitespaces).isEmpty else { return }
-                            prevConsultanList.append(prevConsultanDesc)
-                            prevConsultanDesc = ""
+                            guard !viewModel.prevConsultanDesc.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+                            viewModel.addPrevConsultancy()
+                            viewModel.loadPrevConsultancyField()
                             focusedField = false
                         } label: {
                             Text("Ekle")
@@ -94,21 +89,22 @@ struct PrevConsultanView: View {
                             .padding(.horizontal)
                         
                         // Liste
-                        if prevConsultanList.isEmpty {
+                        if viewModel.prevConsultanList.isEmpty {
                             Text("Henüz danışmanlık bilgisi eklenmedi.")
                                 .foregroundColor(.gray)
                                 .font(.subheadline)
                                 .padding(.horizontal)
                         } else {
-                            ForEach(prevConsultanList.indices, id: \.self) { index in
+                            ForEach(viewModel.prevConsultanList, id: \.self) { index in
                                 HStack(alignment: .top) {
-                                    Text(prevConsultanList[index])
+                                    Text(index)
                                         .font(.body)
                                     
                                     Spacer()
                                     
                                     Button {
-                                        prevConsultanList.remove(at: index)
+                                        viewModel.deleteConsultancyItem(index)
+                                        viewModel.loadPrevConsultancyField()
                                     } label: {
                                         Image(systemName: "trash.fill")
                                             .imageScale(.large)
@@ -132,6 +128,9 @@ struct PrevConsultanView: View {
                     focusedField = false
                 }
             }
+        }
+        .onAppear{
+            viewModel.loadPrevConsultancyField()
         }
     }
 }
