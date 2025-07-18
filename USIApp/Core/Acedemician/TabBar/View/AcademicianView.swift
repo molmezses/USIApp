@@ -86,8 +86,9 @@ struct AcademicianView: View {
                                     Spacer()
                                 }
                                 
-                                Text(viewModel.akademikGecmis)
+                                Text(viewModel.akademikGecmis.isEmpty ? "Veri Bulunamadı" : viewModel.akademikGecmis)
                                     .padding(.top, 2)
+                                    .foregroundStyle(viewModel.akademikGecmis.isEmpty ? Color.gray : .black)
                             }
                             .padding()
                             .background(.white)
@@ -131,7 +132,9 @@ struct AcademicianView: View {
                                         .padding(6)
                                         .background(Color("usi").opacity(0.2))
                                         .clipShape(Circle())
-                                    Text(viewModel.personelTel)
+                                    Text(viewModel.personelTel == "" ? "Veri bulunamadı" : viewModel.personelTel )
+                                        .foregroundStyle(viewModel.personelTel == "" ? .gray : .black)
+
                                 }
                                 HStack {
                                     Image(systemName: "phone.fill")
@@ -139,7 +142,8 @@ struct AcademicianView: View {
                                         .padding(6)
                                         .background(Color("usi").opacity(0.2))
                                         .clipShape(Circle())
-                                    Text(viewModel.kurumsalTel)
+                                    Text(viewModel.kurumsalTel == "" ? "Veri bulunamadı" : viewModel.kurumsalTel )
+                                        .foregroundStyle(viewModel.kurumsalTel == "" ? .gray : .black)
                                 }
                                 HStack {
                                     Image(systemName: "mail.fill")
@@ -156,7 +160,8 @@ struct AcademicianView: View {
                                         .padding(6)
                                         .background(Color("usi").opacity(0.2))
                                         .clipShape(Circle())
-                                    Text(verbatim: viewModel.konum)
+                                    Text(viewModel.konum.count < 4 ? "Veri bulunamadı" : viewModel.konum )
+                                        .foregroundStyle(viewModel.konum.count < 4 ? .gray : .black)
                                 }
                                 HStack {
                                     Image(systemName: "network")
@@ -164,7 +169,8 @@ struct AcademicianView: View {
                                         .padding(6)
                                         .background(Color("usi").opacity(0.2))
                                         .clipShape(Circle())
-                                    Text(viewModel.webSite)
+                                    Text(viewModel.webSite == "" ? "Veri bulunamadı" : viewModel.webSite )
+                                        .foregroundStyle(viewModel.webSite == "" ? .gray : .black)
                                 }
                             }
                             .padding()
@@ -209,14 +215,19 @@ struct AcademicianView: View {
                                     Spacer()
                                 }
                                 
-                                ForEach(viewModel.expertList, id: \.self) { item in
-                                    HStack {
-                                        Circle()
-                                            .frame(width: 6, height: 6)
-                                            .foregroundStyle(Color("usi"))
-                                            .padding(.leading)
-                                        Text(item)
+                                if !(viewModel.expertList.isEmpty){
+                                    ForEach(viewModel.expertList, id: \.self) { item in
+                                        HStack {
+                                            Circle()
+                                                .frame(width: 6, height: 6)
+                                                .foregroundStyle(Color("usi"))
+                                                .padding(.leading)
+                                            Text(item)
+                                        }
                                     }
+                                }else{
+                                    Text("Veri bulunamadı")
+                                        .foregroundStyle(.gray)
                                 }
                             }
                             .padding()

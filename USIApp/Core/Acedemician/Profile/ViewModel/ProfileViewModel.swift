@@ -33,6 +33,7 @@ class ProfileViewModel: ObservableObject {
                         self.email = info.email
                         self.unvan = info.unvan
                         self.photo = info.photo
+                        print("AcademicianID : \(documentID)")
                         
                         
                     case .failure(let error):
