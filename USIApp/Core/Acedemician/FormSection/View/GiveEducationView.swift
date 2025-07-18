@@ -11,13 +11,7 @@ struct GiveEducationView: View {
     
     @Environment(\.dismiss) var dismiss
     @FocusState private var isInputFocused: Bool
-    
-    @State private var giveEducationDesc: String = ""
-    @State private var giveEducationList: [String] = [
-        "Öğrenci koçluğu, sınav hazırlık kursları",
-        "Eğitim danışmanlığı, güneş enerjisi",
-        "Rüzgar türbinleri ve yenilenebilir enerji"
-    ]
+    @StateObject var viewModel = GiveEducationViewModel()
     
     var body: some View {
         NavigationStack {
@@ -57,7 +51,7 @@ struct GiveEducationView: View {
                         .padding(.horizontal)
                         
                         // TextEditor
-                        TextEditor(text: $giveEducationDesc)
+                        TextEditor(text: $viewModel.giveEducationDesc)
                             .frame(height: 100)
                             .padding(10)
                             .background(Color.white)
@@ -71,9 +65,9 @@ struct GiveEducationView: View {
                         
                         // Ekle Butonu
                         Button {
-                            guard !giveEducationDesc.trimmingCharacters(in: .whitespaces).isEmpty else { return }
-                            giveEducationList.append(giveEducationDesc)
-                            giveEducationDesc = ""
+                            guard !viewModel.giveEducationDesc.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+                            viewModel.addGiveEducation()
+                            viewModel.loadGiveEducation()
                             isInputFocused = false
                         } label: {
                             Text("Ekle")
@@ -92,7 +86,7 @@ struct GiveEducationView: View {
                             .font(.title3.bold())
                             .padding(.horizontal)
                         
-                        if giveEducationList.isEmpty {
+                        if viewModel.giveEducationList.isEmpty {
                             VStack(spacing: 12) {
                                 Image(systemName: "book.closed.fill")
                                     .font(.system(size: 40))
@@ -104,16 +98,16 @@ struct GiveEducationView: View {
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 40)
                         } else {
-                            ForEach(giveEducationList.indices, id: \.self) { index in
+                            ForEach(viewModel.giveEducationList, id: \.self) { item in
                                 HStack {
-                                    Text(giveEducationList[index])
+                                    Text(item)
                                         .lineLimit(nil)
                                         .padding(.vertical, 8)
                                     
                                     Spacer()
                                     
                                     Button {
-                                        giveEducationList.remove(at: index)
+                                        viewModel.deleteEducation(item)
                                     } label: {
                                         Image(systemName: "trash.fill")
                                             .foregroundColor(.red)
@@ -138,6 +132,9 @@ struct GiveEducationView: View {
                     isInputFocused = false
                 }
             }
+        }
+        .onAppear {
+            viewModel.loadGiveEducation()
         }
     }
 }
