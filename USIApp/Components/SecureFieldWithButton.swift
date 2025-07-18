@@ -12,7 +12,7 @@ import SwiftUI
 struct SecureFieldWithButton: View {
     
     @Binding private var text: String
-    @State private var isSecured : Bool = false
+    @State private var isSecured : Bool = true
     private var title : String
     
     init(title: String , text : Binding<String>) {
