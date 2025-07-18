@@ -132,25 +132,42 @@ class FirestoreService{
     
     func fetchFirmalar(forAcademicianId id: String, completion: @escaping ([Firma]) -> Void) {
         let docRef = db.collection("AcademicianInfo").document(id)
-        
+
         docRef.getDocument { document, error in
             if let document = document, document.exists {
                 let data = document.data()
                 let firmalarData = data?["firmalar"] as? [[String: Any]] ?? []
-                
+
                 let firmalar: [Firma] = firmalarData.compactMap { dict in
-                    guard let firmaAdi = dict["firmaAdi"] as? String,
+                    guard let id = dict["id"] as? String,
+                          let firmaAdi = dict["firmaAdi"] as? String,
                           let firmaCalismaAlani = dict["firmaCalismaAlani"] as? [String] else {
                         return nil
                     }
-                    let id = dict["id"] as? String ?? UUID().uuidString
                     return Firma(id: id, firmaAdi: firmaAdi, firmaCalismaAlani: firmaCalismaAlani)
                 }
-                
                 completion(firmalar)
             } else {
                 print("Belge bulunamadı veya hata oluştu: \(error?.localizedDescription ?? "")")
                 completion([])
+            }
+        }
+    }
+
+
+    func deleteFirma(forAcademicianId id: String, firmaId: String, completion: @escaping (Error?) -> Void) {
+        let docRef = db.collection("AcademicianInfo").document(id)
+        
+        docRef.getDocument { document, error in
+            if let document = document, document.exists {
+                var firmalar = (document.data()?["firmalar"] as? [[String: Any]]) ?? []
+                firmalar.removeAll { $0["id"] as? String == firmaId }
+                
+                docRef.updateData(["firmalar": firmalar]) { error in
+                    completion(error)
+                }
+            } else {
+                completion(error ?? NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Belge bulunamadı"]))
             }
         }
     }
@@ -174,33 +191,8 @@ class FirestoreService{
         }
     }
 
-    
-    func deleteFirma(firmaToDelete: Firma, completion: @escaping (Error?) -> Void) {
-        fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-            switch result {
-            case .success(let id):
-                let docRef = self.db.collection("AcademicianInfo").document(id)
-                docRef.getDocument { document, error in
-                    guard let data = document?.data(),
-                          var firmalar = data["firmalar"] as? [[String: Any]] else {
-                        completion(error ?? NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Veri çekilemedi"]))
-                        return
-                    }
 
-                    // ID ile filtrele
-                    firmalar.removeAll { $0["id"] as? String == firmaToDelete.id }
 
-                    docRef.updateData(["firmalar": firmalar]) { error in
-                        completion(error)
-                    }
-                }
-
-            case .failure(let error):
-                print("Hata documentId DeleteFirma : \(error.localizedDescription)")
-                completion(error)
-            }
-        }
-    }
 
     
     func deleteExpertArea(index: String , completion: @escaping (Error?) -> Void){

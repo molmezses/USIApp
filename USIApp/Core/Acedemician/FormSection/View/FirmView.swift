@@ -4,7 +4,6 @@
 //
 //  Created by Mustafa Ölmezses on 2.07.2025.
 //
-
 import SwiftUI
 
 enum FirmEnum {
@@ -13,15 +12,13 @@ enum FirmEnum {
 }
 
 struct FirmView: View {
-    
     @Environment(\.dismiss) var dismiss
     @FocusState private var focusedField: FirmEnum?
     @StateObject var viewModel = FirmViewModel()
-    
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                
                 // Üst Başlık
                 HStack {
                     Button {
@@ -31,30 +28,31 @@ struct FirmView: View {
                             .font(.system(size: 18, weight: .semibold))
                             .foregroundColor(.white)
                     }
-                    
+
                     Spacer()
-                    
+
                     Text("Firma Bilgileri")
                         .font(.headline)
                         .foregroundColor(.white)
-                    
+
                     Spacer()
-                    
-                    Image(systemName: "chevron.left") // simetri için, görünmez
+
+                    // Görünmez simetri için
+                    Image(systemName: "chevron.left")
                         .opacity(0)
                 }
                 .padding()
                 .background(Color("usi"))
-                
+
                 ScrollView {
                     VStack(spacing: 20) {
-                        
-                        // Firma Ekleme Alanı
+
+                        // Yeni Firma Ekleme Bölümü
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Yeni Firma Ekle")
                                 .font(.title3.bold())
                                 .padding(.horizontal)
-                            
+
                             TextField("Firma Adı", text: $viewModel.firmName)
                                 .padding()
                                 .background(Color.white)
@@ -62,7 +60,7 @@ struct FirmView: View {
                                 .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.gray.opacity(0.3)))
                                 .focused($focusedField, equals: .firmName)
                                 .padding(.horizontal)
-                            
+
                             TextField("Firma Çalışma Alanı", text: $viewModel.firmWorkArea)
                                 .padding()
                                 .background(Color.white)
@@ -72,9 +70,7 @@ struct FirmView: View {
                                 .padding(.horizontal)
                                 .overlay(alignment: .trailing) {
                                     Button {
-                                        if !viewModel.firmWorkArea.trimmingCharacters(in: .whitespaces).isEmpty {
-                                            viewModel.addFirmWorkArea()
-                                        }
+                                        viewModel.addFirmWorkArea()
                                     } label: {
                                         Image(systemName: "plus.square.fill")
                                             .resizable()
@@ -83,8 +79,8 @@ struct FirmView: View {
                                             .foregroundStyle(.green)
                                     }
                                 }
-                            
-                            // Çalışma Alanları Listesi
+
+                            // Çalışma Alanları Listesi (yatay scroll)
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack {
                                     ForEach(viewModel.workAreaList, id: \.self) { workArea in
@@ -96,12 +92,12 @@ struct FirmView: View {
                                 }
                                 .padding(.horizontal)
                             }
-                            
+
                             // Kaydet Butonu
                             Button {
                                 guard !viewModel.firmName.trimmingCharacters(in: .whitespaces).isEmpty,
                                       !viewModel.workAreaList.isEmpty else { return }
-                                
+
                                 viewModel.addFirma { error in
                                     if let error = error {
                                         print("Ekleme hatası: \(error.localizedDescription)")
@@ -120,15 +116,15 @@ struct FirmView: View {
                                     .padding(.horizontal)
                             }
                         }
-                        
+
                         Divider().padding(.horizontal)
-                        
+
                         // Firma Listesi
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Eklenmiş Firmalar")
                                 .font(.title3.bold())
                                 .padding(.horizontal)
-                            
+
                             if viewModel.firmList.isEmpty {
                                 Text("Henüz firma eklenmedi.")
                                     .foregroundColor(.gray)
@@ -137,29 +133,23 @@ struct FirmView: View {
                                 ForEach(viewModel.firmList.indices, id: \.self) { index in
                                     HStack(alignment: .top) {
                                         VStack(alignment: .leading, spacing: 4) {
-                                            Text(viewModel.firmList[index].name)
+                                            Text(viewModel.firmList[index].firmaAdi)
                                                 .font(.headline)
-                                            
-                                            Text(viewModel.firmList[index].area.joined(separator: ", "))
+
+                                            Text(viewModel.firmList[index].firmaCalismaAlani.joined(separator: ", "))
                                                 .font(.subheadline)
                                                 .foregroundColor(.secondary)
                                         }
-                                        
+
                                         Spacer()
-                                        
+
                                         Button {
-                                            viewModel.deleteFirma(at: index) { error in
-                                                if let error = error {
-                                                    print("Hata : DeleteFirm \(error.localizedDescription)")
-                                                } else {
-                                                    print("Firma Bilgisi başarıyla silindi")
-                                                }
-                                                viewModel.loadFirmalar()
-                                            }
+                                            viewModel.deleteFirma(at: index)
                                         } label: {
                                             Image(systemName: "trash")
                                                 .foregroundColor(.red)
                                         }
+
                                     }
                                     .padding()
                                     .background(Color.white)
@@ -184,7 +174,6 @@ struct FirmView: View {
         }
     }
 }
-
 
 #Preview {
     FirmView()

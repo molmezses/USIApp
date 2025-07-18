@@ -8,11 +8,10 @@
 import Foundation
 
 class FirmViewModel: ObservableObject {
-    @Published  var firmName: String = ""
-    @Published  var firmWorkArea: String = ""
-    @Published var firmList: [(name: String, area: [String])] = []
+    @Published var firmName: String = ""
+    @Published var firmWorkArea: String = ""
+    @Published var firmList: [Firma] = []
     @Published var workAreaList: [String] = []
-    
 
     func loadFirmalar() {
         FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
@@ -20,60 +19,63 @@ class FirmViewModel: ObservableObject {
             case .success(let id):
                 FirestoreService.shared.fetchFirmalar(forAcademicianId: id) { [weak self] firmalar in
                     DispatchQueue.main.async {
-                        self?.firmList = firmalar.map { (name: $0.firmaAdi, area: $0.firmaCalismaAlani) }
+                        self?.firmList = firmalar
                     }
                 }
-            case .failure(_):
-                print("Hata : LoadFirmalar  AcademicianID")
+            case .failure(let error):
+                print("Hata: Academician ID bulunamadı: \(error.localizedDescription)")
             }
         }
     }
 
-    
+    func addFirmWorkArea() {
+        let trimmed = firmWorkArea.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        workAreaList.append(trimmed)
+        firmWorkArea = ""
+    }
+
     func addFirma(completion: @escaping (Error?) -> Void) {
         let newFirma = Firma(firmaAdi: firmName, firmaCalismaAlani: workAreaList)
-        
+
         FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
             switch result {
             case .success(let id):
                 FirestoreService.shared.addFirma(forAcademicianId: id, newFirma: newFirma) { [weak self] error in
                     if error == nil {
                         DispatchQueue.main.async {
-                            self?.firmList.append((name: newFirma.firmaAdi, area: newFirma.firmaCalismaAlani))
-
+                            self?.firmList.append(newFirma)
                             self?.firmName = ""
-                            self?.firmWorkArea = ""
                             self?.workAreaList = []
                         }
                     }
                     completion(error)
                 }
-            case .failure(_):
-                print("Hata : LoadFirmalar  AcademicianID")
+            case .failure(let error):
+                print("Hata: Academician ID bulunamadı: \(error.localizedDescription)")
+                completion(error)
             }
         }
     }
 
-    
-    func addFirmWorkArea() {
-        workAreaList.append(firmWorkArea)
-        firmWorkArea = ""
-    }
-    
-    func deleteFirma(at index: Int, completion: @escaping (Error?) -> Void) {
-        guard index < firmList.count else { return }
-
-        let firmaTuple = firmList[index]
-        let firma = Firma(firmaAdi: firmaTuple.name, firmaCalismaAlani: firmaTuple.area)
-
-
-        FirestoreService.shared.deleteFirma(firmaToDelete: firma) { [weak self] error in
-            if error == nil {
-                DispatchQueue.main.async {
-                    self?.firmList.remove(at: index)
+    func deleteFirma(at index: Int) {
+        let firma = firmList[index]
+        
+        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
+            switch result {
+            case .success(let id):
+                FirestoreService.shared.deleteFirma(forAcademicianId: id, firmaId: firma.id ?? "") { [weak self] error in
+                    if let error = error {
+                        print("Silme hatası: \(error.localizedDescription)")
+                    } else {
+                        DispatchQueue.main.async {
+                            self?.firmList.remove(at: index)
+                        }
+                    }
                 }
+            case .failure(let error):
+                print("Document ID alınamadı: \(error.localizedDescription)")
             }
-            completion(error)
         }
     }
 
