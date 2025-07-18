@@ -108,6 +108,7 @@ struct GiveEducationView: View {
                                     
                                     Button {
                                         viewModel.deleteEducation(item)
+                                        viewModel.loadGiveEducation()
                                     } label: {
                                         Image(systemName: "trash.fill")
                                             .foregroundColor(.red)

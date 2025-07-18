@@ -113,7 +113,7 @@ class FirestoreService{
                                                verebilecegiDanismanlikKonuları: data["verebilecegiDanismanlikKonulari"] as? [String] ?? [""],
                                                dahaOncekiDanismanliklar: data["dahaOncekiDanismanliklar"] as? [String] ?? [""],
                                                verebilecegiEgitimler: data["verebilecegiEgitimler"] as? [String] ?? [""],
-                                               dahaOncekiVerdigiEgitimler: data["dahaOncekiVerdigiEgitimler"] as? [String] ?? [""],
+                                               dahaOncekiVerdigiEgitimler: data["dahaOnceVerdigiEgitimler"] as? [String] ?? [""],
                                                
                     )
                     
@@ -324,6 +324,32 @@ class FirestoreService{
                 let docRef = Firestore.firestore().collection("AcademicianInfo").document(id)
                 docRef.updateData([
                     "verebilecegiEgitimler": FieldValue.arrayUnion([education])
+                ]) { error in
+                    if let error = error {
+                        print("Daha önceki danışmanlık alanları eklenirken hata: \(error.localizedDescription)")
+                    }
+                    completion(error)
+                }
+
+            case .failure(let error):
+                print("Belge ID alınamadı: \(error.localizedDescription)")
+                completion(error)
+            }
+        }
+    }
+    
+    func addPreEducation(education: String, completion: @escaping (Error?) -> Void) {
+        guard let email = AuthService.shared.getCurrentUser()?.email else {
+            print("Geçerli kullanıcı e-posta alınamadı.")
+            return
+        }
+
+        fetchAcademicianDocumentById(byEmail: email) { result in
+            switch result {
+            case .success(let id):
+                let docRef = Firestore.firestore().collection("AcademicianInfo").document(id)
+                docRef.updateData([
+                    "dahaOnceVerdigiEgitimler": FieldValue.arrayUnion([education])
                 ]) { error in
                     if let error = error {
                         print("Daha önceki danışmanlık alanları eklenirken hata: \(error.localizedDescription)")
