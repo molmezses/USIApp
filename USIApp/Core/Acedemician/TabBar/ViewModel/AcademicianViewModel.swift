@@ -18,7 +18,6 @@ class AcademicianViewModel: ObservableObject {
     @Published var kurumsalTel: String = ""
     @Published var webSite: String = ""
     @Published var konum: String = ""
-    @Published var firmList: [(name: String, area: String)] = []
     @Published var expertList: [String] = []
     @Published var consultancyList: [String] = []
     @Published var prevConsultanList: [String] = []
@@ -48,7 +47,6 @@ class AcademicianViewModel: ObservableObject {
                         self.kurumsalTel = info.kurumsalTel
                         self.webSite = info.webSite
                         self.konum = "\(info.il)/\(info.ilce)"
-                        self.loadFirmalar()
                         self.loadExpertArea()
                         self.loadConsultancyField()
                         self.loadPrevConsultancyField()
@@ -69,26 +67,7 @@ class AcademicianViewModel: ObservableObject {
         
     }
     
-    func loadFirmalar() {
-        
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-            switch result {
-            case .success(let id):
-                
-                FirestoreService.shared.fetchFirmalar(forAcademicianId: id) { [weak self] firmalar in
-                    DispatchQueue.main.async {
-                        self?.firmList = firmalar
-                    }
-                }
-                
-            case .failure(_):
-                print("Hata : LoadFirmalar  AcademicianID")
-                
-            }
-        }
-        
-       
-    }
+
     
     func loadExpertArea(){
         FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in

@@ -186,20 +186,20 @@ struct AcademicianView: View {
                                     Spacer()
                                 }
                                 
-                                ForEach(viewModel.firmList.indices, id: \.self) { index in
-                                    
-                                    HStack {
-                                        Circle()
-                                            .frame(width: 6, height: 6)
-                                            .foregroundStyle(Color("usi"))
-                                            .padding(.leading)
-                                        VStack(alignment: .leading){
-                                            Text(viewModel.firmList[index].name)
-                                                .font(.headline)
-                                            Text(viewModel.firmList[index].area)
-                                        }
-                                    }
-                                }
+//                                ForEach(viewModel.firmList.indices, id: \.self) { index in
+//                                    
+//                                    HStack {
+//                                        Circle()
+//                                            .frame(width: 6, height: 6)
+//                                            .foregroundStyle(Color("usi"))
+//                                            .padding(.leading)
+//                                        VStack(alignment: .leading){
+//                                            Text(viewModel.firmList[index].name)
+//                                                .font(.headline)
+//                                            Text(viewModel.firmList[index].area)
+//                                        }
+//                                    }
+//                                }
 
                             }
                             .padding()

@@ -7,13 +7,14 @@
 
 import Foundation
 
-struct Firma: Identifiable, Codable {
+struct Firma: Codable, Equatable {
     var id: String = UUID().uuidString
     var firmaAdi: String
-    var firmaCalismaAlani: String
-    
+    var firmaCalismaAlani: [String]
+
     func toDictionary() -> [String: Any] {
         return [
+            "id": id,
             "firmaAdi": firmaAdi,
             "firmaCalismaAlani": firmaCalismaAlani
         ]

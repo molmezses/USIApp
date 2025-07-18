@@ -18,7 +18,6 @@ struct FirmView: View {
     @FocusState private var focusedField: FirmEnum?
     @StateObject var viewModel = FirmViewModel()
     
-    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -41,7 +40,7 @@ struct FirmView: View {
                     
                     Spacer()
                     
-                    Image(systemName: "chevron.left") // simetri için
+                    Image(systemName: "chevron.left") // simetri için, görünmez
                         .opacity(0)
                 }
                 .padding()
@@ -71,22 +70,48 @@ struct FirmView: View {
                                 .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.gray.opacity(0.3)))
                                 .focused($focusedField, equals: .firmWorkArea)
                                 .padding(.horizontal)
+                                .overlay(alignment: .trailing) {
+                                    Button {
+                                        if !viewModel.firmWorkArea.trimmingCharacters(in: .whitespaces).isEmpty {
+                                            viewModel.addFirmWorkArea()
+                                        }
+                                    } label: {
+                                        Image(systemName: "plus.square.fill")
+                                            .resizable()
+                                            .frame(width: 40, height: 40)
+                                            .padding(.trailing, 20)
+                                            .foregroundStyle(.green)
+                                    }
+                                }
                             
+                            // Çalışma Alanları Listesi
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack {
+                                    ForEach(viewModel.workAreaList, id: \.self) { workArea in
+                                        Text(workArea)
+                                            .padding(8)
+                                            .background(Color("usi").opacity(0.2))
+                                            .cornerRadius(8)
+                                    }
+                                }
+                                .padding(.horizontal)
+                            }
+                            
+                            // Kaydet Butonu
                             Button {
                                 guard !viewModel.firmName.trimmingCharacters(in: .whitespaces).isEmpty,
-                                      !viewModel.firmWorkArea.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+                                      !viewModel.workAreaList.isEmpty else { return }
                                 
                                 viewModel.addFirma { error in
                                     if let error = error {
-                                                print("Ekleme hatası: \(error.localizedDescription)")
-                                            } else {
-                                                focusedField = nil
-                                            }
+                                        print("Ekleme hatası: \(error.localizedDescription)")
+                                    } else {
+                                        focusedField = nil
+                                        viewModel.loadFirmalar()
+                                    }
                                 }
-                                viewModel.loadFirmalar()
-                                focusedField = nil
                             } label: {
-                                Text("Ekle")
+                                Text("Kaydet")
                                     .frame(maxWidth: .infinity)
                                     .frame(height: 50)
                                     .background(Color("usi"))
@@ -115,7 +140,7 @@ struct FirmView: View {
                                             Text(viewModel.firmList[index].name)
                                                 .font(.headline)
                                             
-                                            Text(viewModel.firmList[index].area)
+                                            Text(viewModel.firmList[index].area.joined(separator: ", "))
                                                 .font(.subheadline)
                                                 .foregroundColor(.secondary)
                                         }
@@ -124,9 +149,9 @@ struct FirmView: View {
                                         
                                         Button {
                                             viewModel.deleteFirma(at: index) { error in
-                                                if let error = error{
+                                                if let error = error {
                                                     print("Hata : DeleteFirm \(error.localizedDescription)")
-                                                }else{
+                                                } else {
                                                     print("Firma Bilgisi başarıyla silindi")
                                                 }
                                                 viewModel.loadFirmalar()
