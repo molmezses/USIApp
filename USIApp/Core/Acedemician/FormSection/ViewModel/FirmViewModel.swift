@@ -11,6 +11,7 @@ class FirmViewModel: ObservableObject {
     @Published  var firmName: String = ""
     @Published  var firmWorkArea: String = ""
     @Published var firmList: [(name: String, area: String)] = []
+    
 
     func loadFirmalar() {
         

@@ -359,6 +359,9 @@ struct ProfileView: View {
                         .padding(.horizontal)
                     }
                     .padding(.top)
+                    .refreshable {
+                        viewModel.loadAcademicianInfo()
+                    }
                 }
             }
             .onAppear{

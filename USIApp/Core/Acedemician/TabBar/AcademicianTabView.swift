@@ -23,13 +23,7 @@ struct AcademicianTabView: View {
                 .tag(0)
                 .environmentObject(authViewModel)
             
-            ContentsView()
-                .tabItem {
-                    Image(systemName: "house")
-                    Text("Taleplerim")
-                }
-                .tag(0)
-                .environmentObject(authViewModel)
+
             
             ProfileView()
                 .tabItem {

@@ -9,7 +9,7 @@ import SwiftUI
 struct AcademicianView: View {
     
     @Environment(\.dismiss) var dismiss
-    @State var isOn: Bool = true
+    @StateObject var viewModel = AcademicianViewModel()
     
 
     
@@ -17,8 +17,6 @@ struct AcademicianView: View {
         
         NavigationStack {
             VStack(spacing: 0) {
-                
-                // Başlık Alanı
                 HStack {
                     Spacer()
                     Text("Önizleme")
@@ -38,7 +36,7 @@ struct AcademicianView: View {
                         ScrollView {
                             HStack {
                                 
-                                if let profileImageURL = URL(string: "https://unis.ahievran.edu.tr/app_files/2024/10/Kisi_Logo_1460_a525c00f.jpg") {
+                                if let profileImageURL = URL(string: viewModel.photo) {
                                     AsyncImage(url: profileImageURL) { phase in
                                         switch phase {
                                         case .empty:
@@ -63,12 +61,12 @@ struct AcademicianView: View {
                                 }
                                     
                                 VStack(spacing: 8){
-                                    Text("Arş.Görv")
+                                    Text(viewModel.unvan)
                                         .frame(maxWidth: .infinity , alignment: .leading)
                                         .underline()
                                         .font(.headline)
                                         .fontWeight(.semibold)
-                                    Text("Mustafa Ölmezses")
+                                    Text(viewModel.adSoyad)
                                         .frame(maxWidth: .infinity , alignment: .leading)
                                 }
                                 .padding(.leading)
@@ -88,7 +86,7 @@ struct AcademicianView: View {
                                     Spacer()
                                 }
                                 
-                                Text("Lorem ipsipsum dolor sit amet consectetur adipisicing elit. Quo, voluptatem voluptates!um dolor sit amet consectetur adipisicing elit. Quo, voluptatem voluptatipsipsum dolor sit amet consectetur adipisicing elit. Quo, voluptatem voluptates!um dolor sit amet consectetur adipisicing elit. Quo, voluptatem voluptates!es! lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, voluptatem voluptates!um dolor sit amet consectetur adipisicing elit. Quo, voluptatem voluptates!")
+                                Text(viewModel.akademikGecmis)
                                     .padding(.top, 2)
                             }
                             .padding()
@@ -104,7 +102,7 @@ struct AcademicianView: View {
                                     Text("Ortak Proje Geliştirme Talebi")
                                     Spacer()
                                     
-                                    Toggle("", isOn: $isOn)
+                                    Toggle("", isOn: $viewModel.isOn)
                                         .tint(Color("usi"))
                                         .foregroundStyle(Color("usi"))
                                         .disabled(true)
@@ -133,15 +131,24 @@ struct AcademicianView: View {
                                         .padding(6)
                                         .background(Color("usi").opacity(0.2))
                                         .clipShape(Circle())
-                                    Text("03862806059")
+                                    Text(viewModel.personelTel)
                                 }
                                 HStack {
-                                    Image(systemName: "mail.fill")
+                                    Image(systemName: "phone.fill")
                                         .foregroundStyle(Color("usi"))
                                         .padding(6)
                                         .background(Color("usi").opacity(0.2))
                                         .clipShape(Circle())
-                                    Text(verbatim: "basaktuna@ahievran.edu.tr")
+                                    Text(viewModel.kurumsalTel)
+                                }
+                                HStack {
+                                    Image(systemName: "mail.fill")
+                                        .imageScale(.small)
+                                        .foregroundStyle(Color("usi"))
+                                        .padding(8)
+                                        .background(Color("usi").opacity(0.2))
+                                        .clipShape(Circle())
+                                    Text(verbatim: viewModel.email)
                                 }
                                 HStack {
                                     Image(systemName: "mappin.circle.fill")
@@ -149,7 +156,7 @@ struct AcademicianView: View {
                                         .padding(6)
                                         .background(Color("usi").opacity(0.2))
                                         .clipShape(Circle())
-                                    Text(verbatim: "https://unis.ahievran.edu.tr/akedemisyen/basaktuna")
+                                    Text(verbatim: viewModel.konum)
                                 }
                                 HStack {
                                     Image(systemName: "network")
@@ -157,7 +164,7 @@ struct AcademicianView: View {
                                         .padding(6)
                                         .background(Color("usi").opacity(0.2))
                                         .clipShape(Circle())
-                                    Text("03862806059")
+                                    Text(viewModel.webSite)
                                 }
                             }
                             .padding()
@@ -173,29 +180,21 @@ struct AcademicianView: View {
                                     Spacer()
                                 }
                                 
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    VStack(alignment: .leading){
-                                        Text("ABC Medya ")
-                                            .font(.headline)
-                                        Text("Yazılım , finansman ve danışmanlık")
+                                ForEach(viewModel.firmList.indices, id: \.self) { index in
+                                    
+                                    HStack {
+                                        Circle()
+                                            .frame(width: 6, height: 6)
+                                            .foregroundStyle(Color("usi"))
+                                            .padding(.leading)
+                                        VStack(alignment: .leading){
+                                            Text(viewModel.firmList[index].name)
+                                                .font(.headline)
+                                            Text(viewModel.firmList[index].area)
+                                        }
                                     }
                                 }
-                                
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    VStack(alignment: .leading){
-                                        Text("Nanokompozit ")
-                                            .font(.headline)
-                                        Text("Nanokompozit üretimi ve sanayisi")
-                                    }
-                                }
+
                             }
                             .padding()
                             .background(.white)
@@ -210,39 +209,15 @@ struct AcademicianView: View {
                                     Spacer()
                                 }
                                 
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    Text("Nanokompozit üretimi")
+                                ForEach(viewModel.expertList, id: \.self) { item in
+                                    HStack {
+                                        Circle()
+                                            .frame(width: 6, height: 6)
+                                            .foregroundStyle(Color("usi"))
+                                            .padding(.leading)
+                                        Text(item)
+                                    }
                                 }
-                                
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    Text("Plastik geri dönüşümü")
-                                }
-                                
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    Text("Farmasotik teknoloji ve ilaç mühendisliği")
-                                }
-                                
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    Text("Kozmotoloji")
-                                }
-                                
-                                
                             }
                             .padding()
                             .background(.white)
@@ -257,47 +232,15 @@ struct AcademicianView: View {
                                     Spacer()
                                 }
                                 
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    Text("Polimer malzemelerim işlenmesi ve üretimi")
+                                ForEach(viewModel.consultancyList, id: \.self) { item in
+                                    HStack {
+                                        Circle()
+                                            .frame(width: 6, height: 6)
+                                            .foregroundStyle(Color("usi"))
+                                            .padding(.leading)
+                                        Text(item)
+                                    }
                                 }
-                                
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    Text("Nanokompozit üretimi teknikleri")
-                                }
-                                
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    Text("Plastik geri dönüşümü")
-                                }
-                                
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    Text("Farmosotik ilaç ve ilaç formülasyonu ")
-                                }
-                                
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    Text("Kozmotoloji ve ileri malzeme teknolojileri")
-                                }
-                                
-                                
                             }
                             .padding()
                             .background(.white)
@@ -312,33 +255,15 @@ struct AcademicianView: View {
                                     Spacer()
                                 }
                                 
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    Text("TÜBİTAK 1501 , 1507 , 1512 projeleri için hakemlik ve değerlendirme süreçleri")
+                                ForEach(viewModel.prevConsultanList, id: \.self) { item in
+                                    HStack {
+                                        Circle()
+                                            .frame(width: 6, height: 6)
+                                            .foregroundStyle(Color("usi"))
+                                            .padding(.leading)
+                                        Text(item)
+                                    }
                                 }
-                                
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    Text("Avrupda birliği projeleri(Euroka , M-ERA.NET) için panel üyeliği")
-                                }
-                                
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    Text("Sanayi iş birlikleri kapsamında malzeme geliştirme ve analiz çalışmaları")
-                                }
-                                
-                                
-                                
-                                
                             }
                             .padding()
                             .background(.white)
@@ -353,49 +278,16 @@ struct AcademicianView: View {
                                     Spacer()
                                 }
                                 
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    Text("Polimer işleme teknolojileri")
+                                ForEach(viewModel.giveEducationList, id: \.self) { item in
+                                    HStack {
+                                        Circle()
+                                            .frame(width: 6, height: 6)
+                                            .foregroundStyle(Color("usi"))
+                                            .padding(.leading)
+                                        Text(item)
+                                    }
                                 }
-                                
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    Text("Nanokompozit üretimi")
-                                }
-                                
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    Text("Plastik geri dönüşümü")
-                                }
-                                
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    Text("İlaç mühendisliği ve farmasötik teknoloji")
-                                }
-                                
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    Text("Kozmetoloji")
-                                }
-                                
-                                
-                                
-                                
+  
                             }
                             .padding()
                             .background(.white)
@@ -410,22 +302,15 @@ struct AcademicianView: View {
                                     Spacer()
                                 }
                                 
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    Text("Polimer ve nanaopompozit üretimi üzerine lisans ve lisansüstü dersler")
+                                ForEach(viewModel.preEducationList, id: \.self) { item in
+                                    HStack {
+                                        Circle()
+                                            .frame(width: 6, height: 6)
+                                            .foregroundStyle(Color("usi"))
+                                            .padding(.leading)
+                                        Text(item)
+                                    }
                                 }
-                                
-                                HStack {
-                                    Circle()
-                                        .frame(width: 6, height: 6)
-                                        .foregroundStyle(Color("usi"))
-                                        .padding(.leading)
-                                    Text("TÜBİTAK ve Avrupa birliği destek programları kapsamında araştırmacaalara yönelik eğitimler sektörel eğitimler ve danışmanlıklar")
-                                }
-                                
                             }
                             .padding()
                             .background(.white)
@@ -435,10 +320,16 @@ struct AcademicianView: View {
 
                         }
                         .scrollIndicators(.hidden)
+                        .refreshable {
+                            viewModel.loadAcademicianInfo()
+                        }
                     }
                     .padding(.horizontal)
                 }
             }
+        }
+        .onAppear{
+            viewModel.loadAcademicianInfo()
         }
     }
 }

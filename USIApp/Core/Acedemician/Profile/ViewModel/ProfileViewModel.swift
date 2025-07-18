@@ -34,6 +34,7 @@ class ProfileViewModel: ObservableObject {
                         self.unvan = info.unvan
                         self.photo = info.photo
                         
+                        
                     case .failure(let error):
                         print("Hata loadAcademicianInfo : \(error.localizedDescription)")
                     }

@@ -11,6 +11,8 @@ class ExpertAreaViewModel: ObservableObject{
     @Published  var expertDesc: String = ""
     @Published  var expertList: [String] = []
     
+    static let shared = ExpertAreaViewModel()
+    
     
     func loadExpertArea(){
         FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
