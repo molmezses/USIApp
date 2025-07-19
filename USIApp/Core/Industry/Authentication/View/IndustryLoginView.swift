@@ -14,13 +14,16 @@ import FirebaseAuth
 struct IndustryLoginView: View {
     
     @StateObject var viewModel = IndustryLoginViewModel()
+    @FocusState private var focusedField: Bool
+    @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var authViewModel : IndustryAuthViewModel
+
     
     var body: some View {
         VStack {
             NavigationStack {
-//                if authViewModel.userSession == nil{
-                if true{
-                    
+                if authViewModel.industryUserSession == nil{
+        
                     VStack {
                         
                         HeaderView()
@@ -30,8 +33,11 @@ struct IndustryLoginView: View {
                         VStack(spacing: 30){
                             Spacer()
                             
+                            Text("Sanayi Girişi")
+                                .font(.title)
                             
-                            TextField("Üniversite Mailiniz :", text: $viewModel.email)
+                            
+                            TextField("Mailinizi giriniz :", text: $viewModel.email)
                                 .frame(height: 55)
                                 .padding(.horizontal)
                                 .background(Color(.tertiarySystemGroupedBackground))
@@ -80,11 +86,36 @@ struct IndustryLoginView: View {
                                     .onTapGesture {
                                         dismiss()
                                     }
+                                
+                                HStack {
+                                    RoundedRectangle(cornerRadius: 1)
+                                        .frame(height: 2)
+                                        .foregroundStyle(.gray)
+                                    Text("veya")
+                                        .font(.footnote)
+                                        .foregroundStyle(.gray)
+                                    RoundedRectangle(cornerRadius: 1)
+                                        .frame(height: 2)
+                                        .foregroundStyle(.gray)
+                                }
+                                .padding(.vertical , 20)
+                                .padding(.top , 6)
+                                
+                                HStack{
+                                    Image("googleLogo")
+                                        .resizable()
+                                        .frame(width:50 , height: 50)
+                                    Text("Countinue with Google Account")
+                                        .font(.headline)
+                                        .foregroundStyle(.blue)
+                                }
+                                .padding(.vertical , 8)
+                                
                                 Spacer()
                                 HStack {
                                     Text("Daha önce kayıt olmadın mı?")
                                     NavigationLink {
-                                        AcademicianRegisterView()
+                                        IndustryRegisterView()
                                             .navigationBarBackButtonHidden()
                                             .environmentObject(authViewModel)
                                     } label: {
@@ -108,21 +139,9 @@ struct IndustryLoginView: View {
                         FooterView()
                         
                     }
-                    .alert("Hata", isPresented: $viewModel.showAlert, actions: {
-                        Button("Tamam" , role: .cancel){}
-                    }, message :{
-                        Text("\(viewModel.errorMessage)")
-                    })
                     .ignoresSafeArea()
-                    .onTapGesture {
-                        focusedField = false
-                    }
-                    .navigationDestination(isPresented: $navigate) {
-                        AcademicianTabView()
-                            .navigationBarBackButtonHidden()
-                    }
                 }else{
-                    AcademicianTabView()
+                    IndustryTabView()
                         .environmentObject(authViewModel)
                 }
             }
@@ -136,4 +155,5 @@ struct IndustryLoginView: View {
 
 #Preview {
     IndustryLoginView()
+        .environmentObject(IndustryAuthViewModel())
 }

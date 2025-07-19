@@ -11,19 +11,38 @@ import GoogleSignInSwift
 import Firebase
 import FirebaseAuth
 
+
+
 class IndustryLoginViewModel: ObservableObject {
     
-    @p
+    @Published var email: String = ""
+    @Published var password: String = ""
+    @Published var errorMessage = ""
+    @Published var isLoading: Bool = false
     
     
+    func login(authViewModel : IndustryAuthViewModel){
+        isLoading = true
+        IndustryAuthService.shared.login(email: email, password: password) { result in
+            DispatchQueue.main.async {
+                self.isLoading = false
+                switch result {
+                case .success(let session):
+                    authViewModel.industryUserSession = session
+                case .failure(let failure):
+                    self.errorMessage = failure.localizedDescription
+                }
+            }
+        }
+    }
     
     func signInWithGoogle() {
         guard let clientID = FirebaseApp.app()?.options.clientID else {
-            print("❌ clientID alınamadı") // ← Hata kontrolü
+            print("clientID alınamadı") // ← Hata kontrolü
             return
         }
         
-        print("✅ clientID bulundu: \(clientID)") // ← Bunu ekle, clientID geliyor mu kontrol et
+        print("clientID bulundu: \(clientID)") // ← Bunu ekle, clientID geliyor mu kontrol et
 
         _ = GIDConfiguration(clientID: clientID)
 
@@ -34,13 +53,13 @@ class IndustryLoginViewModel: ObservableObject {
 
         GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController) { result, error in
             if let error = error {
-                print("❌ Google giriş hatası: \(error.localizedDescription)")
+                print("Google giriş hatası: \(error.localizedDescription)")
                 return
             }
 
             guard let user = result?.user,
                   let idToken = user.idToken?.tokenString else {
-                print("❌ Kullanıcı veya token alınamadı")
+                print("Kullanıcı veya token alınamadı")
                 return
             }
 
@@ -49,9 +68,9 @@ class IndustryLoginViewModel: ObservableObject {
 
             Auth.auth().signIn(with: credential) { result, error in
                 if let error = error {
-                    print("❌ Firebase oturum açma hatası: \(error.localizedDescription)")
+                    print("Firebase oturum açma hatası: \(error.localizedDescription)")
                 } else {
-                    print("✅ Giriş başarılı! Kullanıcı: \(result?.user.email ?? "")")
+                    print("Giriş başarılı! Kullanıcı: \(result?.user.email ?? "")")
                 }
             }
         }
