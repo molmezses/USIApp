@@ -25,8 +25,9 @@ struct LoginView: View {
                         .frame(width: 330, height: 150)
                         .padding(.bottom, 20)
                     
-                    Button {
-                        print("denemedeneme")
+                    NavigationLink {
+                        IndustryLoginView()
+                            .navigationBarBackButtonHidden()
                     } label: {
                         Text("Sanayi Girişi")
                             .font(.headline)

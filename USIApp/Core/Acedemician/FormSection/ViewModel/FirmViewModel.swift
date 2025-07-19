@@ -12,6 +12,7 @@ class FirmViewModel: ObservableObject {
     @Published var firmWorkArea: String = ""
     @Published var firmList: [Firma] = []
     @Published var workAreaList: [String] = []
+    
 
     func loadFirmalar() {
         FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
@@ -64,7 +65,7 @@ class FirmViewModel: ObservableObject {
         FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
             switch result {
             case .success(let id):
-                FirestoreService.shared.deleteFirma(forAcademicianId: id, firmaId: firma.id ?? "") { [weak self] error in
+                FirestoreService.shared.deleteFirma(forAcademicianId: id, firmaId: firma.id) { [weak self] error in
                     if let error = error {
                         print("Silme hatası: \(error.localizedDescription)")
                     } else {

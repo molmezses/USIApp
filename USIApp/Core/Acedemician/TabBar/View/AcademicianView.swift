@@ -186,21 +186,30 @@ struct AcademicianView: View {
                                     Spacer()
                                 }
                                 
-//                                ForEach(viewModel.firmList.indices, id: \.self) { index in
-//                                    
-//                                    HStack {
-//                                        Circle()
-//                                            .frame(width: 6, height: 6)
-//                                            .foregroundStyle(Color("usi"))
-//                                            .padding(.leading)
-//                                        VStack(alignment: .leading){
-//                                            Text(viewModel.firmList[index].name)
-//                                                .font(.headline)
-//                                            Text(viewModel.firmList[index].area)
-//                                        }
-//                                    }
-//                                }
-
+                                if viewModel.firmList.isEmpty {
+                                    Text("Henüz firma eklenmedi.")
+                                        .foregroundColor(.gray)
+                                        .padding(.horizontal)
+                                } else {
+                                    ForEach(viewModel.firmList.indices, id: \.self) { index in
+                                        
+                                        
+                                        
+                                        HStack {
+                                            Circle()
+                                                .frame(width: 6, height: 6)
+                                                .foregroundStyle(Color("usi"))
+                                                .padding(.leading)
+                                            VStack(alignment: .leading){
+                                                Text(viewModel.firmList[index].firmaAdi)
+                                                    .font(.headline)
+                                                Text(viewModel.firmList[index].firmaCalismaAlani.joined(separator: ", "))
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.secondary)
+                                            }
+                                        }
+                                    }
+                                }
                             }
                             .padding()
                             .background(.white)
@@ -251,6 +260,8 @@ struct AcademicianView: View {
                                             .padding(.leading)
                                         Text(item)
                                     }
+                                    
+                                    
                                 }
                             }
                             .padding()
@@ -349,6 +360,7 @@ struct AcademicianView: View {
 #Preview {
     AcademicianView()
 }
+
 
 
 

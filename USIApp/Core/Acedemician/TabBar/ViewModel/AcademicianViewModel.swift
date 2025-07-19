@@ -23,6 +23,7 @@ class AcademicianViewModel: ObservableObject {
     @Published var prevConsultanList: [String] = []
     @Published var preEducationList: [String] = []
     @Published var giveEducationList: [String] = []
+    @Published var firmList: [Firma] = []
 
     
     
@@ -52,6 +53,7 @@ class AcademicianViewModel: ObservableObject {
                         self.loadPrevConsultancyField()
                         self.loadPreEducation()
                         self.loadGiveEducation()
+                        self.loadFirmalar()
                         
                         
                     case .failure(let error):
@@ -187,6 +189,21 @@ class AcademicianViewModel: ObservableObject {
                 
             case .failure(_):
                 print("Hata : prevConsultanList  DocumentId")
+            }
+        }
+    }
+    
+    func loadFirmalar() {
+        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
+            switch result {
+            case .success(let id):
+                FirestoreService.shared.fetchFirmalar(forAcademicianId: id) { [weak self] firmalar in
+                    DispatchQueue.main.async {
+                        self?.firmList = firmalar
+                    }
+                }
+            case .failure(let error):
+                print("Hata: Academician ID bulunamadı: \(error.localizedDescription)")
             }
         }
     }
