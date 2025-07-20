@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 class IndustryAuthViewModel: ObservableObject {
     
@@ -14,8 +15,27 @@ class IndustryAuthViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     
     init() {
-        self.industryUserSession = IndustryAuthService.shared.getCurrentUser()
+        if let session = IndustryAuthService.shared.getCurrentUser() {
+            // Firebase'den kullanıcıyı gerçekten kontrol et
+            Auth.auth().currentUser?.reload(completion: { error in
+                if let error = error {
+                    print("Kullanıcı oturumu geçersiz: \(error.localizedDescription)")
+                    DispatchQueue.main.async {
+                        self.industryUserSession = nil
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.industryUserSession = session
+                    }
+                }
+            })
+        } else {
+            self.industryUserSession = nil
+        }
     }
+
+    
+
     
     
     func logOut(){

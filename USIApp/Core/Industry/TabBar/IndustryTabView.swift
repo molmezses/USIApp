@@ -14,6 +14,12 @@ struct IndustryTabView: View {
     var body: some View {
         Text("Başarılı")
         
+        Button(action: {
+            self.authViewModel.logOut()
+        }) {
+            Text("Log Out")
+        }
+        
         
     }
 }
