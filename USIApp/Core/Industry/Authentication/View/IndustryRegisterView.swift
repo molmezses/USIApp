@@ -108,15 +108,20 @@ struct IndustryRegisterView: View {
                             .padding(.vertical , 20)
                             .padding(.top , 6)
                             
-                            HStack{
-                                Image("googleLogo")
-                                    .resizable()
-                                    .frame(width:50 , height: 50)
-                                Text("Countinue with Google Account")
-                                    .font(.headline)
-                                    .foregroundStyle(.blue)
+                            Button {
+                                viewModel.signGoogle(authViewModel: authViewModel)
+                            } label: {
+                                HStack{
+                                    Image("googleLogo")
+                                        .resizable()
+                                        .frame(width:50 , height: 50)
+                                    Text("Countinue with Google Account")
+                                        .font(.headline)
+                                        .foregroundStyle(.blue)
+                                }
+                                .padding(.vertical , 8)
                             }
-                            .padding(.vertical , 8)
+
                             
                             Spacer()
                         }
