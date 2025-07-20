@@ -9,21 +9,39 @@ import SwiftUI
 
 struct IndustryTabView: View {
     
+    @State private var selectedTab = 1
     @EnvironmentObject var authViewModel : IndustryAuthViewModel
 
     var body: some View {
         NavigationStack {
             VStack {
                 if authViewModel.industryUserSession != nil {
-                    Text("\(String(describing: authViewModel.industryUserSession?.email))")
                     
-                    Button(action: {
-                        self.authViewModel.logOut()
-                    }) {
-                        Text("Log Out")
+                    
+                    TabView(selection: $selectedTab) {
+                        
+                        RequestView()
+                            .environmentObject(authViewModel)
+                            .tabItem {
+                                Image(systemName: "inset.filled.square.dashed")
+                                Text("Taleplerim")
+                            }
+                            .tag(0)
+                        
+                        IndustryProfileView()
+                            .environmentObject(authViewModel)
+                            .tabItem {
+                                Image(systemName: "person.fill")
+                                Text("Profil")
+                            }
+                            .tag(1)
+                        
+                        
                     }
+
                 }else{
                     LoginView()
+                        .navigationBarBackButtonHidden()
                 }
             }
         }
