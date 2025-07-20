@@ -27,6 +27,9 @@ struct AcademicianRegisterView: View {
                 VStack(spacing: 30) {
                     Spacer()
                     
+                    Text("Akademisyen Kayıt Ol")
+                        .font(.title)
+                    
                     TextField("Üniversite Mailiniz :", text: $viewModel.email)
                         .autocorrectionDisabled()
                         .frame(height: 55)

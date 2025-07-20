@@ -30,6 +30,9 @@ struct AcedemicianLoginView: View {
                     VStack(spacing: 30){
                         Spacer()
                         
+                        Text("Akademisyen Giriş Yap")
+                            .font(.title)
+                        
                         
                         TextField("Üniversite Mailiniz :", text: $viewModel.email)
                             .frame(height: 55)
