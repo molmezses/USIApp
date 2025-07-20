@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 final class AuthViewModel : ObservableObject{
     @Published var userSession : UserSession? = nil
@@ -14,7 +15,20 @@ final class AuthViewModel : ObservableObject{
     
     
     init() {
-        self.userSession = AuthService.shared.getCurrentUser()
+        if let session = AuthService.shared.getCurrentUser() {
+            
+            FirestoreService.shared.fetchAcademicianDocumentById(byEmail: Auth.auth().currentUser?.email ?? "") { result in
+                switch result {
+                case .success(_):
+                    self.userSession = session
+                case.failure(_):
+                    self.userSession = nil
+                }
+            }
+            
+        } else {
+            self.userSession = nil
+        }
     }
     
     func logOut(){

@@ -84,6 +84,7 @@ struct VerficationView: View {
         }
         .navigationDestination(isPresented: $viewModel.navigateToProfile) {
             AcademicianTabView()
+                .environmentObject(authViewModel)
                 .navigationBarBackButtonHidden()
         }
     }

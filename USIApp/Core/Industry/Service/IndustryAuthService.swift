@@ -33,6 +33,7 @@ final class IndustryAuthService{
     func register(email: String , password: String , completion: @escaping (Result<IndustryUserSession , Error>) -> Void){
         
         
+        
         Auth.auth().createUser(withEmail: email, password: password) { result, error in
             if let error = error {
                 print("HATA1")

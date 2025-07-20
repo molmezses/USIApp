@@ -12,15 +12,21 @@ struct IndustryTabView: View {
     @EnvironmentObject var authViewModel : IndustryAuthViewModel
 
     var body: some View {
-        Text("Başarılı")
-        
-        Button(action: {
-            self.authViewModel.logOut()
-        }) {
-            Text("Log Out")
+        NavigationStack {
+            VStack {
+                if authViewModel.industryUserSession != nil {
+                    Text("\(String(describing: authViewModel.industryUserSession?.email))")
+                    
+                    Button(action: {
+                        self.authViewModel.logOut()
+                    }) {
+                        Text("Log Out")
+                    }
+                }else{
+                    LoginView()
+                }
+            }
         }
-        
-        
     }
 }
 

@@ -13,27 +13,34 @@ struct AcademicianTabView: View {
     @EnvironmentObject var authViewModel : AuthViewModel
     
     var body: some View {
-        TabView(selection: $selectedTab) {
-            
-            AcademicianView()
-                .tabItem {
-                    Image(systemName: "house")
-                    Text("Önizleme")
-                }
-                .tag(0)
-                .environmentObject(authViewModel)
-            
+        
+        if authViewModel.userSession != nil {
+            TabView(selection: $selectedTab) {
+                
+                AcademicianView()
+                    .tabItem {
+                        Image(systemName: "house")
+                        Text("Önizleme")
+                    }
+                    .tag(0)
+                    .environmentObject(authViewModel)
+                
 
-            
-            ProfileView()
-                .tabItem {
-                    Image(systemName: "person")
-                    Text("Profilim")
-                }
-                .tag(1)
-                .environmentObject(authViewModel)
+                
+                ProfileView()
+                    .tabItem {
+                        Image(systemName: "person")
+                        Text("Profilim")
+                    }
+                    .tag(1)
+                    .environmentObject(authViewModel)
+            }
+            .tint(Color("usi"))
+        }else{
+            LoginView()
+                .navigationBarBackButtonHidden()
         }
-        .tint(Color("usi"))
+        
     }
 }
 

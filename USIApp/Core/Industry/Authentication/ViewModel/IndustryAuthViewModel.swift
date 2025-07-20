@@ -16,19 +16,27 @@ class IndustryAuthViewModel: ObservableObject {
     
     init() {
         if let session = IndustryAuthService.shared.getCurrentUser() {
-            // Firebase'den kullanıcıyı gerçekten kontrol et
-            Auth.auth().currentUser?.reload(completion: { error in
-                if let error = error {
-                    print("Kullanıcı oturumu geçersiz: \(error.localizedDescription)")
-                    DispatchQueue.main.async {
-                        self.industryUserSession = nil
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.industryUserSession = session
-                    }
+            
+            FirestoreService.shared.fetchAcademicianDocumentById(byEmail: Auth.auth().currentUser?.email ?? "") { result in
+                switch result {
+                case .success(_):
+                    self.industryUserSession = nil
+                case.failure(_):
+                    Auth.auth().currentUser?.reload(completion: { error in
+                        if let error = error {
+                            print("Kullanıcı oturumu geçersiz: \(error.localizedDescription)")
+                            DispatchQueue.main.async {
+                                self.industryUserSession = nil
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                self.industryUserSession = session
+                            }
+                        }
+                    })
                 }
-            })
+            }
+            
         } else {
             self.industryUserSession = nil
         }
