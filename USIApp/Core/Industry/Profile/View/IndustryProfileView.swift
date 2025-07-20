@@ -12,13 +12,7 @@ import SwiftUI
 
 struct IndustryProfileView: View {
     
-    @State private var isEditing = false
-    
-    @State private var companyName: String = ""
-    @State private var selectedWorkArea: String = ""
-    @State private var customWorkArea: String = ""
-    @State private var address: String = ""
-    @State private var phoneNumber: String = ""
+    @StateObject var viewModel = IndustryProfileViewModel()
     @EnvironmentObject var authViewModel : IndustryAuthViewModel
     
     let predefinedWorkAreas = ["Sağlık", "Yapay Zeka", "Enerji", "Makine", "Tarım", "Tekstil"]
@@ -37,9 +31,10 @@ struct IndustryProfileView: View {
                         .foregroundColor(.white)
                     Spacer()
                     Button(action: {
-                        isEditing.toggle()
+                        viewModel.isEditing.toggle()
+                        viewModel.saveIndustryData()
                     }) {
-                        Text(isEditing ? "Kaydet " : "Düzenle")
+                        Text(viewModel.isEditing ? "Kaydet " : "Düzenle")
                             .font(.headline)
                             .foregroundStyle(Color("usi"))
                             .padding(6)
@@ -53,7 +48,7 @@ struct IndustryProfileView: View {
                     VStack(spacing: 20) {
                         
                         // Firma Adı
-                        profileField(title: "Firma Adı", text: $companyName)
+                        profileField(title: "Firma Adı", text: $viewModel.companyName)
                         
                         // Çalışma Alanı
                         VStack(alignment: .leading, spacing: 5) {
@@ -63,12 +58,12 @@ struct IndustryProfileView: View {
                                 .padding(.horizontal)
                             
                             HStack {
-                                Text("Seçim:")
+                                Text("Seçim: \(viewModel.selectedWorkArea)")
                                     .foregroundColor(.gray)
                                 
                                 Spacer()
                                 
-                                Picker("", selection: $selectedWorkArea) {
+                                Picker("", selection: $viewModel.selectedWorkArea) {
                                     Text("Seçiniz").tag("")
                                     ForEach(predefinedWorkAreas, id: \.self) {
                                         Text($0)
@@ -77,17 +72,17 @@ struct IndustryProfileView: View {
                                 }
                                 .labelsHidden()
                                 .pickerStyle(MenuPickerStyle())
-                                .disabled(!isEditing)
+                                .disabled(!(viewModel.isEditing))
                             }
                             .padding()
                             .background(Color.white)
                             .cornerRadius(10)
-                            .overlay(RoundedRectangle(cornerRadius: 10).stroke(isEditing ? Color("usi").opacity(1) : Color.gray.opacity(0.3) ))
+                            .overlay(RoundedRectangle(cornerRadius: 10).stroke(viewModel.isEditing ? Color("usi").opacity(1) : Color.gray.opacity(0.3) ))
 
                             .padding(.horizontal)
                             
-                            if selectedWorkArea == "Diğer" {
-                                profileField(title: "Özel Çalışma Alanı", text: $customWorkArea)
+                            if viewModel.selectedWorkArea == "Diğer" || viewModel.selectedWorkArea == viewModel.customWorkArea {
+                                profileField(title: "Diğer Çalışma Alanı", text: $viewModel.customWorkArea)
                             }
                         }
                         
@@ -100,7 +95,7 @@ struct IndustryProfileView: View {
 
                             ZStack {
                                 // Placeholder
-                                if address.isEmpty {
+                                if viewModel.address.isEmpty {
                                     Text("Adresinizi girin")
                                         .foregroundColor(.gray)
                                         .padding(.leading, 8)
@@ -108,20 +103,21 @@ struct IndustryProfileView: View {
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                 }
 
-                                TextEditor(text: $address)
-                                    .disabled(!isEditing)
+                                TextEditor(text: $viewModel.address)
+                                    .foregroundColor(viewModel.isEditing ? .black : .gray)
+                                    .disabled(!(viewModel.isEditing))
                                     .frame(height: 120)
                                     .padding(8)
                                     .background(Color.white)
                                     .cornerRadius(10)
-                                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(isEditing ? Color("usi").opacity(1) : Color.gray.opacity(0.3) ))
+                                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(viewModel.isEditing ? Color("usi").opacity(1) : Color.gray.opacity(0.3) ))
                             }
                             .padding(.horizontal)
                         }
 
                         
                         // Telefon
-                        profileField(title: "Telefon Numarası", text: $phoneNumber, keyboard: .phonePad)
+                        profileField(title: "Telefon Numarası", text: $viewModel.phoneNumber, keyboard: .phonePad)
                         
                         Spacer()
                         
@@ -151,12 +147,13 @@ struct IndustryProfileView: View {
                 .foregroundColor(.secondary)
                 .padding(.horizontal)
             TextField(title, text: text)
+                .foregroundColor(viewModel.isEditing ? .black : .gray)
                 .keyboardType(keyboard)
-                .disabled(!isEditing)
+                .disabled(!(viewModel.isEditing))
                 .padding()
                 .background(Color.white)
                 .cornerRadius(10)
-                .overlay(RoundedRectangle(cornerRadius: 10).stroke(isEditing ? Color("usi").opacity(1) : Color.gray.opacity(0.3) ))
+                .overlay(RoundedRectangle(cornerRadius: 10).stroke(viewModel.isEditing ? Color("usi").opacity(1) : Color.gray.opacity(0.3)))
                 .padding(.horizontal)
         }
     }
