@@ -93,6 +93,52 @@ class IndustryFirestoreService {
         
     }
     
+    func fetchRequests(completion: @escaping (Result<[RequestModel], Error>) -> Void) {
+        
+        guard let userId = IndustryAuthService.shared.getCurrentUser()?.id else {
+            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Kullanıcı ID bulunamadı"])))
+            return
+        }
+        
+        let docRef = Firestore.firestore()
+            .collection("Industry")
+            .document(userId)
+            .collection("Request")
+        
+        docRef.getDocuments { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let documents = snapshot?.documents else {
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Belge bulunamadı"])))
+                return
+            }
+            
+            let requests: [RequestModel] = documents.compactMap { doc in
+                let data = doc.data()
+                
+                let title = data["requestTitle"] as? String ?? ""
+                let description = data["requestMessage"] as? String ?? ""
+                let date = data["createdDate"] as? String ?? ""
+                let selectedCategories = data["selectedCategories"] as? [String] ?? []
+                
+                return RequestModel(
+                    id: doc.documentID,
+                    title: title,
+                    description: description,
+                    date: date,
+                    selectedCategories: selectedCategories
+                )
+            }
+            
+            completion(.success(requests))
+        }
+    }
+
+
+    
     
     
 }

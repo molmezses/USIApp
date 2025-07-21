@@ -11,5 +11,6 @@ struct RequestModel:Identifiable {
     var id :String
     var title: String
     var description: String
-    var date: Date
+    var date: String
+    var selectedCategories: [String]
 }

@@ -71,6 +71,10 @@ class RequestViewModel: ObservableObject {
         "Sosyal Sorumluluk Projeleri"
     ]
     
+    init() {
+        loadRequests()
+    }
+    
 
 
     func validateAddCategory() -> Bool{
@@ -93,6 +97,19 @@ class RequestViewModel: ObservableObject {
                 print("Hata: \(error.localizedDescription)")
             } else {
                 print("Başarılı : Document added successfully!")
+            }
+        }
+    }
+    
+    func loadRequests(){
+        IndustryFirestoreService.shared.fetchRequests { result in
+            switch result {
+            case .success(let requests):
+                
+                self.requests = requests
+                print("Başarılı : Document added successfully!")
+            case .failure(let failure):
+                print("Hata: \(failure.localizedDescription)")
             }
         }
     }

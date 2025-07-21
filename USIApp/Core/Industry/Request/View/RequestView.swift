@@ -77,7 +77,7 @@ struct RequestView: View {
             Text(request.description)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
-            Text("Tarih: \(request.date.formatted(date: .abbreviated, time: .omitted))")
+            Text("Tarih: \(request.date)")
                 .font(.caption)
                 .foregroundColor(.gray)
         }
