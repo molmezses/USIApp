@@ -9,16 +9,15 @@ import Foundation
 
 class RequestViewModel: ObservableObject {
     
-    @Published var requests: [RequestModel] = [
-        RequestModel(title: "Stajyer Talebi", description: "Yazılım departmanımıza 2 stajyer arıyoruz.", date: Date()),
-        RequestModel(title: "Proje Ortaklığı", description: "Makine mühendisliği öğrencileriyle Ar-Ge projesi.", date: Date())
-    ]
-
-    @Published var showNewRequestSheet = false
+    @Published var requests: [RequestModel] = []
     
     @Published var selectedCategories: [String] = []
 
     @Published var customCategoryInput: String = ""
+    
+    @Published var requestTitle: String = ""
+    
+    @Published var requestMessage: String = ""
     
     let categories: [String] = [
         "Yapay Zeka",
@@ -71,6 +70,33 @@ class RequestViewModel: ObservableObject {
         "Karar Destek Sistemleri",
         "Sosyal Sorumluluk Projeleri"
     ]
+    
 
+
+    func validateAddCategory() -> Bool{
+        if selectedCategories == [] {
+            return false
+        }
+        return true
+    }
+    
+    func clearFields(){
+        self.selectedCategories.removeAll()
+        self.customCategoryInput = ""
+        self.requestTitle = ""
+        self.requestMessage = ""
+    }
+    
+    func saveRequestData(){
+        IndustryFirestoreService.shared.saveRequest(selectedCategories: selectedCategories, requestTitle: requestTitle, requestMessage: requestMessage) { error in
+            if let error = error {
+                print("Hata: \(error.localizedDescription)")
+            } else {
+                print("Başarılı : Document added successfully!")
+            }
+        }
+    }
+    
+    
     
 }

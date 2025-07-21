@@ -14,7 +14,6 @@ struct IndustryTabView: View {
     @EnvironmentObject var requestViewModel : RequestViewModel
 
     var body: some View {
-        NavigationStack {
             VStack {
                 if authViewModel.industryUserSession != nil {
                     
@@ -46,7 +45,7 @@ struct IndustryTabView: View {
                         .navigationBarBackButtonHidden()
                 }
             }
-        }
+        
     }
 }
 

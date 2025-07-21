@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct RequestModel: Identifiable {
-    var id = UUID()
+struct RequestModel:Identifiable {
+    var id :String
     var title: String
     var description: String
     var date: Date

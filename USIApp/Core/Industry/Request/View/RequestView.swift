@@ -10,9 +10,11 @@ import SwiftUI
 struct RequestView: View {
     
     @EnvironmentObject var viewModel: RequestViewModel
+    @EnvironmentObject var authViewModel : IndustryAuthViewModel
+    @State var showNewRequestSheet = false
+
 
     var body: some View {
-        NavigationStack {
             VStack(spacing: 0) {
                 
                 // Üst Başlık
@@ -44,7 +46,7 @@ struct RequestView: View {
                 .background(Color(.systemGroupedBackground))
                 
                 Button(action: {
-                    viewModel.showNewRequestSheet = true
+                    showNewRequestSheet = true
                 }) {
                     HStack {
                         Image(systemName: "plus.circle.fill")
@@ -59,12 +61,13 @@ struct RequestView: View {
                     .padding()
                 }
             }
-            .navigationDestination(isPresented: $viewModel.showNewRequestSheet) {
+            .navigationDestination(isPresented: $showNewRequestSheet) {
                 AddRequestCategoryView()
                     .environmentObject(viewModel)
+                    .environmentObject(authViewModel)
                     .navigationBarBackButtonHidden()
             }
-        }
+        
     }
     
     func requestCard(for request: RequestModel) -> some View {

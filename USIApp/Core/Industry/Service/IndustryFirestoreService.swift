@@ -57,12 +57,40 @@ class IndustryFirestoreService {
                 email: data["email"] as? String ?? ""
             )
 
-            
             completion(.success(info))
-            
-            
         }
+    }
+    
+    func getCurrentDateAsString() -> String {
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        return formatter.string(from: date)
+    }
 
+    
+    func saveRequest(selectedCategories: [String] , requestTitle: String , requestMessage: String, completion: @escaping (Error?) -> Void){
+        
+        let document: [String: Any] = [
+            "selectedCategories" : selectedCategories,
+            "requestTitle" : requestTitle,
+            "requestMessage" : requestMessage,
+            "createdDate" : getCurrentDateAsString()
+        ]
+        
+        Firestore.firestore()
+            .collection("Industry")
+            .document("\(IndustryAuthService.shared.getCurrentUser()?.id ?? "id yok")")
+            .collection("Request")
+            .addDocument(data: document) { error in
+                if let error = error {
+                    print("Hata: \(error.localizedDescription)")
+                } else {
+                    print("Başarılı : Document added successfully!")
+                }
+                completion(error)
+            }
+        
     }
     
     
