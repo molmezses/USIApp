@@ -131,7 +131,13 @@ struct IndustryProfileView: View {
                     }
                     .padding(.top)
                 }
+                .refreshable {
+                    viewModel.loadIndustryProfileData()
+                }
                 .background(Color(.systemGroupedBackground))
+            }
+            .onAppear {
+                viewModel.loadIndustryProfileData()
             }
         }
     }

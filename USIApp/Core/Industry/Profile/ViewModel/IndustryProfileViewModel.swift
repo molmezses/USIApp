@@ -16,7 +16,9 @@ class IndustryProfileViewModel: ObservableObject{
     @Published  var phoneNumber: String = ""
     @Published var errorMessage: String = ""
     
-    init() {}
+    init() {
+        self.loadIndustryProfileData()
+    }
     
     
     func saveIndustryData(){
@@ -60,6 +62,26 @@ class IndustryProfileViewModel: ObservableObject{
             }
         }
         
+        
+    }
+    
+    func loadIndustryProfileData(){
+        
+        IndustryFirestoreService.shared.fetchIndustryProfileData { result in
+            switch result {
+            case .success(let info):
+                
+                self.companyName = info.firmaAdi
+                self.selectedWorkArea = info.calismaAlani
+                self.address = info.adres
+                self.selectedWorkArea = info.calismaAlani
+                self.phoneNumber = info.tel
+                
+            case .failure(let failure):
+                self.errorMessage = "Hata : \(failure.localizedDescription)"
+                print(self.errorMessage)
+            }
+        }
         
     }
     
