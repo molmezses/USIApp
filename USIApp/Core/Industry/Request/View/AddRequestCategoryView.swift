@@ -101,7 +101,6 @@ struct AddRequestCategoryView: View {
                     }
                     .padding(.bottom)
                     
-                    // Diğer kategori girişi
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Diğer Kategori Ekle")
                             .font(.subheadline)
@@ -159,7 +158,7 @@ struct AddRequestCategoryView: View {
                                                     }
                                                     .padding(.vertical, 6)
                                                     .padding(.horizontal, 10)
-                                                    .background(Color("usi"))
+                                                    .background(.green)
                                                     .cornerRadius(15)
                                                 }
                                             }

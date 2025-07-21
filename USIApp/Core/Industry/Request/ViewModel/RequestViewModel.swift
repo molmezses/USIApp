@@ -99,6 +99,8 @@ class RequestViewModel: ObservableObject {
                 print("Başarılı : Document added successfully!")
             }
         }
+        
+        self.loadRequests()
     }
     
     func loadRequests(){
@@ -108,6 +110,18 @@ class RequestViewModel: ObservableObject {
                 
                 self.requests = requests
                 print("Başarılı : Document added successfully!")
+            case .failure(let failure):
+                print("Hata: \(failure.localizedDescription)")
+            }
+        }
+    }
+    
+    func deleteRequest(documentID: String){
+        IndustryFirestoreService.shared.deleteRequest(documentID: documentID) { result in
+            switch result {
+            case .success(_):
+                self.loadRequests()
+                print("Başarılı : Document deleted successfully!")
             case .failure(let failure):
                 print("Hata: \(failure.localizedDescription)")
             }

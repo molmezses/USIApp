@@ -17,7 +17,6 @@ struct RequestView: View {
     var body: some View {
             VStack(spacing: 0) {
                 
-                // Üst Başlık
                 HStack {
                     Spacer()
                     Text("Taleplerim")
@@ -28,13 +27,14 @@ struct RequestView: View {
                 .padding()
                 .background(Color("usi"))
                 
-                // Scroll İçeriği
                 ScrollView {
                     VStack(spacing: 16) {
                         if viewModel.requests.isEmpty {
-                            Text("Henüz talep oluşturulmamış.")
+                            Text("Henüz talep oluşturulmamış. Talep oluşturmak için teni talep butonuna tıklayınız")
+                                .frame(maxWidth: .infinity)
                                 .foregroundColor(.gray)
                                 .padding(.top, 50)
+                                .padding(.horizontal)
                         } else {
                             ForEach(viewModel.requests) { request in
                                 requestCard(for: request)
@@ -42,6 +42,9 @@ struct RequestView: View {
                         }
                     }
                     .padding(.top)
+                }
+                .refreshable {
+                    viewModel.loadRequests()
                 }
                 .background(Color(.systemGroupedBackground))
                 
@@ -71,23 +74,65 @@ struct RequestView: View {
     }
     
     func requestCard(for request: RequestModel) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(request.title)
-                .font(.headline)
-            Text(request.description)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-            Text("Tarih: \(request.date)")
-                .font(.caption)
-                .foregroundColor(.gray)
+        VStack(alignment: .leading, spacing: 12) {
+            
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(request.title)
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.primary)
+                    
+                    Text(request.description)
+                        .font(.body)
+                        .foregroundColor(.secondary)
+                        .lineLimit(3)
+                    
+                    Text("📅 \(request.date)")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
+                
+                Spacer()
+                
+                // Sil Butonu
+                Button(action: {
+                    viewModel.deleteRequest(documentID: request.id)
+                }) {
+                    Image(systemName: "trash")
+                        .foregroundColor(.red)
+                        .padding(8)
+                        .background(Color.red.opacity(0.1))
+                        .clipShape(Circle())
+                }
+                .buttonStyle(PlainButtonStyle())
+            }
+            
+            // Kategori Etiketleri
+            if !request.selectedCategories.isEmpty {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 6) {
+                        ForEach(request.selectedCategories, id: \.self) { category in
+                            Text(category)
+                                .font(.caption)
+                                .padding(.vertical, 4)
+                                .padding(.horizontal, 10)
+                                .background(Color.blue.opacity(0.1))
+                                .foregroundColor(.blue)
+                                .clipShape(Capsule())
+                        }
+                    }
+                }
+            }
+            
         }
-        .frame(maxWidth: .infinity , alignment: .leading)
         .padding()
         .background(Color.white)
-        .cornerRadius(12)
-        .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
+        .cornerRadius(16)
+        .shadow(color: Color.black.opacity(0.07), radius: 6, x: 0, y: 3)
         .padding(.horizontal)
     }
+
 }
 
 
