@@ -11,6 +11,7 @@ struct IndustryTabView: View {
     
     @State private var selectedTab = 1
     @EnvironmentObject var authViewModel : IndustryAuthViewModel
+    @EnvironmentObject var requestViewModel : RequestViewModel
 
     var body: some View {
         NavigationStack {
@@ -22,6 +23,7 @@ struct IndustryTabView: View {
                         
                         RequestView()
                             .environmentObject(authViewModel)
+                            .environmentObject(requestViewModel)
                             .tabItem {
                                 Image(systemName: "inset.filled.square.dashed")
                                 Text("Taleplerim")

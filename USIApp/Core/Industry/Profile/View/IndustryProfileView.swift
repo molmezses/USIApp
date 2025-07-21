@@ -2,10 +2,6 @@
 //  IndustryProfileView.swift
 //  USIApp
 //
-
-
-
-
 //  Created by Mustafa Ölmezses on 20.07.2025.
 //
 import SwiftUI

@@ -63,4 +63,7 @@ class IndustryProfileViewModel: ObservableObject{
         
     }
     
+    
+    
+    
 }

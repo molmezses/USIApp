@@ -17,6 +17,7 @@ struct IndustryLoginView: View {
     @FocusState private var focusedField: Bool
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var authViewModel: IndustryAuthViewModel
+    @EnvironmentObject var requestViewModel: RequestViewModel
 
     var body: some View {
         VStack {
@@ -147,6 +148,7 @@ struct IndustryLoginView: View {
             } else {
                 IndustryTabView()
                     .environmentObject(authViewModel)
+                    .environmentObject(requestViewModel)
             }
 
         }

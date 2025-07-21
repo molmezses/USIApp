@@ -13,6 +13,8 @@ struct IndustryRegisterView: View {
     @FocusState private var focusedField: Bool
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var authViewModel : IndustryAuthViewModel
+    @EnvironmentObject var requestViewModel: RequestViewModel
+
     
     
     
@@ -140,6 +142,7 @@ struct IndustryRegisterView: View {
                 .navigationDestination(isPresented: $viewModel.navigateToIndustryTabView) {
                     IndustryTabView()
                         .environmentObject(authViewModel)
+                        .environmentObject(requestViewModel)
                         .navigationBarBackButtonHidden()
                 }
                 .ignoresSafeArea()

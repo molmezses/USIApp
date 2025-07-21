@@ -37,7 +37,6 @@ struct FirmView: View {
 
                     Spacer()
 
-                    // Görünmez simetri için
                     Image(systemName: "chevron.left")
                         .opacity(0)
                 }
@@ -47,7 +46,6 @@ struct FirmView: View {
                 ScrollView {
                     VStack(spacing: 20) {
 
-                        // Yeni Firma Ekleme Bölümü
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Yeni Firma Ekle")
                                 .font(.title3.bold())

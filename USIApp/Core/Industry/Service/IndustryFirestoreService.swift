@@ -29,8 +29,6 @@ class IndustryFirestoreService {
                 print("Veri kaydedildi")
             }
         }
-
-        
     }
     
     

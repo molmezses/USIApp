@@ -29,12 +29,14 @@ struct USIAppApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject var authViewModel = AuthViewModel()
     @StateObject var industryAuthViewModel = IndustryAuthViewModel()
+    @StateObject var requestViewModel = RequestViewModel()
     
     var body: some Scene {
         WindowGroup {
             LoginView()
                 .environmentObject(authViewModel)
                 .environmentObject(industryAuthViewModel)
+                .environmentObject(requestViewModel)
         }
     }
 }
