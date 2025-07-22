@@ -4,14 +4,14 @@ struct AdminView: View {
     @Environment(\.dismiss) var dismiss
     
     // Örnek veri
-    let totalAcademics = 100
-    let loggedInAcademics = 65
-    let totalIndustry = 50
-    let loggedInIndustry = 30
+    let totalAcademics = 989
+    let loggedInAcademics = 765
+    let totalIndustry = 10
+    let loggedInIndustry = 3
     let totalRequests = 80
-    let approvedRequests = 50
-    let rejectedRequests = 15
-    let pendingRequests = 15
+    let approvedRequests = 55
+    let rejectedRequests = 11
+    let pendingRequests = 14
     
     // Kart yüksekliği sabiti
     private let cardHeight: CGFloat = 160
@@ -196,10 +196,10 @@ struct AdminView: View {
                 .padding(.horizontal)
             
             HStack(spacing: 12) {
-                StatItem(icon: "person.3.fill", value: "\(totalAcademics)", label: "Akademisyen")
-                StatItem(icon: "building.2.fill", value: "\(totalIndustry)", label: "Sanayi")
-                StatItem(icon: "checkmark.circle.fill", value: "\(approvedRequests)", label: "Onaylanan")
-                StatItem(icon: "doc.fill", value: "\(totalRequests)", label: "Toplam Talep")
+                StatItem(icon: "person.3.fill", value: "\(totalAcademics)", label: "Akademisyen", color: Color("usi"))
+                StatItem(icon: "building.2.fill", value: "\(totalIndustry)", label: "Sanayi", color: Color("sari"))
+                StatItem(icon: "checkmark.circle.fill", value: "\(approvedRequests)", label: "Onaylanan", color: .green)
+                StatItem(icon: "doc.fill", value: "\(totalRequests)", label: "Toplam Talep", color: Color.purple)
             }
             .padding()
             .frame(height: cardHeight)
@@ -316,12 +316,13 @@ struct StatItem: View {
     let icon: String
     let value: String
     let label: String
+    var color: Color
     
     var body: some View {
         VStack(spacing: 6) {
             Image(systemName: icon)
                 .font(.system(size: 20))
-                .foregroundColor(.blue)
+                .foregroundColor(color)
             
             Text(value)
                 .font(.headline)
