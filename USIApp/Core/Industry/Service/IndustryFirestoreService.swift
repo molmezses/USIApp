@@ -75,7 +75,8 @@ class IndustryFirestoreService {
             "selectedCategories" : selectedCategories,
             "requestTitle" : requestTitle,
             "requestMessage" : requestMessage,
-            "createdDate" : getCurrentDateAsString()
+            "createdDate" : getCurrentDateAsString(),
+            "status" : "pending"
         ]
         
         Firestore.firestore()
