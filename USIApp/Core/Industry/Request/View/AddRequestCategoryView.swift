@@ -34,7 +34,7 @@ struct AddRequestCategoryView: View {
                         .foregroundColor(.white)
                 }
                 Spacer()
-                Text("Taleplerim")
+                Text("Talebinizin Kategorisini seçiniz")
                     .font(.headline)
                     .foregroundColor(.white)
                 Spacer()

@@ -24,7 +24,7 @@ struct AddRequestMessageView: View {
                         .foregroundColor(.white)
                 }
                 Spacer()
-                Text("Taleplerim")
+                Text("Talebinizin Detayı")
                     .font(.headline)
                     .foregroundColor(.white)
                 Spacer()
