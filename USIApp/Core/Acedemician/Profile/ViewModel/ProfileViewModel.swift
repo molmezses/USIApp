@@ -49,6 +49,20 @@ class ProfileViewModel: ObservableObject {
         
     }
     
+    func isAdminUser() -> Bool {
+       
+        if AuthService.shared.getCurrentUser()?.email == "mustafaolmezses@gmail.com"{
+            return true
+        }
+        
+        if AuthService.shared.getCurrentUser()?.email == "veysel.akatay@ahievran.edu.tr"{
+            return true
+        }
+        
+        return false
+       
+    }
+    
     
     
 }

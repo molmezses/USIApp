@@ -93,6 +93,32 @@ struct ProfileView: View {
                             .padding(.bottom)
                             
                             VStack {
+                                
+                                if viewModel.isAdminUser() {
+                                    NavigationLink {
+                                        AdminView()
+                                            .navigationBarBackButtonHidden()
+                                    } label: {
+                                        HStack {
+                                            Image(systemName: "key.icloud.fill")
+                                                .resizable()
+                                                .foregroundStyle(Color("usi"))
+                                                .frame(width: 28, height: 28)
+                                            Text("Yönetim paneline geç")
+                                            Spacer()
+                                            Image(systemName: "chevron.right")
+                                            
+                                        }
+                                        .padding(2)
+                                        .foregroundStyle(.black)
+                                    }
+                                    Divider()
+                                        .padding(.vertical , 4)
+                                }
+                                
+                                
+                                
+                                
                                 NavigationLink {
                                     PersonalInformationView()
                                         .environmentObject(authViewModel)
