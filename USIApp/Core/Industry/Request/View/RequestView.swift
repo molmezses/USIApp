@@ -37,7 +37,13 @@ struct RequestView: View {
                                 .padding(.horizontal)
                         } else {
                             ForEach(viewModel.requests) { request in
-                                requestCard(for: request)
+                                NavigationLink {
+                                    RequestInfoView(request: request)
+                                        .navigationBarBackButtonHidden()
+                                } label: {
+                                    requestCard(for: request)
+                                }
+
                             }
                         }
                     }
@@ -128,7 +134,7 @@ struct RequestView: View {
         }
         .padding()
         .background(Color.white)
-        .cornerRadius(16)
+        .cornerRadius(10)
         .shadow(color: Color.black.opacity(0.07), radius: 6, x: 0, y: 3)
         .padding(.horizontal)
     }
