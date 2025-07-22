@@ -9,17 +9,10 @@ import SwiftUI
 
 struct RequestInfoView: View {
     var request: RequestModel
-    var status: RequestStatus = .pending
-        
-        
-//        .rejected(reason: "Talebiniz içeriğinizin boş olması sebebi ile reddeilmiştir")
-        
-//        .approved(
-//        message: "Talebiniz uygun bulunmuştur. Lütfen iletişim bilgileri kısmından bize ulaşınız.",
-//        approver: Approver(name: "Dr. Ahmet Yılmaz", title: "Teknoloji Transfer Uzmanı", mail: "mustafaolmezses@gmail.com", phone: "05055370194")
-//  )
+    var status: RequestStatus?
     
     @Environment(\.dismiss) var dismiss
+    @State var viewModel = RequestInfoViewModel()
     
     var body: some View {
         VStack(spacing: 0) {
@@ -89,12 +82,45 @@ struct RequestInfoView: View {
                                     }
                                 }
                             }
-                        case .rejected(let reason):
-                            Label("Reddedildi", systemImage: "xmark.octagon")
-                                .foregroundColor(.red)
-                                .frame(maxWidth: .infinity , alignment:.leading)
-                            Text("Sebep: \(reason)")
-                                .foregroundColor(.secondary)
+                        case .rejected(let message , let approver):
+                            VStack(alignment: .leading, spacing: 10) {
+                                Label("Talep Reddedildi", systemImage: "xmark.octagon.fill")
+                                    .foregroundColor(.red)
+                                
+                                Text("Reddedilme nedeni: \(message)")
+                                    .font(.body)
+                                    .foregroundColor(.secondary)
+                                    .frame(maxWidth: .infinity , alignment:.leading)
+                                
+                                HStack(alignment: .top, spacing: 12) {
+                                    Image(systemName: "person.crop.circle.fill")
+                                        .resizable()
+                                        .frame(width: 40, height: 40)
+                                        .foregroundColor(.blue)
+                                    
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(approver.name)
+                                            .font(.subheadline.bold())
+                                        Text(approver.title)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                        Text("Mail: \(approver.mail)")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                        Text("Tel: \(approver.phone)")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
+                            }
+                        case .none:
+                            HStack {
+                                ProgressView()
+                                Label("Gönderildi – Cevap Bekleniyor", systemImage: "clock")
+                                    .foregroundColor(.orange)
+                                    .frame(maxWidth: .infinity , alignment:.leading)
+
+                            }
                         }
                     }
                     .padding()
@@ -152,7 +178,7 @@ struct RequestInfoView: View {
 enum RequestStatus {
     case pending
     case approved(message: String, approver: Approver)
-    case rejected(reason: String)
+    case rejected(message: String, approver: Approver)
 }
 
 struct Approver {
@@ -181,3 +207,4 @@ struct WrapHStack<Item: Hashable, Content: View>: View {
 #Preview {
 
 }
+

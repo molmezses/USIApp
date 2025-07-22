@@ -11,74 +11,79 @@ struct RequestView: View {
     
     @EnvironmentObject var viewModel: RequestViewModel
     @EnvironmentObject var authViewModel : IndustryAuthViewModel
+    
+    
     @State var showNewRequestSheet = false
-
-
+    
+    
     var body: some View {
-            VStack(spacing: 0) {
-                
-                HStack {
-                    Spacer()
-                    Text("Taleplerim")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                    Spacer()
-                }
-                .padding()
-                .background(Color("usi"))
-                
-                ScrollView {
-                    VStack(spacing: 16) {
-                        if viewModel.requests.isEmpty {
-                            Text("Henüz talep oluşturulmamış. Talep oluşturmak için teni talep butonuna tıklayınız")
-                                .frame(maxWidth: .infinity)
-                                .foregroundColor(.gray)
-                                .padding(.top, 50)
-                                .padding(.horizontal)
-                        } else {
-                            ForEach(viewModel.requests) { request in
-                                NavigationLink {
-                                    RequestInfoView(request: request)
-                                        .navigationBarBackButtonHidden()
-                                } label: {
-                                    requestCard(for: request)
-                                }
-
+        VStack(spacing: 0) {
+            
+            HStack {
+                Spacer()
+                Text("Taleplerim")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                Spacer()
+            }
+            .padding()
+            .background(Color("usi"))
+            
+            ScrollView {
+                VStack(spacing: 16) {
+                    if viewModel.requests.isEmpty {
+                        Text("Henüz talep oluşturulmamış. Talep oluşturmak için teni talep butonuna tıklayınız")
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(.gray)
+                            .padding(.top, 50)
+                            .padding(.horizontal)
+                    } else {
+                        ForEach(viewModel.requests) { request in
+                            NavigationLink {
+                                
+                                
+                                RequestInfoView(request: request , status: request.status )
+                                    .navigationBarBackButtonHidden()
+                                
+                            } label: {
+                                requestCard(for: request)
                             }
+                            
                         }
                     }
-                    .padding(.top)
                 }
-                .refreshable {
-                    viewModel.loadRequests()
-                }
-                .background(Color(.systemGroupedBackground))
-                
-                Button(action: {
-                    showNewRequestSheet = true
-                }) {
-                    HStack {
-                        Image(systemName: "plus.circle.fill")
-                        Text("Yeni Talep Oluştur")
-                            .fontWeight(.semibold)
-                    }
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color("usi"))
-                    .cornerRadius(12)
-                    .padding()
-                }
+                .padding(.top)
             }
-            .onAppear{
+            .refreshable {
                 viewModel.loadRequests()
             }
-            .navigationDestination(isPresented: $showNewRequestSheet) {
-                AddRequestCategoryView()
-                    .environmentObject(viewModel)
-                    .environmentObject(authViewModel)
-                    .navigationBarBackButtonHidden()
+            .background(Color(.systemGroupedBackground))
+            
+            Button(action: {
+                showNewRequestSheet = true
+            }) {
+                HStack {
+                    Image(systemName: "plus.circle.fill")
+                    Text("Yeni Talep Oluştur")
+                        .fontWeight(.semibold)
+                }
+                .foregroundColor(.white)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color("usi"))
+                .cornerRadius(12)
+                .padding()
             }
+        }
+        .onAppear{
+            viewModel.loadRequests()
+        }
+        .navigationDestination(isPresented: $showNewRequestSheet) {
+            AddRequestCategoryView()
+                .environmentObject(viewModel)
+                .environmentObject(authViewModel)
+                .navigationBarBackButtonHidden()
+        }
         
     }
     
@@ -141,7 +146,7 @@ struct RequestView: View {
         .shadow(color: Color.black.opacity(0.07), radius: 6, x: 0, y: 3)
         .padding(.horizontal)
     }
-
+    
 }
 
 

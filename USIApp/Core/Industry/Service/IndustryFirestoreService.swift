@@ -164,7 +164,7 @@ class IndustryFirestoreService {
         case "approved":
             return .approved(message: "", approver: Approver(name: "Veysel Akatay", title: "TTO Uzmanı", mail: "veysel.akatay@ahievran.edu.tr", phone: "053243244023"))
         case "rejected":
-            return .rejected(reason: "onaylanmadı")
+            return .rejected(message: "", approver: Approver(name: "Veysel Akatay", title: "TTO Uzmanı", mail: "veysel.akatay@ahievran.edu.tr", phone: "053243244023"))
         default:
             return .pending
         }
