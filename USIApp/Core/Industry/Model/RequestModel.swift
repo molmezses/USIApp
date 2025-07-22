@@ -13,4 +13,5 @@ struct RequestModel:Identifiable {
     var description: String
     var date: String
     var selectedCategories: [String]
+    var status: RequestStatus
 }

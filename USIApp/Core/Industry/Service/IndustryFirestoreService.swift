@@ -124,13 +124,16 @@ class IndustryFirestoreService {
                 let description = data["requestMessage"] as? String ?? ""
                 let date = data["createdDate"] as? String ?? ""
                 let selectedCategories = data["selectedCategories"] as? [String] ?? []
+                let status = data["status"] as? String ?? ""
+                
                 
                 return RequestModel(
                     id: doc.documentID,
                     title: title,
                     description: description,
                     date: date,
-                    selectedCategories: selectedCategories
+                    selectedCategories: selectedCategories,
+                    status: self.stringToRequestStatus(string: status)
                 )
             }
             
@@ -151,6 +154,21 @@ class IndustryFirestoreService {
                     print("Belge silindi")
                 }
             }
+    }
+    
+    func stringToRequestStatus(string stringData: String) -> RequestStatus {
+        
+        switch stringData{
+        case "pending":
+            return .pending
+        case "approved":
+            return .approved(message: "", approver: Approver(name: "Veysel Akatay", title: "TTO Uzmanı", mail: "veysel.akatay@ahievran.edu.tr", phone: "053243244023"))
+        case "rejected":
+            return .rejected(reason: "onaylanmadı")
+        default:
+            return .pending
+        }
+        
     }
 
 

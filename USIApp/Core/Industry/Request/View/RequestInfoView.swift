@@ -175,17 +175,7 @@ struct WrapHStack<Item: Hashable, Content: View>: View {
     }
 }
 
-#Preview {
-    RequestInfoView(
-        request: RequestModel(
-            id: "1",
-            title: "Test verisi üzerine",
-            description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry...",
-            date: "21.07.2025",
-            selectedCategories: ["Enerji Sistemleri", "Eğitim Teknolojileri", "Girişimcilik", "Test"]
-        )
-    )
-}
+
 
 
 #Preview {

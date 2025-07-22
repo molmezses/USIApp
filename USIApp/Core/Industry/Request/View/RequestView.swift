@@ -70,6 +70,9 @@ struct RequestView: View {
                     .padding()
                 }
             }
+            .onAppear{
+                viewModel.loadRequests()
+            }
             .navigationDestination(isPresented: $showNewRequestSheet) {
                 AddRequestCategoryView()
                     .environmentObject(viewModel)
