@@ -131,6 +131,8 @@ struct RequestInfoView: View {
                     
                     VStack(alignment: .leading, spacing: 16) {
                         
+                        
+                        
                         Text(request.title)
                             .font(.title2.bold())
                         

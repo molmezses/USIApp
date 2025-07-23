@@ -37,7 +37,7 @@ struct AdminView: View {
                         
                         
                         NavigationLink {
-                            EmptyView()
+                            PendingRequestView()
                                 .navigationBarBackButtonHidden()
                         } label: {
                             HStack {

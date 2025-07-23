@@ -40,64 +40,73 @@ struct PendingRequestView: View {
             ScrollView {
                 VStack(spacing: 20) {
 
-                    
-                    VStack(alignment: .leading, spacing: 12) {
-                        
-                        HStack(alignment: .top, spacing: 12) {
-                            // Profil resmi
-                            Image("petlas")
-                                .resizable()
-                                .frame(width: 50, height: 50)
-                                .clipShape(Circle())
+                    //petlas
+                    NavigationLink {
+                        RequestInfoAdminView(request: RequestModel(id: "", title: "Yapay zeka robotları", description: "Fabrikamızdaki ürünlerin birimler arasında iş gücü olmadan ve kolaylıkla taşınabilmesi için geliştirilmiş yapaında iş gücü olmadan ve kolaylıkla taşınabilmesi için geliştirilmiş yapay zeka destekli gömülü sistem olan robotların yapımı  zeka destekli gömülü sistem olan robotların yapımı ve alandaki maliyeti en aza indirmek.", date: "23.07.2025", selectedCategories: selectedCategories, status: .pending))
+                            .navigationBarBackButtonHidden()
+                            .foregroundStyle(.black)
+                    } label: {
+                        VStack(alignment: .leading, spacing: 12) {
                             
-                            // Gönderen bilgisi
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Mustafa Ölmezses")
-                                    .font(.headline)
-                                    .bold()
-                                Text("Petlas LTD .ŞTİ")
-                                    .font(.subheadline)
+                            HStack(alignment: .top, spacing: 12) {
+                                // Profil resmi
+                                Image("petlas")
+                                    .resizable()
+                                    .frame(width: 50, height: 50)
+                                    .clipShape(Circle())
+                                
+                                // Gönderen bilgisi
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Mustafa Ölmezses")
+                                        .font(.headline)
+                                        .bold()
+                                        .foregroundStyle(.black)
+                                    Text("Petlas LTD .ŞTİ")
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
+                                }
+                                
+                                Spacer()
+                                
+                                // Ok
+                                Image(systemName: "chevron.right")
                                     .foregroundColor(.gray)
                             }
                             
-                            Spacer()
+                            // Açıklama
+                            Text("Fabrikamızdaki ürünlerin birimler arasında iş gücü olmadan ve kolaylıkla taşınabilmesi için geliştirilmiş yapay zeka destekli gömülü sistem olan robotların yapımı ve alandaki maliyeti en aza indirmek.")
+                                .lineLimit(4)
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
                             
-                            // Ok
-                            Image(systemName: "chevron.right")
+                            // Tarih
+                            Text("Tarih: 23.07.2025")
+                                .font(.caption2)
                                 .foregroundColor(.gray)
-                        }
-                        
-                        // Açıklama
-                        Text("Fabrikamızdaki ürünlerin birimler arasında iş gücü olmadan ve kolaylıkla taşınabilmesi için geliştirilmiş yapay zeka destekli gömülü sistem olan robotların yapımı ve alandaki maliyeti en aza indirmek.")
-                            .lineLimit(4)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                        
-                        // Tarih
-                        Text("Tarih: 23.07.2025")
-                            .font(.caption2)
-                            .foregroundColor(.gray)
-                        
-                        // Kategoriler
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 8) {
-                                ForEach(selectedCategories, id: \.self) { category in
-                                    Text(category)
-                                        .font(.caption)
-                                        .padding(.horizontal, 10)
-                                        .padding(.vertical, 6)
-                                        .background(Color("usi").opacity(0.1))
-                                        .foregroundColor(.blue)
-                                        .cornerRadius(8)
+                            
+                            // Kategoriler
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 8) {
+                                    ForEach(selectedCategories, id: \.self) { category in
+                                        Text(category)
+                                            .font(.caption)
+                                            .padding(.horizontal, 10)
+                                            .padding(.vertical, 6)
+                                            .background(Color("usi").opacity(0.1))
+                                            .foregroundColor(.blue)
+                                            .cornerRadius(8)
+                                    }
                                 }
                             }
                         }
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(10)
+                        .padding(.horizontal)
                     }
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(10)
-                    .padding(.horizontal)
+
                     
+                    //badem
                     VStack(alignment: .leading, spacing: 12) {
                         
                         HStack(alignment: .top, spacing: 12) {
