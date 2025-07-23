@@ -141,6 +141,60 @@ class IndustryFirestoreService {
         }
     }
     
+//    func fetchAllRequests(completion: @escaping (Result<[RequestModel], Error>) -> Void) {
+//        let db = Firestore.firestore()
+//        let industryRef = db.collection("Industry")
+//        
+//        industryRef.getDocuments { (snapshot, error) in
+//            if let error = error {
+//                print("Hata: Industry koleksiyonu okunamadı - \(error.localizedDescription)")
+//                completion(.failure(error))
+//                return
+//            }
+//            
+//            guard let documents = snapshot?.documents else {
+//                completion(.failure(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Industry belgeleri bulunamadı."])))
+//                return
+//            }
+//            
+//            var allRequests: [RequestModel] = []
+//            let dispatchGroup = DispatchGroup()
+//            
+//            for document in documents {
+//                let industryId = document.documentID
+//                let requestRef = industryRef.document(industryId).collection("Request")
+//                
+//                dispatchGroup.enter()
+//                requestRef.getDocuments { (requestSnapshot, error) in
+//                    if let error = error {
+//                        print("Hata: \(industryId) altındaki Request koleksiyonu alınamadı - \(error.localizedDescription)")
+//                        dispatchGroup.leave()
+//                        return
+//                    }
+//                    
+//                    if let requestDocs = requestSnapshot?.documents {
+//                        for doc in requestDocs {
+//                            do {
+//                                if let request = try doc.data(as: RequestModel?.self) {
+//                                    allRequests.append(request)
+//                                }
+//                            } catch {
+//                                print("RequestModel dönüşüm hatası: \(error.localizedDescription)")
+//                            }
+//                        }
+//                    }
+//                    
+//                    dispatchGroup.leave()
+//                }
+//            }
+//            
+//            dispatchGroup.notify(queue: .main) {
+//                completion(.success(allRequests))
+//            }
+//        }
+//    }
+
+    
     func deleteRequest(documentID:String , completion: @escaping (Result<Void ,Error>) -> Void){
         let docRef = Firestore.firestore().collection("Industry").document(IndustryAuthService.shared.getCurrentUser()?.id ?? "")
             .collection("Request")
