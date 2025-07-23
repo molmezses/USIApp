@@ -17,6 +17,13 @@ struct AcademicianTabView: View {
         if authViewModel.userSession != nil {
             TabView(selection: $selectedTab) {
                 
+                PendingRequestAcademicianInfoView()
+                    .tabItem {
+                        Image(systemName: "inset.filled.square.dashed")
+                        Text("Gelen Talepler")
+                    }
+                    .tag(2)
+                
                 AcademicianView()
                     .tabItem {
                         Image(systemName: "house")

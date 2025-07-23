@@ -6,6 +6,8 @@ struct RequestInfoAdminView: View {
     
     @Environment(\.dismiss) var dismiss
     @State var viewModel = RequestInfoViewModel()
+    @State var requestMessage: String = ""
+    @FocusState var focusedField: Bool
     
     var body: some View {
         VStack(spacing: 0) {
@@ -141,6 +143,33 @@ struct RequestInfoAdminView: View {
                     .cornerRadius(10)
                     .shadow(radius: 2)
                     
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("Mesajınız :")
+                            .font(.subheadline.bold())
+                        ZStack(alignment: .topLeading) {
+                            if requestMessage == "" {
+                                Text("Mesajınızı buraya yazınız...")
+                                    .foregroundColor(.gray)
+                                    .padding(EdgeInsets(top: 12, leading: 16, bottom: 0, trailing: 0))
+                            }
+                            TextEditor(text: $requestMessage)
+                                .frame(height: 140)
+                                .padding(8)
+                                .background(Color.white)
+                                .cornerRadius(8)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.gray.opacity(0.3))
+                                )
+                                .padding(.horizontal)
+                                .focused($focusedField)
+                        }
+                    }
+                    .padding()
+                    .background(Color.white)
+                    .cornerRadius(10)
+                    .shadow(radius: 2)
+                    
                     // 4. Kabul / Reddet Butonları
                     HStack(spacing: 16) {
                         Button(action: {
@@ -176,6 +205,9 @@ struct RequestInfoAdminView: View {
                 .padding()
             }
             .background(Color(.systemGroupedBackground))
+        }
+        .onTapGesture {
+            focusedField = false
         }
     }
 }

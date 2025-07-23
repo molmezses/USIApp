@@ -15,16 +15,16 @@ struct PendingRequestSelectAcademicianView: View {
     @State private var selectedAcademicians: [Academician] = []
     
     let allAcademicians = [
-        Academician(id: "1", name: "Ahmet", surname: "Yılmaz", image: "a1", expertise: ["Yapay Zeka", "Makine Öğrenmesi"]),
-        Academician(id: "2", name: "Mehmet", surname: "Kaya", image: "a2", expertise: ["Veri Bilimi", "İstatistik"]),
-        Academician(id: "3", name: "Ayşe", surname: "Demir", image: "a6", expertise: ["Nörobilim", "Bilişsel Bilim"]),
-        Academician(id: "4", name: "Fatma", surname: "Şahin", image: "a7", expertise: ["Robotik", "Otomasyon"]),
-        Academician(id: "5", name: "Zeynep", surname: "Koç", image: "a8", expertise: ["Yazılım Mühendisliği", "Algoritmalar"]),
-        Academician(id: "6", name: "Can", surname: "Arslan", image: "a3", expertise: ["Bilgisayar Ağları", "Siber Güvenlik"]),
-        Academician(id: "7", name: "Elif", surname: "Yıldız", image: "a9", expertise: ["İnsan-Bilgisayar Etkileşimi", "Kullanıcı Deneyimi"]),
-        Academician(id: "8", name: "Burak", surname: "Öztürk", image: "a4", expertise: ["Veritabanı Sistemleri", "Büyük Veri"]),
-        Academician(id: "9", name: "Selin", surname: "Aydın", image: "a10", expertise: ["Yapay Sinir Ağları", "Derin Öğrenme"]),
-        Academician(id: "10", name: "Kerem", surname: "Korkmaz", image: "a5", expertise: ["Mobil Uygulama Geliştirme", "iOS Programlama"])
+        Academician(id: "1", name: "Mustafa Kasım", surname: "KARAHOCGİL", image: "rektorhoca", expertise: ["Tıp bilimleri", "Yapay Zeka"], unvan: "Prof. Doktor"),
+        Academician(id: "2", name: "Mahmut", surname: "Sari", image: "mahutsari", expertise: ["Veri Bilimi", "İstatistik"], unvan: "Ögr. GAörevlisi"),
+        Academician(id: "3", name: "Veysel", surname: "Akatay", image: "veyselhoca", expertise: ["Nörobilim", "Bilişsel Bilim"], unvan: "Doçent"),
+        Academician(id: "4", name: "Fatma", surname: "Şahin", image: "a7", expertise: ["Robotik", "Otomasyon"], unvan: "Araştırma Görevlisi"),
+        Academician(id: "5", name: "Zeynep", surname: "Koç", image: "a8", expertise: ["Yazılım Mühendisliği", "Algoritmalar"], unvan: "Doç. Doktor"),
+        Academician(id: "6", name: "Can", surname: "Arslan", image: "a3", expertise: ["Bilgisayar Ağları", "Siber Güvenlik"], unvan: "Prof. Doktor"),
+        Academician(id: "7", name: "Elif", surname: "Yıldız", image: "a9", expertise: ["İnsan-Bilgisayar Etkileşimi", "Kullanıcı Deneyimi"], unvan: "Doçent"),
+        Academician(id: "8", name: "Burak", surname: "Öztürk", image: "a4", expertise: ["Veritabanı Sistemleri", "Büyük Veri"], unvan: "Öğretim Görevlisi"),
+        Academician(id: "9", name: "Selin", surname: "Aydın", image: "a10", expertise: ["Yapay Sinir Ağları", "Derin Öğrenme"], unvan: "Öğretim Görevlisi"),
+        Academician(id: "10", name: "Kerem", surname: "Korkmaz", image: "a5", expertise: ["Mobil Uygulama Geliştirme", "iOS Programlama"], unvan: "Doçent")
     ]
     
     var filteredAcademicians: [Academician] {
@@ -130,6 +130,7 @@ struct Academician: Identifiable, Equatable {
     let surname: String
     let image: String
     let expertise: [String]
+    let unvan: String
 }
 
 // Arama Çubuğu
@@ -183,15 +184,18 @@ struct AcademicianRow: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text("\(academician.name) \(academician.surname)")
                     .font(.headline)
+                Text("\(academician.unvan)")
+                    .font(.subheadline)
+                    .foregroundStyle(.gray)
                 
                 // Uzmanlık alanları
                 FlexibleView(data: academician.expertise, spacing: 4, alignment: .leading) { item in
                     Text(item)
-                        .font(.caption)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(Color.blue.opacity(0.2))
-                        .cornerRadius(10)
+                        .font(.caption2)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 3)
+                        .background(Color("usi").opacity(0.2))
+                        .cornerRadius(6)
                 }
             }
             
@@ -200,7 +204,7 @@ struct AcademicianRow: View {
             Button(action: onSelect) {
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "plus.circle.fill")
                     .font(.system(size: 24))
-                    .foregroundColor(isSelected ? .green : .blue)
+                    .foregroundColor(isSelected ? .green : Color("usi"))
             }
         }
         .padding()

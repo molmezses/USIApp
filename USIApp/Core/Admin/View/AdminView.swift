@@ -29,6 +29,8 @@ struct AdminView: View {
                     // Talep İstatistikleri
                     requestStatsSection
                     
+                    ortakProjeStatus
+                    
                     // Özet İstatistikler
                     statsSummaryView
                     
@@ -185,6 +187,40 @@ struct AdminView: View {
             .padding(.horizontal)
         }
     }
+    
+    private var ortakProjeStatus: some View {
+        VStack(spacing: 16) {
+            Text("Ortak Proje Talebi ")
+                .font(.headline)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal)
+            
+            HStack(spacing: 16) {
+                // Onaylanan Talepler
+                StatsProgressView(
+                    title: "Ortak proje ",
+                    current: 890,
+                    total: 980,
+                    color: .purple,
+                    icon: "checkmark.circle.fill",
+                    height: cardHeight
+                )
+                
+                // Reddedilen Talepler
+                StatsProgressView(
+                    title: "Atananlar",
+                    current: 84,
+                    total: 989,
+                    color: .mint,
+                    icon: "chevron.right",
+                    height: cardHeight
+                )
+            }
+            .padding(.horizontal)
+        }
+    }
+    
+    
     
     
     

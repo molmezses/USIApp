@@ -43,6 +43,11 @@ struct IndustryProfileView: View {
                 ScrollView {
                     VStack(spacing: 20) {
                         
+                        Image("petlas")
+                            .resizable()
+                            .frame(width: 80, height: 80)
+                            .clipShape(Circle())
+                        
                         // Firma Adı
                         profileField(title: "Firma Adı", text: $viewModel.companyName)
                         
