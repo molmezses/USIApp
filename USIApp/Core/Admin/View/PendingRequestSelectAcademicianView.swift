@@ -178,6 +178,7 @@ struct AcademicianRow: View {
                 .scaledToFit()
                 .frame(width: 50, height: 50)
                 .foregroundColor(.blue)
+                .clipShape(Circle())
             
             VStack(alignment: .leading, spacing: 4) {
                 Text("\(academician.name) \(academician.surname)")
