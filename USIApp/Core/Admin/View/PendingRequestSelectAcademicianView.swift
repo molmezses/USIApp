@@ -15,8 +15,8 @@ struct PendingRequestSelectAcademicianView: View {
     @State private var selectedAcademicians: [Academician] = []
     
     let allAcademicians = [
-        Academician(id: "1", name: "Mustafa Kasım", surname: "KARAHOCGİL", image: "rektorhoca", expertise: ["Tıp bilimleri", "Yapay Zeka"], unvan: "Prof. Doktor"),
-        Academician(id: "2", name: "Mahmut", surname: "Sari", image: "mahutsari", expertise: ["Veri Bilimi", "İstatistik"], unvan: "Ögr. GAörevlisi"),
+        Academician(id: "1", name: "Mustafa Kasım", surname: "KARAHOCGİL", image: "rektorhoca", expertise: ["Tıp bilimleri", "Bakteriyoloji ve Enfeksiyon"], unvan: "Prof. Doktor"),
+        Academician(id: "2", name: "Mahmut", surname: "Sari", image: "mahmutsari", expertise: ["Veri Bilimi", "İstatistik"], unvan: "Ögr. GAörevlisi"),
         Academician(id: "3", name: "Veysel", surname: "Akatay", image: "veyselhoca", expertise: ["Nörobilim", "Bilişsel Bilim"], unvan: "Doçent"),
         Academician(id: "4", name: "Fatma", surname: "Şahin", image: "a7", expertise: ["Robotik", "Otomasyon"], unvan: "Araştırma Görevlisi"),
         Academician(id: "5", name: "Zeynep", surname: "Koç", image: "a8", expertise: ["Yazılım Mühendisliği", "Algoritmalar"], unvan: "Doç. Doktor"),

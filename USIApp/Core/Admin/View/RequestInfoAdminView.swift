@@ -60,47 +60,47 @@ struct RequestInfoAdminView: View {
                     .cornerRadius(10)
                     .shadow(radius: 2)
                     
-                    // 2. Talep Durumu Kartı
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Talep Durumu")
-                            .font(.subheadline.bold())
-                            .frame(maxWidth: .infinity , alignment: .leading)
-                        
-                        switch status {
-                        case .pending:
-                            Label("Gönderildi – Cevap Bekleniyor", systemImage: "clock")
-                                .foregroundColor(.orange)
-                        case .approved(let message, let approver):
-                            VStack(alignment: .leading, spacing: 8) {
-                                Label("Talep Onaylandı", systemImage: "checkmark.seal")
-                                    .foregroundColor(.green)
-                                Text("Mesaj: \(message)")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                                Text("Onaylayan: \(approver.name) • \(approver.mail)")
-                                    .font(.caption2)
-                                    .foregroundColor(.gray)
-                            }
-                        case .rejected(let message, let approver):
-                            VStack(alignment: .leading, spacing: 8) {
-                                Label("Talep Reddedildi", systemImage: "xmark.octagon.fill")
-                                    .foregroundColor(.red)
-                                Text("Reddedilme nedeni: \(message)")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                                Text("Reddeden: \(approver.name) • \(approver.mail)")
-                                    .font(.caption2)
-                                    .foregroundColor(.gray)
-                            }
-                        case .none:
-                            Label("Gönderildi – Cevap Bekleniyor", systemImage: "clock")
-                                .foregroundColor(.orange)
-                        }
-                    }
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(10)
-                    .shadow(radius: 2)
+//                    // 2. Talep Durumu Kartı
+//                    VStack(alignment: .leading, spacing: 12) {
+//                        Text("Talep Durumu")
+//                            .font(.subheadline.bold())
+//                            .frame(maxWidth: .infinity , alignment: .leading)
+//                        
+//                        switch status {
+//                        case .pending:
+//                            Label("Gönderildi – Cevap Bekleniyor", systemImage: "clock")
+//                                .foregroundColor(.orange)
+//                        case .approved(let message, let approver):
+//                            VStack(alignment: .leading, spacing: 8) {
+//                                Label("Talep Onaylandı", systemImage: "checkmark.seal")
+//                                    .foregroundColor(.green)
+//                                Text("Mesaj: \(message)")
+//                                    .font(.subheadline)
+//                                    .foregroundColor(.secondary)
+//                                Text("Onaylayan: \(approver.name) • \(approver.mail)")
+//                                    .font(.caption2)
+//                                    .foregroundColor(.gray)
+//                            }
+//                        case .rejected(let message, let approver):
+//                            VStack(alignment: .leading, spacing: 8) {
+//                                Label("Talep Reddedildi", systemImage: "xmark.octagon.fill")
+//                                    .foregroundColor(.red)
+//                                Text("Reddedilme nedeni: \(message)")
+//                                    .font(.subheadline)
+//                                    .foregroundColor(.secondary)
+//                                Text("Reddeden: \(approver.name) • \(approver.mail)")
+//                                    .font(.caption2)
+//                                    .foregroundColor(.gray)
+//                            }
+//                        case .none:
+//                            Label("Gönderildi – Cevap Bekleniyor", systemImage: "clock")
+//                                .foregroundColor(.orange)
+//                        }
+//                    }
+//                    .padding()
+//                    .background(Color.white)
+//                    .cornerRadius(10)
+//                    .shadow(radius: 2)
                     
                     // 3. Talep Bilgisi Kartı
                     VStack(alignment: .leading, spacing: 16) {
@@ -153,7 +153,7 @@ struct RequestInfoAdminView: View {
                                     .padding(EdgeInsets(top: 12, leading: 16, bottom: 0, trailing: 0))
                             }
                             TextEditor(text: $requestMessage)
-                                .frame(height: 140)
+                                .frame(height: 80)
                                 .padding(8)
                                 .background(Color.white)
                                 .cornerRadius(8)

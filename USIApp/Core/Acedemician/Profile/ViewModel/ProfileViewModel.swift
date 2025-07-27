@@ -55,7 +55,7 @@ class ProfileViewModel: ObservableObject {
             return true
         }
         
-        if AuthService.shared.getCurrentUser()?.email == "veysel.akatay@ahievran.edu.tr"{
+        if AuthService.shared.getCurrentUser()?.email == "mahmutsari@ahievran.edu.tr"{
             return true
         }
         
