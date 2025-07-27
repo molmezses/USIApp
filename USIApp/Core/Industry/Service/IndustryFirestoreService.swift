@@ -71,7 +71,10 @@ class IndustryFirestoreService {
     
     func saveRequest(selectedCategories: [String] , requestTitle: String , requestMessage: String, completion: @escaping (Error?) -> Void){
         
+        let requsterID = IndustryAuthService.shared.getCurrentUser()?.id ?? "id yok"
+        
         let document: [String: Any] = [
+            "requesterID" : requsterID,
             "selectedCategories" : selectedCategories,
             "requestTitle" : requestTitle,
             "requestMessage" : requestMessage,
@@ -80,9 +83,7 @@ class IndustryFirestoreService {
         ]
         
         Firestore.firestore()
-            .collection("Industry")
-            .document("\(IndustryAuthService.shared.getCurrentUser()?.id ?? "id yok")")
-            .collection("Request")
+            .collection("Requests")
             .addDocument(data: document) { error in
                 if let error = error {
                     print("Hata: \(error.localizedDescription)")
@@ -96,15 +97,15 @@ class IndustryFirestoreService {
     
     func fetchRequests(completion: @escaping (Result<[RequestModel], Error>) -> Void) {
         
-        guard let userId = IndustryAuthService.shared.getCurrentUser()?.id else {
+        guard let requesterId = IndustryAuthService.shared.getCurrentUser()?.id else {
             completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Kullanıcı ID bulunamadı"])))
             return
         }
         
+        
         let docRef = Firestore.firestore()
-            .collection("Industry")
-            .document(userId)
-            .collection("Request")
+                .collection("Requests")
+            .whereField("requesterID", isEqualTo: requesterId )
         
         docRef.getDocuments { snapshot, error in
             if let error = error {
@@ -140,59 +141,7 @@ class IndustryFirestoreService {
             completion(.success(requests))
         }
     }
-    
-//    func fetchAllRequests(completion: @escaping (Result<[RequestModel], Error>) -> Void) {
-//        let db = Firestore.firestore()
-//        let industryRef = db.collection("Industry")
-//        
-//        industryRef.getDocuments { (snapshot, error) in
-//            if let error = error {
-//                print("Hata: Industry koleksiyonu okunamadı - \(error.localizedDescription)")
-//                completion(.failure(error))
-//                return
-//            }
-//            
-//            guard let documents = snapshot?.documents else {
-//                completion(.failure(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Industry belgeleri bulunamadı."])))
-//                return
-//            }
-//            
-//            var allRequests: [RequestModel] = []
-//            let dispatchGroup = DispatchGroup()
-//            
-//            for document in documents {
-//                let industryId = document.documentID
-//                let requestRef = industryRef.document(industryId).collection("Request")
-//                
-//                dispatchGroup.enter()
-//                requestRef.getDocuments { (requestSnapshot, error) in
-//                    if let error = error {
-//                        print("Hata: \(industryId) altındaki Request koleksiyonu alınamadı - \(error.localizedDescription)")
-//                        dispatchGroup.leave()
-//                        return
-//                    }
-//                    
-//                    if let requestDocs = requestSnapshot?.documents {
-//                        for doc in requestDocs {
-//                            do {
-//                                if let request = try doc.data(as: RequestModel?.self) {
-//                                    allRequests.append(request)
-//                                }
-//                            } catch {
-//                                print("RequestModel dönüşüm hatası: \(error.localizedDescription)")
-//                            }
-//                        }
-//                    }
-//                    
-//                    dispatchGroup.leave()
-//                }
-//            }
-//            
-//            dispatchGroup.notify(queue: .main) {
-//                completion(.success(allRequests))
-//            }
-//        }
-//    }
+
 
     
     func deleteRequest(documentID:String , completion: @escaping (Result<Void ,Error>) -> Void){
