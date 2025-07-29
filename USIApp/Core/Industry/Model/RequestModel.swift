@@ -14,4 +14,10 @@ struct RequestModel:Identifiable {
     var date: String
     var selectedCategories: [String]
     var status: RequestStatus
+    var requesterID: String
+    var requesterCategories : String
+    var requesterName : String
+    var requesterEmail: String
+    var requesterPhone: String
+    
 }

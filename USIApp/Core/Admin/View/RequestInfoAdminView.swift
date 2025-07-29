@@ -34,22 +34,22 @@ struct RequestInfoAdminView: View {
                     // 1. Gönderen Bilgisi Kartı
                     VStack(alignment: .leading, spacing: 12) {
                         HStack(spacing: 16) {
-                            Image("petlas") // Firma logosu
+                            Image("ben") // Firma logosu
                                 .resizable()
                                 .frame(width: 60, height: 60)
                                 .clipShape(Circle())
                             
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("Mustafa Ölmezses")
+                                Text(request.requesterName)
                                     .frame(maxWidth: .infinity , alignment: .leading)
                                     .font(.headline)
-                                Text("Petlas LTD .ŞTI")
+                                Text(request.requesterCategories)
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
-                                Text("📧 mustafaolmezses@gmail.com")
+                                Text("📧 \(request.requesterEmail)")
                                     .font(.footnote)
                                     .foregroundColor(.secondary)
-                                Text("📞 05052332104")
+                                Text("📞 \(request.requesterPhone)")
                                     .font(.footnote)
                                     .foregroundColor(.secondary)
                             }
@@ -60,49 +60,8 @@ struct RequestInfoAdminView: View {
                     .cornerRadius(10)
                     .shadow(radius: 2)
                     
-//                    // 2. Talep Durumu Kartı
-//                    VStack(alignment: .leading, spacing: 12) {
-//                        Text("Talep Durumu")
-//                            .font(.subheadline.bold())
-//                            .frame(maxWidth: .infinity , alignment: .leading)
-//                        
-//                        switch status {
-//                        case .pending:
-//                            Label("Gönderildi – Cevap Bekleniyor", systemImage: "clock")
-//                                .foregroundColor(.orange)
-//                        case .approved(let message, let approver):
-//                            VStack(alignment: .leading, spacing: 8) {
-//                                Label("Talep Onaylandı", systemImage: "checkmark.seal")
-//                                    .foregroundColor(.green)
-//                                Text("Mesaj: \(message)")
-//                                    .font(.subheadline)
-//                                    .foregroundColor(.secondary)
-//                                Text("Onaylayan: \(approver.name) • \(approver.mail)")
-//                                    .font(.caption2)
-//                                    .foregroundColor(.gray)
-//                            }
-//                        case .rejected(let message, let approver):
-//                            VStack(alignment: .leading, spacing: 8) {
-//                                Label("Talep Reddedildi", systemImage: "xmark.octagon.fill")
-//                                    .foregroundColor(.red)
-//                                Text("Reddedilme nedeni: \(message)")
-//                                    .font(.subheadline)
-//                                    .foregroundColor(.secondary)
-//                                Text("Reddeden: \(approver.name) • \(approver.mail)")
-//                                    .font(.caption2)
-//                                    .foregroundColor(.gray)
-//                            }
-//                        case .none:
-//                            Label("Gönderildi – Cevap Bekleniyor", systemImage: "clock")
-//                                .foregroundColor(.orange)
-//                        }
-//                    }
-//                    .padding()
-//                    .background(Color.white)
-//                    .cornerRadius(10)
-//                    .shadow(radius: 2)
                     
-                    // 3. Talep Bilgisi Kartı
+                    //Talep Bilgisi Kartı
                     VStack(alignment: .leading, spacing: 16) {
                         Text(request.title)
                             .font(.title3.bold())

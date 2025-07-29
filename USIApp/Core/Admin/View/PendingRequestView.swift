@@ -10,9 +10,7 @@ import SwiftUI
 struct PendingRequestView: View {
     
     @Environment(\.dismiss) var dismiss
-    var selectedCategories = ["Yapay Zeka", "Robot", "Makine", "Gömülü Sistem"]
-    var selectedCategories2 = ["Şişe tasarımı", "Bakteri", "Yapay Zeka", "Kimya",]
-
+    @StateObject var viewModel = PendingRequestsViewModel()
     
     var body: some View {
         VStack(spacing: 0) {
@@ -39,135 +37,94 @@ struct PendingRequestView: View {
             
             ScrollView {
                 VStack(spacing: 20) {
-
-                    //petlas
-                    NavigationLink {
-                        RequestInfoAdminView(request: RequestModel(id: "", title: "Yapay zeka robotları", description: "Fabrikamızdaki ürünlerin birimler arasında iş gücü olmadan ve kolaylıkla taşınabilmesi için geliştirilmiş yapaında iş gücü olmadan ve kolaylıkla taşınabilmesi için geliştirilmiş yapay zeka destekli gömülü sistem olan robotların yapımı  zeka destekli gömülü sistem olan robotların yapımı ve alandaki maliyeti en aza indirmek.", date: "23.07.2025", selectedCategories: selectedCategories, status: .pending))
-                            .navigationBarBackButtonHidden()
-                            .foregroundStyle(.black)
-                    } label: {
-                        VStack(alignment: .leading, spacing: 12) {
-                            
-                            HStack(alignment: .top, spacing: 12) {
-                                // Profil resmi
-                                Image("petlas")
-                                    .resizable()
-                                    .frame(width: 50, height: 50)
-                                    .clipShape(Circle())
-                                
-                                // Gönderen bilgisi
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("Mustafa Ölmezses")
-                                        .font(.headline)
-                                        .bold()
-                                        .foregroundStyle(.black)
-                                    Text("Petlas LTD .ŞTİ")
-                                        .font(.subheadline)
-                                        .foregroundColor(.gray)
-                                }
-                                
-                                Spacer()
-                                
-                                // Ok
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(.gray)
-                            }
-                            
-                            // Açıklama
-                            Text("Fabrikamızdaki ürünlerin birimler arasında iş gücü olmadan ve kolaylıkla taşınabilmesi için geliştirilmiş yapay zeka destekli gömülü sistem olan robotların yapımı ve alandaki maliyeti en aza indirmek.")
-                                .lineLimit(4)
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                            
-                            // Tarih
-                            Text("Tarih: 23.07.2025")
-                                .font(.caption2)
-                                .foregroundColor(.gray)
-                            
-                            // Kategoriler
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 8) {
-                                    ForEach(selectedCategories, id: \.self) { category in
-                                        Text(category)
-                                            .font(.caption)
-                                            .padding(.horizontal, 10)
-                                            .padding(.vertical, 6)
-                                            .background(Color("usi").opacity(0.1))
-                                            .foregroundColor(.blue)
-                                            .cornerRadius(8)
-                                    }
-                                }
-                            }
-                        }
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(10)
-                        .padding(.horizontal)
-                    }
-
                     
-                    //badem
-                    VStack(alignment: .leading, spacing: 12) {
-                        
-                        HStack(alignment: .top, spacing: 12) {
-                            // Profil resmi
-                            Image("su")
-                                .resizable()
-                                .frame(width: 50, height: 50)
-                                .clipShape(Circle())
-                            
-                            // Gönderen bilgisi
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Eda Dursun")
-                                    .font(.headline)
-                                    .bold()
-                                Text("Badem Pınarı Doğal Kaynak Suyu")
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
-                            }
-                            
-                            Spacer()
-                            
-                            // Ok
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(.gray)
-                        }
-                        
-                        // Açıklama
-                        Text("Üretmiş olduğumuz su şişlerindeki zararlı bakterileri tespit edip analizini yapabilecek şişelerin dahada sağlıklı bir şekilde üretilmesi için farklı şişe ha mmaddesi üzerinde deneyim sahibi olan birisiyle ortak proje talebi")
-                            .lineLimit(4)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                        
-                        // Tarih
-                        Text("Tarih: 19.07.2025")
-                            .font(.caption2)
+                    if viewModel.pendingRequests.isEmpty {
+                        Text("Bekleyen talep bulunmamaktadır")
+                            .frame(maxWidth: .infinity)
                             .foregroundColor(.gray)
+                            .padding(.top, 50)
+                            .padding(.horizontal)
+                    }else{
                         
-                        // Kategoriler
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 8) {
-                                ForEach(selectedCategories2, id: \.self) { category in
-                                    Text(category)
-                                        .font(.caption)
-                                        .padding(.horizontal, 10)
-                                        .padding(.vertical, 6)
-                                        .background(Color("usi").opacity(0.1))
-                                        .foregroundColor(.blue)
-                                        .cornerRadius(8)
-                                }
+                        ForEach(viewModel.pendingRequests) { request in
+                            NavigationLink {
+                                RequestInfoAdminView(request: request)
+                                    .navigationBarBackButtonHidden()
+                            } label: {
+                                requestCard(for: request)
                             }
                         }
+
                     }
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(10)
-                    .padding(.horizontal)
                 }
                 .padding(.top)
             }
+            .refreshable {
+                viewModel.loadRequests()
+            }
             .background(Color(.systemGroupedBackground))
         }
+    }
+    
+    func requestCard(for request: RequestModel) -> some View{
+        VStack(alignment: .leading, spacing: 12) {
+            
+            HStack(alignment: .top, spacing: 12) {
+                
+                Image("ben")
+                    .resizable()
+                    .frame(width: 50, height: 50)
+                    .clipShape(Circle())
+                
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(request.requesterName)
+                        .font(.headline)
+                        .bold()
+                        .foregroundStyle(.black)
+                    Text(request.requesterCategories)
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+                
+                
+                Spacer()
+                
+                // Ok
+                Image(systemName: "chevron.right")
+                    .foregroundColor(.gray)
+            }
+            
+            // Açıklama
+            Text(request.description)
+                .lineLimit(4)
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+            
+            // Tarih
+            Text("Tarih: \(request.date)")
+                .font(.caption2)
+                .foregroundColor(.gray)
+            
+            // Kategoriler
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(request.selectedCategories, id: \.self) { category in
+                        Text(category)
+                            .font(.caption)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .background(Color("usi").opacity(0.1))
+                            .foregroundColor(.blue)
+                            .cornerRadius(8)
+                    }
+                }
+            }
+        }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(10)
+        .padding(.horizontal)
     }
 }
 

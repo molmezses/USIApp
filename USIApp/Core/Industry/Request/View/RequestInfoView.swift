@@ -56,10 +56,16 @@ struct RequestInfoView: View {
                                 Label("Talep Onaylandı", systemImage: "checkmark.seal")
                                     .foregroundColor(.green)
                                 
-                                Text("Mesaj: \(message)")
-                                    .font(.body)
-                                    .foregroundColor(.secondary)
-                                    .frame(maxWidth: .infinity , alignment:.leading)
+                                VStack {
+                                    Text("Mesaj :")
+                                        .font(.body)
+                                        .foregroundColor(.black)
+                                        .frame(maxWidth: .infinity , alignment:.leading)
+                                    Text(message)
+                                        .font(.body)
+                                        .foregroundColor(.secondary)
+                                        .frame(maxWidth: .infinity , alignment:.leading)
+                                }
                                 
                                 HStack(alignment: .top, spacing: 12) {
                                     Image(systemName: "person.crop.circle.fill")

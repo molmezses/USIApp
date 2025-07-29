@@ -104,7 +104,7 @@ class RequestViewModel: ObservableObject {
     }
     
     func loadRequests(){
-        IndustryFirestoreService.shared.fetchRequests { result in
+        IndustryFirestoreService.shared.fetchIndustryRequests { result in
             switch result {
             case .success(let requests):
                 
