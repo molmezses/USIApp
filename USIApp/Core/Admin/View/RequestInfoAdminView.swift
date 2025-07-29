@@ -5,8 +5,7 @@ struct RequestInfoAdminView: View {
     var status: RequestStatus?
     
     @Environment(\.dismiss) var dismiss
-    @State var viewModel = RequestInfoViewModel()
-    @State var requestMessage: String = ""
+    @State var viewModel = RequestInfoAdminViewModel()
     @FocusState var focusedField: Bool
     
     var body: some View {
@@ -106,12 +105,12 @@ struct RequestInfoAdminView: View {
                         Text("Mesajınız :")
                             .font(.subheadline.bold())
                         ZStack(alignment: .topLeading) {
-                            if requestMessage == "" {
+                            if viewModel.adminMessage == "" {
                                 Text("Mesajınızı buraya yazınız...")
                                     .foregroundColor(.gray)
                                     .padding(EdgeInsets(top: 12, leading: 16, bottom: 0, trailing: 0))
                             }
-                            TextEditor(text: $requestMessage)
+                            TextEditor(text: $viewModel.adminMessage)
                                 .frame(height: 80)
                                 .padding(8)
                                 .background(Color.white)
@@ -131,21 +130,27 @@ struct RequestInfoAdminView: View {
                     
                     // 4. Kabul / Reddet Butonları
                     HStack(spacing: 16) {
-                        Button(action: {
-                            
-                        }) {
-                            Label("Reddet", systemImage: "xmark")
-                                .frame(maxWidth: .infinity)
+                        Button {
+                            viewModel.rejectRequest(documentId: request.id)
+                        } label: {
+                           VStack{
+                                Label("Reddet", systemImage: "xmark")
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .padding()
+                            .background(Color.red.opacity(0.9))
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
                         }
-                        .padding()
-                        .background(Color.red.opacity(0.9))
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
                         
-                        NavigationLink {
-                            PendingRequestSelectAcademicianView()
-                                .navigationBarBackButtonHidden()
-                                .foregroundStyle(.black)
+                        Button {
+                            viewModel.approveRequest(documentId: request.id)
+                            
+                            //sayfa yönlendiremy ypa
+                            
+//                            PendingRequestSelectAcademicianView()
+//                                .navigationBarBackButtonHidden()
+//                                .foregroundStyle(.black)
                         } label: {
                            VStack{
                                 Label("Kabul Et", systemImage: "checkmark")
