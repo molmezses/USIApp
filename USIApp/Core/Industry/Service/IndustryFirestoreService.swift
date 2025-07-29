@@ -145,9 +145,7 @@ class IndustryFirestoreService {
 
     
     func deleteRequest(documentID:String , completion: @escaping (Result<Void ,Error>) -> Void){
-        let docRef = Firestore.firestore().collection("Industry").document(IndustryAuthService.shared.getCurrentUser()?.id ?? "")
-            .collection("Request")
-            .document(documentID)
+        let docRef = Firestore.firestore().collection("Requests").document(documentID)
         
         docRef.delete { error in
                 if let error = error {
