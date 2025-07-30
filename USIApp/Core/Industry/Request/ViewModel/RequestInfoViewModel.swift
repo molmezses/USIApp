@@ -9,6 +9,22 @@ import Foundation
 
 class RequestInfoViewModel: ObservableObject {
     
+    @Published var adminMessage: String = ""
+    @Published var request: RequestModel?
+
+    
+    func loadRequestAnswer(requestId: String) {
+        IndustryFirestoreService.shared.fetchRequestInfo(requestId: requestId) { result in
+            switch result {
+            case .success(let requestInfo):
+                DispatchQueue.main.async {
+                    self.request = requestInfo
+                }
+            case .failure(let error):
+                print("Failed to fetch request info: \(error)")
+            }
+        }
+    }
     
     func stringToRequestStatus(string stringData: String) -> RequestStatus {
         
@@ -16,9 +32,9 @@ class RequestInfoViewModel: ObservableObject {
         case "pending":
             return .pending
         case "approved":
-            return .approved(message: "", approver: Approver(name: "Veysel Akatay", title: "TTO Uzmanı", mail: "veysel.akatay@ahievran.edu.tr", phone: "053243244023"))
+            return .approved
         case "rejected":
-            return .rejected(message: "Edayı seviyorum dskfsdkfhkdsjhkdfsfsdfkhsdjhfks", approver: Approver(name: "Veysel Akatay", title: "TTO Uzmanı", mail: "veysel.akatay@ahievran.edu.tr", phone: "053243244023"))
+            return .rejected
         default:
             return .pending
         }

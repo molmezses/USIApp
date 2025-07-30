@@ -140,6 +140,39 @@ class IndustryFirestoreService {
         
     }
     
+    
+    func fetchRequestInfo(requestId: String, completion: @escaping (Result<RequestModel, Error>) -> Void) {
+        
+        let docRef = Firestore.firestore()
+            .collection("Requests")
+            .document(requestId)
+        
+        docRef.getDocument { document, error in
+            
+            if let error = error {
+                completion(.failure(error))
+            }
+            
+            guard let document =  document , document.exists else{
+                let error = NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Document does not exist"])
+                completion(.failure(error))
+                return
+            }
+            
+            do{
+                let requestData = try document.data(as: RequestModel.self)
+                completion(.success(requestData))
+            }catch let decodeError{
+                completion(.failure(decodeError))
+            }
+            
+            
+        }
+        
+        
+        
+    }
+    
     func fetchIndustryRequests(completion: @escaping (Result<[RequestModel], Error>) -> Void) {
         
         guard let requesterId = IndustryAuthService.shared.getCurrentUser()?.id else {
@@ -176,6 +209,7 @@ class IndustryFirestoreService {
                 let requesterCategories = data["requesterCategories"] as? String ?? ""
                 let requesterEmail = data["requesterEmail"] as? String ?? ""
                 let requesterPhone = data["requesterPhone"] as? String ?? ""
+                let adminMessage = data["adminMessage"] as? String ?? ""
                 
                 
                 return RequestModel(
@@ -189,7 +223,8 @@ class IndustryFirestoreService {
                     requesterCategories: requesterCategories,
                     requesterName : requesterName,
                     requesterEmail: requesterEmail,
-                    requesterPhone: requesterPhone
+                    requesterPhone: requesterPhone,
+                    adminMessage : adminMessage
                 )
             }
             
@@ -232,6 +267,8 @@ class IndustryFirestoreService {
                 let requesterCategories = data["requesterCategories"] as? String ?? ""
                 let requesterEmail = data["requesterEmail"] as? String ?? ""
                 let requesterPhone = data["requesterPhone"] as? String ?? ""
+                let adminMessage = data["adminMessage"] as? String ?? ""
+
 
 
                 
@@ -247,7 +284,8 @@ class IndustryFirestoreService {
                     requesterCategories: requesterCategories,
                     requesterName: requesterName,
                     requesterEmail: requesterEmail,
-                    requesterPhone: requesterPhone
+                    requesterPhone: requesterPhone,
+                    adminMessage : adminMessage
                     
                 )
             }
@@ -277,9 +315,9 @@ class IndustryFirestoreService {
         case "pending":
             return .pending
         case "approved":
-            return .approved(message: "", approver: Approver(name: "Veysel Akatay", title: "TTO Uzmanı", mail: "veysel.akatay@ahievran.edu.tr", phone: "053243244023"))
+            return .approved
         case "rejected":
-            return .rejected(message: "", approver: Approver(name: "Veysel Akatay", title: "TTO Uzmanı", mail: "veysel.akatay@ahievran.edu.tr", phone: "053243244023"))
+            return .rejected
         default:
             return .pending
         }

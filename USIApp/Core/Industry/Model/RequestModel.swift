@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RequestModel:Identifiable {
+struct RequestModel:Identifiable , Codable{
     var id :String
     var title: String
     var description: String
@@ -19,5 +19,6 @@ struct RequestModel:Identifiable {
     var requesterName : String
     var requesterEmail: String
     var requesterPhone: String
+    var adminMessage: String
     
 }

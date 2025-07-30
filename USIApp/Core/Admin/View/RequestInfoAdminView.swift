@@ -30,7 +30,7 @@ struct RequestInfoAdminView: View {
             ScrollView {
                 VStack(spacing: 20) {
                     
-                    // 1. Gönderen Bilgisi Kartı
+                    
                     VStack(alignment: .leading, spacing: 12) {
                         HStack(spacing: 16) {
                             Image("ben") // Firma logosu
@@ -60,7 +60,6 @@ struct RequestInfoAdminView: View {
                     .shadow(radius: 2)
                     
                     
-                    //Talep Bilgisi Kartı
                     VStack(alignment: .leading, spacing: 16) {
                         Text(request.title)
                             .font(.title3.bold())
@@ -128,7 +127,6 @@ struct RequestInfoAdminView: View {
                     .cornerRadius(10)
                     .shadow(radius: 2)
                     
-                    // 4. Kabul / Reddet Butonları
                     HStack(spacing: 16) {
                         Button {
                             viewModel.rejectRequest(documentId: request.id)
@@ -146,11 +144,6 @@ struct RequestInfoAdminView: View {
                         Button {
                             viewModel.approveRequest(documentId: request.id)
                             
-                            //sayfa yönlendiremy ypa
-                            
-//                            PendingRequestSelectAcademicianView()
-//                                .navigationBarBackButtonHidden()
-//                                .foregroundStyle(.black)
                         } label: {
                            VStack{
                                 Label("Kabul Et", systemImage: "checkmark")

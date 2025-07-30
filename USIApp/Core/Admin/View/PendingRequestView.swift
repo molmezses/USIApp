@@ -64,6 +64,9 @@ struct PendingRequestView: View {
             }
             .background(Color(.systemGroupedBackground))
         }
+        .onAppear {
+            viewModel.loadRequests()
+        }
     }
     
     func requestCard(for request: RequestModel) -> some View{

@@ -17,9 +17,9 @@ class RequestInfoAdminViewModel: ObservableObject {
         case "pending":
             return .pending
         case "approved":
-            return .approved(message: "", approver: Approver(name: "Veysel Akatay", title: "TTO Uzmanı", mail: "veysel.akatay@ahievran.edu.tr", phone: "053243244023"))
+            return .approved
         case "rejected":
-            return .rejected(message: "Edayı seviyorum dskfsdkfhkdsjhkdfsfsdfkhsdjhfks", approver: Approver(name: "Veysel Akatay", title: "TTO Uzmanı", mail: "veysel.akatay@ahievran.edu.tr", phone: "053243244023"))
+            return .rejected
         default:
             return .pending
         }

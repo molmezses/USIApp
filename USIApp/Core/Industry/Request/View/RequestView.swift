@@ -42,7 +42,7 @@ struct RequestView: View {
                             NavigationLink {
                                 
                                 
-                                RequestInfoView(request: request , status: request.status )
+                                RequestInfoView(request: request)
                                     .navigationBarBackButtonHidden()
                                 
                             } label: {

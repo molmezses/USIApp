@@ -9,14 +9,12 @@ import SwiftUI
 
 struct RequestInfoView: View {
     var request: RequestModel
-    var status: RequestStatus?
     
     @Environment(\.dismiss) var dismiss
     @State var viewModel = RequestInfoViewModel()
     
     var body: some View {
         VStack(spacing: 0) {
-            // Üst başlık barı
             HStack {
                 Button { dismiss() } label: {
                     Image(systemName: "chevron.left")
@@ -29,7 +27,7 @@ struct RequestInfoView: View {
                     .foregroundColor(.white)
                 Spacer()
                 Image(systemName: "chevron.left")
-                    .opacity(0) // simetri için boş
+                    .opacity(0)
             }
             .padding()
             .background(Color("usi"))
@@ -37,12 +35,11 @@ struct RequestInfoView: View {
             ScrollView {
                 VStack(spacing: 16) {
                     
-                    // MARK: - Durum Kartı
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Talep Durumu")
                             .font(.subheadline.bold())
                         
-                        switch status {
+                        switch viewModel.request?.status ?? request.status {
                         case .pending:
                             HStack {
                                 ProgressView()
@@ -51,81 +48,91 @@ struct RequestInfoView: View {
                                     .frame(maxWidth: .infinity , alignment:.leading)
 
                             }
-                        case .approved(let message, let approver):
+                        case .approved:
                             VStack(alignment: .leading, spacing: 10) {
                                 Label("Talep Onaylandı", systemImage: "checkmark.seal")
                                     .foregroundColor(.green)
                                 
-                                VStack {
-                                    Text("Mesaj :")
+                                Divider()
+                                    .padding(.vertical , 2)
+                                
+                                VStack(spacing:4){
+                                    Text("Mesaj : ")
                                         .font(.body)
                                         .foregroundColor(.black)
                                         .frame(maxWidth: .infinity , alignment:.leading)
-                                    Text(message)
+                                    
+                                    Text(request.adminMessage)
                                         .font(.body)
                                         .foregroundColor(.secondary)
                                         .frame(maxWidth: .infinity , alignment:.leading)
                                 }
                                 
+                                Divider()
+                                    .padding(.vertical , 2)
+                                
                                 HStack(alignment: .top, spacing: 12) {
-                                    Image(systemName: "person.crop.circle.fill")
+                                    
+                                    Image("ünilogo")
                                         .resizable()
                                         .frame(width: 40, height: 40)
                                         .foregroundColor(.blue)
                                     
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text(approver.name)
+                                        Text("Üniversite Sanayi İşbirliği")
                                             .font(.subheadline.bold())
-                                        Text(approver.title)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                        Text("Mail: \(approver.mail)")
+                                        Text("Talep Değerlendirme Kurulu ")
+                                            .font(.subheadline)
+                                        Text("Mail: tto@ahievran.edu.tr")
                                             .font(.caption)
                                             .foregroundColor(.secondary)
-                                        Text("Tel: \(approver.phone)")
+                                        Text("Tel: 0850-441-02-44")
                                             .font(.caption)
                                             .foregroundColor(.secondary)
                                     }
                                 }
                             }
-                        case .rejected(let message , let approver):
+                        case .rejected:
                             VStack(alignment: .leading, spacing: 10) {
                                 Label("Talep Reddedildi", systemImage: "xmark.octagon.fill")
                                     .foregroundColor(.red)
                                 
-                                Text("Reddedilme nedeni: \(message)")
-                                    .font(.body)
-                                    .foregroundColor(.secondary)
-                                    .frame(maxWidth: .infinity , alignment:.leading)
+                                Divider()
+                                    .padding(.vertical , 2)
+                                
+                                VStack(spacing:4){
+                                    Text("Reddedilme nedeni: ")
+                                        .font(.body)
+                                        .foregroundColor(.black)
+                                        .frame(maxWidth: .infinity , alignment:.leading)
+                                    Text(request.adminMessage)
+                                        .font(.body)
+                                        .foregroundColor(.secondary)
+                                        .frame(maxWidth: .infinity , alignment:.leading)
+                                }
+                                Divider()
+                                    .padding(.vertical , 2)
                                 
                                 HStack(alignment: .top, spacing: 12) {
-                                    Image(systemName: "person.crop.circle.fill")
+                                    Image("ünilogo")
                                         .resizable()
                                         .frame(width: 40, height: 40)
                                         .foregroundColor(.blue)
                                     
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text(approver.name)
+                                        Text("Üniversite Sanayi İşbirliği")
                                             .font(.subheadline.bold())
-                                        Text(approver.title)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                        Text("Mail: \(approver.mail)")
+                                        Text("Talep Değerlendirme Kurulu ")
+                                            .font(.subheadline)
+                                        Text("Mail: tto@ahievran.edu.tr")
                                             .font(.caption)
                                             .foregroundColor(.secondary)
-                                        Text("Tel: \(approver.phone)")
+                                        Text("Tel: 0850-441-02-44")
                                             .font(.caption)
                                             .foregroundColor(.secondary)
                                     }
+                                    
                                 }
-                            }
-                        case .none:
-                            HStack {
-                                ProgressView()
-                                Label("Gönderildi – Cevap Bekleniyor", systemImage: "clock")
-                                    .foregroundColor(.orange)
-                                    .frame(maxWidth: .infinity , alignment:.leading)
-
                             }
                         }
                     }
@@ -183,10 +190,10 @@ struct RequestInfoView: View {
     }
 }
 
-enum RequestStatus {
+enum RequestStatus: Codable{
     case pending
-    case approved(message: String, approver: Approver)
-    case rejected(message: String, approver: Approver)
+    case approved
+    case rejected
 }
 
 struct Approver {
