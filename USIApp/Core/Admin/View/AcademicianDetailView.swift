@@ -11,7 +11,7 @@ struct AcademicianDetailView: View {
     
     @Environment(\.dismiss) var dismiss
     var academician: AcademicianInfo
-    @State var isoN: Bool = false
+    @State var isoN: Bool = true
     
     var body: some View {
         

@@ -239,15 +239,15 @@ struct SelectedAcademiciansView: View {
                                     ProgressView()
                                 }
                             }
-                            .frame(width: 20, height: 20)
+                            .frame(width: 24, height: 24)
                             .clipShape(Circle())
                         } else {
                             Image(systemName: "person.circle")
                                 .resizable()
-                                .frame(width: 20, height: 20)
+                                .frame(width: 24, height: 24)
                         }
 
-                        Text("\(academician.adSoyad.prefix(1)).")
+                        Text("\(academician.adSoyad)")
                             .font(.caption)
 
                         Button(action: {
