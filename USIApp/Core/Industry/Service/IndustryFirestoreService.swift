@@ -242,6 +242,7 @@ class IndustryFirestoreService {
         
         let docRef = Firestore.firestore()
                 .collection("Requests")
+                .whereField("status", isEqualTo: "pending")
         
         docRef.getDocuments { snapshot, error in
             if let error = error {

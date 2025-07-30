@@ -5,43 +5,27 @@
 //  Created by Mustafa Ölmezses on 23.07.2025.
 //
 
-
 import SwiftUI
 
 struct PendingRequestSelectAcademicianView: View {
     
     @Environment(\.dismiss) var dismiss
     @State private var searchText = ""
-    @State private var selectedAcademicians: [Academician] = []
-    @EnvironmentObject var viewModel :RequestInfoAdminViewModel
+    @State private var selectedAcademicians: [AcademicianInfo] = []
+    @EnvironmentObject var viewModel: RequestInfoAdminViewModel
     var requestId: String
 
-
-    let allAcademicians = [
-        Academician(id: "1", name: "Mustafa Kasım", surname: "KARAHOCGİL", image: "rektorhoca", expertise: ["Tıp bilimleri", "Bakteriyoloji ve Enfeksiyon"], unvan: "Prof. Doktor"),
-        Academician(id: "2", name: "Mahmut", surname: "Sari", image: "mahmutsari", expertise: ["Veri Bilimi", "İstatistik"], unvan: "Ögr. GAörevlisi"),
-        Academician(id: "3", name: "Veysel", surname: "Akatay", image: "veyselhoca", expertise: ["Nörobilim", "Bilişsel Bilim"], unvan: "Doçent"),
-        Academician(id: "4", name: "Fatma", surname: "Şahin", image: "a7", expertise: ["Robotik", "Otomasyon"], unvan: "Araştırma Görevlisi"),
-        Academician(id: "5", name: "Zeynep", surname: "Koç", image: "a8", expertise: ["Yazılım Mühendisliği", "Algoritmalar"], unvan: "Doç. Doktor"),
-        Academician(id: "6", name: "Can", surname: "Arslan", image: "a3", expertise: ["Bilgisayar Ağları", "Siber Güvenlik"], unvan: "Prof. Doktor"),
-        Academician(id: "7", name: "Elif", surname: "Yıldız", image: "a9", expertise: ["İnsan-Bilgisayar Etkileşimi", "Kullanıcı Deneyimi"], unvan: "Doçent"),
-        Academician(id: "8", name: "Burak", surname: "Öztürk", image: "a4", expertise: ["Veritabanı Sistemleri", "Büyük Veri"], unvan: "Öğretim Görevlisi"),
-        Academician(id: "9", name: "Selin", surname: "Aydın", image: "a10", expertise: ["Yapay Sinir Ağları", "Derin Öğrenme"], unvan: "Öğretim Görevlisi"),
-        Academician(id: "10", name: "Kerem", surname: "Korkmaz", image: "a5", expertise: ["Mobil Uygulama Geliştirme", "iOS Programlama"], unvan: "Doçent")
-    ]
-    
-    var filteredAcademicians: [Academician] {
+    var filteredAcademicians: [AcademicianInfo] {
         if searchText.isEmpty {
-            return allAcademicians
+            return viewModel.academicians
         } else {
-            return allAcademicians.filter { academician in
-                academician.name.lowercased().contains(searchText.lowercased()) ||
-                academician.surname.lowercased().contains(searchText.lowercased()) ||
-                academician.expertise.contains { $0.lowercased().contains(searchText.lowercased()) }
+            return viewModel.academicians.filter { academician in
+                academician.adSoyad.lowercased().contains(searchText.lowercased()) ||
+                academician.uzmanlikAlani.contains { $0.lowercased().contains(searchText.lowercased()) }
             }
         }
     }
-    
+
     var body: some View {
         VStack {
             // Üst Başlık
@@ -53,92 +37,80 @@ struct PendingRequestSelectAcademicianView: View {
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundColor(.white)
                 }
-                
+
                 Spacer()
-                
+
                 Text("Akademisyen Ata")
                     .font(.headline)
                     .foregroundColor(.white)
-                
+
                 Spacer()
-                
+
                 Image(systemName: "chevron.left")
                     .opacity(0)
             }
             .padding()
             .background(Color("usi"))
-            
+
             // Arama Çubuğu
             SearchBar(text: $searchText)
                 .padding(.horizontal)
                 .padding(.top, 8)
-            
-            
-            
-            
-            // Seçilen Akademisyenler
+
+            // Seçilen Akademisyenler ve Onay Butonu
             if !selectedAcademicians.isEmpty {
-                
                 Button {
                     viewModel.approveRequest(documentId: requestId)
+                    AdminUserFirestoreService.shared.moveOldRequests(from: "Requests", documentId: requestId, to: "OldRequests")
                 } label: {
-                    VStack{
-                         Label("Akedemisyeni ata ve onayla", systemImage: "checkmark")
-                            .font(.headline)
-                             .frame(maxWidth: .infinity)
-                     }
-                     .padding()
-                     .background(Color.green.opacity(0.9))
-                     .foregroundColor(.white)
-                     .cornerRadius(10)
-                     .padding(.horizontal)
-                     .padding(.vertical , 4)
+                    Label("Akademisyeni Ata ve Onayla", systemImage: "checkmark.circle.fill")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.green)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .padding(.horizontal)
+                        .padding(.top, 4)
                 }
-                .foregroundStyle(.black)
 
-                
                 SelectedAcademiciansView(selectedAcademicians: $selectedAcademicians)
                     .padding(.horizontal)
             }
-            
+
             // Akademisyen Listesi
             ScrollView {
                 LazyVStack(spacing: 12) {
                     ForEach(filteredAcademicians) { academician in
-                        AcademicianRow(academician: academician,
-                                       isSelected: selectedAcademicians.contains(where: { $0.id == academician.id }),
-                                       onSelect: {
-                            if let index = selectedAcademicians.firstIndex(where: { $0.id == academician.id }) {
-                                selectedAcademicians.remove(at: index)
-                            } else {
-                                selectedAcademicians.append(academician)
+                        AcademicianRow(
+                            academician: academician,
+                            isSelected: selectedAcademicians.contains(where: { $0.id == academician.id }),
+                            onSelect: {
+                                if let index = selectedAcademicians.firstIndex(where: { $0.id == academician.id }) {
+                                    selectedAcademicians.remove(at: index)
+                                } else {
+                                    selectedAcademicians.append(academician)
+                                }
                             }
-                        })
-                        .padding(.horizontal)
+                        )
+                        .foregroundStyle(.black)
                     }
                 }
                 .padding(.top, 8)
             }
             .background(Color(.systemGroupedBackground))
         }
+        .onAppear {
+            viewModel.loadAcademicians()
+        }
         .navigationBarHidden(true)
     }
 }
 
-// Akademisyen Modeli
-struct Academician: Identifiable, Equatable {
-    let id: String
-    let name: String
-    let surname: String
-    let image: String
-    let expertise: [String]
-    let unvan: String
-}
-
-// Arama Çubuğu
+// MARK: - Search Bar
 struct SearchBar: View {
     @Binding var text: String
-    
+
     var body: some View {
         HStack {
             TextField("Akademisyen ara...", text: $text)
@@ -152,7 +124,7 @@ struct SearchBar: View {
                             .foregroundColor(.gray)
                             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                             .padding(.leading, 8)
-                        
+
                         if !text.isEmpty {
                             Button(action: {
                                 text = ""
@@ -168,73 +140,120 @@ struct SearchBar: View {
     }
 }
 
-// Akademisyen Satırı
+// MARK: - Akademisyen Satırı
 struct AcademicianRow: View {
-    let academician: Academician
+    let academician: AcademicianInfo
     let isSelected: Bool
     let onSelect: () -> Void
-    
+
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image("\(academician.image)")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 50, height: 50)
-                .foregroundColor(.blue)
-                .clipShape(Circle())
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text("\(academician.name) \(academician.surname)")
-                    .font(.headline)
-                Text("\(academician.unvan)")
-                    .font(.subheadline)
-                    .foregroundStyle(.gray)
-                
-                // Uzmanlık alanları
-                FlexibleView(data: academician.expertise, spacing: 4, alignment: .leading) { item in
-                    Text(item)
-                        .font(.caption2)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 3)
-                        .background(Color("usi").opacity(0.2))
-                        .cornerRadius(6)
+        NavigationLink {
+            AcademicianDetailView(academician: academician)
+                .navigationBarBackButtonHidden()
+                .foregroundStyle(.black)
+        } label: {
+            HStack(alignment: .top, spacing: 12) {
+                if let url = URL(string: academician.photo) {
+                    AsyncImage(url: url) { phase in
+                        if let image = phase.image {
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        } else if phase.error != nil {
+                            Image(systemName: "person.crop.circle.badge.exclamationmark")
+                        } else {
+                            ProgressView()
+                        }
+                    }
+                    .frame(width: 50, height: 50)
+                    .clipShape(Circle())
+                } else {
+                    Image(systemName: "person.circle")
+                        .resizable()
+                        .frame(width: 50, height: 50)
+                        .foregroundColor(.blue)
+                        .clipShape(Circle())
+                }
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(academician.adSoyad)
+                        .font(.headline)
+                    Text(academician.unvan)
+                        .font(.subheadline)
+                        .foregroundStyle(.gray)
+
+                    if !(academician.uzmanlikAlani == [""] || academician.uzmanlikAlani.isEmpty) {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 6) {
+                                ForEach(academician.uzmanlikAlani, id: \.self) { item in
+                                    Text(item)
+                                        .font(.caption2)
+                                        .lineLimit(1)
+                                        .truncationMode(.tail)
+                                        .padding(.horizontal, 6)
+                                        .padding(.vertical, 3)
+                                        .background(Color("usi").opacity(0.2))
+                                        .cornerRadius(6)
+                                }
+                            }
+                            .padding(.top, 2)
+                        }
+                    }
+
+                }
+
+                Spacer()
+
+                Button(action: onSelect) {
+                    Image(systemName: isSelected ? "checkmark.circle.fill" : "plus.circle.fill")
+                        .font(.system(size: 24))
+                        .foregroundColor(isSelected ? .green : Color("usi"))
                 }
             }
-            
-            Spacer()
-            
-            Button(action: onSelect) {
-                Image(systemName: isSelected ? "checkmark.circle.fill" : "plus.circle.fill")
-                    .font(.system(size: 24))
-                    .foregroundColor(isSelected ? .green : Color("usi"))
-            }
+            .padding()
+            .background(Color.white)
+            .cornerRadius(12)
+            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+            .padding(.horizontal)
         }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(12)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+
     }
 }
 
-// Seçilen Akademisyenler
+// MARK: - Seçilen Akademisyenler
 struct SelectedAcademiciansView: View {
-    @Binding var selectedAcademicians: [Academician]
-    
+    @Binding var selectedAcademicians: [AcademicianInfo]
+
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 ForEach(selectedAcademicians) { academician in
                     HStack(spacing: 4) {
-                        Image(systemName: academician.image)
-                            .resizable()
-                            .scaledToFit()
+                        if let url = URL(string: academician.photo) {
+                            AsyncImage(url: url) { phase in
+                                if let image = phase.image {
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                } else if phase.error != nil {
+                                    Image(systemName: "person.crop.circle.badge.exclamationmark")
+                                } else {
+                                    ProgressView()
+                                }
+                            }
                             .frame(width: 20, height: 20)
-                        
-                        Text("\(academician.name) \(academician.surname.prefix(1)).")
+                            .clipShape(Circle())
+                        } else {
+                            Image(systemName: "person.circle")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                        }
+
+                        Text("\(academician.adSoyad.prefix(1)).")
                             .font(.caption)
-                        
+
                         Button(action: {
-                            if let index = selectedAcademicians.firstIndex(of: academician) {
+                            if let index = selectedAcademicians.firstIndex(where: { $0.id == academician.id }) {
                                 selectedAcademicians.remove(at: index)
                             }
                         }) {
@@ -253,14 +272,14 @@ struct SelectedAcademiciansView: View {
     }
 }
 
-// Çoklu etiket görünümü
+// MARK: - FlexibleView
 struct FlexibleView<Data: Collection, Content: View>: View where Data.Element: Hashable {
     let data: Data
     let spacing: CGFloat
     let alignment: HorizontalAlignment
     let content: (Data.Element) -> Content
     @State private var availableWidth: CGFloat = 0
-    
+
     var body: some View {
         ZStack(alignment: Alignment(horizontal: alignment, vertical: .center)) {
             Color.clear
@@ -268,7 +287,7 @@ struct FlexibleView<Data: Collection, Content: View>: View where Data.Element: H
                 .readSize { size in
                     availableWidth = size.width
                 }
-            
+
             _FlexibleView(
                 availableWidth: availableWidth,
                 data: data,
@@ -287,8 +306,8 @@ private struct _FlexibleView<Data: Collection, Content: View>: View where Data.E
     let alignment: HorizontalAlignment
     let content: (Data.Element) -> Content
     @State var elementsSize: [Data.Element: CGSize] = [:]
-    
-    var body : some View {
+
+    var body: some View {
         VStack(alignment: alignment, spacing: spacing) {
             ForEach(computeRows(), id: \.self) { rowElements in
                 HStack(spacing: spacing) {
@@ -303,15 +322,15 @@ private struct _FlexibleView<Data: Collection, Content: View>: View where Data.E
             }
         }
     }
-    
+
     func computeRows() -> [[Data.Element]] {
         var rows: [[Data.Element]] = [[]]
         var currentRow = 0
         var remainingWidth = availableWidth
-        
+
         for element in data {
             let elementSize = elementsSize[element, default: CGSize(width: availableWidth, height: 1)]
-            
+
             if remainingWidth - (elementSize.width + spacing) >= 0 {
                 rows[currentRow].append(element)
                 remainingWidth -= elementSize.width + spacing
@@ -321,12 +340,12 @@ private struct _FlexibleView<Data: Collection, Content: View>: View where Data.E
                 remainingWidth = availableWidth - elementSize.width - spacing
             }
         }
-        
+
         return rows
     }
 }
 
-// View boyutunu okumak için extension
+// MARK: - View boyutunu okumak için Extension
 extension View {
     func readSize(onChange: @escaping (CGSize) -> Void) -> some View {
         background(
@@ -345,4 +364,3 @@ private struct SizePreferenceKey: PreferenceKey {
         value = nextValue()
     }
 }
-

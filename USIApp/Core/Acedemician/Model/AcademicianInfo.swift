@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AcademicianInfo {
+struct AcademicianInfo: Identifiable, Codable , Equatable {
     var id: String
     var email: String
     var unvan: String
