@@ -13,7 +13,10 @@ struct PendingRequestSelectAcademicianView: View {
     @Environment(\.dismiss) var dismiss
     @State private var searchText = ""
     @State private var selectedAcademicians: [Academician] = []
-    
+    @EnvironmentObject var viewModel :RequestInfoAdminViewModel
+    var requestId: String
+
+
     let allAcademicians = [
         Academician(id: "1", name: "Mustafa Kasım", surname: "KARAHOCGİL", image: "rektorhoca", expertise: ["Tıp bilimleri", "Bakteriyoloji ve Enfeksiyon"], unvan: "Prof. Doktor"),
         Academician(id: "2", name: "Mahmut", surname: "Sari", image: "mahmutsari", expertise: ["Veri Bilimi", "İstatistik"], unvan: "Ögr. GAörevlisi"),
@@ -76,9 +79,8 @@ struct PendingRequestSelectAcademicianView: View {
             // Seçilen Akademisyenler
             if !selectedAcademicians.isEmpty {
                 
-                NavigationLink {
-                    AdminView()
-                        .navigationBarBackButtonHidden()
+                Button {
+                    viewModel.approveRequest(documentId: requestId)
                 } label: {
                     VStack{
                          Label("Akedemisyeni ata ve onayla", systemImage: "checkmark")
@@ -344,6 +346,3 @@ private struct SizePreferenceKey: PreferenceKey {
     }
 }
 
-#Preview {
-    PendingRequestSelectAcademicianView()
-}

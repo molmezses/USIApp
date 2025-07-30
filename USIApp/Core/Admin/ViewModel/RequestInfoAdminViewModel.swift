@@ -29,11 +29,13 @@ class RequestInfoAdminViewModel: ObservableObject {
     
     func approveRequest(documentId: String){
         AdminUserFirestoreService.shared.approvRequest(documentId: documentId, adminMessage: adminMessage) { result in
-            switch result{
-            case .success(_):
-                print("Talep onaylandı mesaj: \(self.adminMessage)")
-            case .failure(let error):
-                print("Hata Talep onaylanamadı \(error.localizedDescription)")
+            DispatchQueue.main.async {
+                switch result{
+                case .success(_):
+                    print("Talep onaylandı mesaj: \(self.adminMessage)")
+                case .failure(let error):
+                    print("Hata Talep onaylanamadı \(error.localizedDescription)")
+                }
             }
         }
     }

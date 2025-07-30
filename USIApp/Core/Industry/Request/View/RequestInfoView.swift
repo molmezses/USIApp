@@ -39,7 +39,7 @@ struct RequestInfoView: View {
                         Text("Talep Durumu")
                             .font(.subheadline.bold())
                         
-                        switch viewModel.request?.status ?? request.status {
+                        switch request.status {
                         case .pending:
                             HStack {
                                 ProgressView()
@@ -187,6 +187,7 @@ struct RequestInfoView: View {
             }
             .background(Color(.systemGroupedBackground))
         }
+        
     }
 }
 

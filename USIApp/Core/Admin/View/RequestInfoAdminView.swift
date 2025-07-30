@@ -5,8 +5,9 @@ struct RequestInfoAdminView: View {
     var status: RequestStatus?
     
     @Environment(\.dismiss) var dismiss
-    @State var viewModel = RequestInfoAdminViewModel()
+    @StateObject var viewModel  = RequestInfoAdminViewModel()
     @FocusState var focusedField: Bool
+    @State var gogo = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -141,18 +142,19 @@ struct RequestInfoAdminView: View {
                             .cornerRadius(10)
                         }
                         
-                        Button {
-                            viewModel.approveRequest(documentId: request.id)
-                            
+                        NavigationLink {
+                            PendingRequestSelectAcademicianView(requestId: request.id)
+                                .environmentObject(viewModel)
+                                .navigationBarBackButtonHidden()
                         } label: {
-                           VStack{
-                                Label("Kabul Et", systemImage: "checkmark")
-                                    .frame(maxWidth: .infinity)
-                            }
-                            .padding()
-                            .background(Color.green.opacity(0.9))
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
+                            VStack{
+                                 Label("Kabul Et", systemImage: "checkmark")
+                                     .frame(maxWidth: .infinity)
+                             }
+                             .padding()
+                             .background(Color.green.opacity(0.9))
+                             .foregroundColor(.white)
+                             .cornerRadius(10)
                         }
 
                     }
