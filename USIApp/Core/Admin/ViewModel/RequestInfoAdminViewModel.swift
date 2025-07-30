@@ -12,6 +12,8 @@ class RequestInfoAdminViewModel: ObservableObject {
     @Published var adminMessage: String = ""
     @Published var academicians: [AcademicianInfo] = []
     @Published var isLoading: Bool = false
+    @Published  var searchText = ""
+    @Published  var selectedAcademicians: [AcademicianInfo] = []
     
         
     func stringToRequestStatus(string stringData: String) -> RequestStatus {
@@ -46,7 +48,7 @@ class RequestInfoAdminViewModel: ObservableObject {
         }
     
     func approveRequest(documentId: String){
-        AdminUserFirestoreService.shared.approvRequest(documentId: documentId, adminMessage: adminMessage) { result in
+        AdminUserFirestoreService.shared.approvRequest(documentId: documentId, adminMessage: adminMessage, selectedAcademians: selectedAcademicians) { result in
             DispatchQueue.main.async {
                 switch result{
                 case .success(_):

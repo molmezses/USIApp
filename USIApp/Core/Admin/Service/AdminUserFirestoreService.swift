@@ -18,11 +18,15 @@ class AdminUserFirestoreService{
     
     let db = Firestore.firestore().collection("Requests")
     
-    func approvRequest(documentId: String , adminMessage: String, completion: @escaping (Result<Void, Error>) -> Void){
+    func approvRequest(documentId: String , adminMessage: String, selectedAcademians: [AcademicianInfo] , completion: @escaping (Result<Void, Error>) -> Void){
+        
+        let academiciansIdArray = selectedAcademians.map{ $0.id}
+
         
         db.document(documentId).updateData([
             "status": "approved",
-            "adminMessage": adminMessage
+            "adminMessage": adminMessage,
+            "selectedAcademiciansId" : academiciansIdArray
         ]) { error in
             if let error = error {
                 print("Error updating document: \(error)")
@@ -134,6 +138,27 @@ class AdminUserFirestoreService{
                 }
             }
         }
+        
+    }
+    
+    func saveSelectedAcademicians(documentId: String ,selectedAcademians: [AcademicianInfo] , completion: @escaping (Result<Void, Error>) -> Void){
+        
+        
+        let docRef = Firestore.firestore().collection("Requests").document(documentId)
+        
+        let academiciansIdArray = selectedAcademians.map{ $0.id}
+        
+        docRef.setData(["selectedAcademiciansId":academiciansIdArray], merge: true) { error in
+            if let error = error {
+                print("Hata: \(error.localizedDescription)")
+                completion(.failure(error))
+            } else {
+                print("Başarılı")
+                completion(.success(()))
+            }
+        }
+        
+        
         
     }
     

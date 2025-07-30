@@ -10,18 +10,16 @@ import SwiftUI
 struct PendingRequestSelectAcademicianView: View {
     
     @Environment(\.dismiss) var dismiss
-    @State private var searchText = ""
-    @State private var selectedAcademicians: [AcademicianInfo] = []
     @EnvironmentObject var viewModel: RequestInfoAdminViewModel
     var requestId: String
 
     var filteredAcademicians: [AcademicianInfo] {
-        if searchText.isEmpty {
+        if viewModel.searchText.isEmpty {
             return viewModel.academicians
         } else {
             return viewModel.academicians.filter { academician in
-                academician.adSoyad.lowercased().contains(searchText.lowercased()) ||
-                academician.uzmanlikAlani.contains { $0.lowercased().contains(searchText.lowercased()) }
+                academician.adSoyad.lowercased().contains(viewModel.searchText.lowercased()) ||
+                academician.uzmanlikAlani.contains { $0.lowercased().contains(viewModel.searchText.lowercased()) }
             }
         }
     }
@@ -53,12 +51,12 @@ struct PendingRequestSelectAcademicianView: View {
             .background(Color("usi"))
 
             // Arama Çubuğu
-            SearchBar(text: $searchText)
+            SearchBar(text: $viewModel.searchText)
                 .padding(.horizontal)
                 .padding(.top, 8)
 
-            // Seçilen Akademisyenler ve Onay Butonu
-            if !selectedAcademicians.isEmpty {
+            //
+            if !viewModel.selectedAcademicians.isEmpty {
                 Button {
                     viewModel.approveRequest(documentId: requestId)
                     AdminUserFirestoreService.shared.moveOldRequests(from: "Requests", documentId: requestId, to: "OldRequests")
@@ -74,7 +72,7 @@ struct PendingRequestSelectAcademicianView: View {
                         .padding(.top, 4)
                 }
 
-                SelectedAcademiciansView(selectedAcademicians: $selectedAcademicians)
+                SelectedAcademiciansView(selectedAcademicians: $viewModel.selectedAcademicians)
                     .padding(.horizontal)
             }
 
@@ -84,12 +82,12 @@ struct PendingRequestSelectAcademicianView: View {
                     ForEach(filteredAcademicians) { academician in
                         AcademicianRow(
                             academician: academician,
-                            isSelected: selectedAcademicians.contains(where: { $0.id == academician.id }),
+                            isSelected: viewModel.selectedAcademicians.contains(where: { $0.id == academician.id }),
                             onSelect: {
-                                if let index = selectedAcademicians.firstIndex(where: { $0.id == academician.id }) {
-                                    selectedAcademicians.remove(at: index)
+                                if let index = viewModel.selectedAcademicians.firstIndex(where: { $0.id == academician.id }) {
+                                    viewModel.selectedAcademicians.remove(at: index)
                                 } else {
-                                    selectedAcademicians.append(academician)
+                                    viewModel.selectedAcademicians.append(academician)
                                 }
                             }
                         )
