@@ -14,6 +14,7 @@ class RequestInfoAdminViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published  var searchText = ""
     @Published  var selectedAcademicians: [AcademicianInfo] = []
+    @Published var destinated: Bool = false
     
         
     func stringToRequestStatus(string stringData: String) -> RequestStatus {
@@ -52,6 +53,7 @@ class RequestInfoAdminViewModel: ObservableObject {
             DispatchQueue.main.async {
                 switch result{
                 case .success(_):
+                    self.destinated = true
                     print("Talep onaylandı mesaj: \(self.adminMessage)")
                 case .failure(let error):
                     print("Hata Talep onaylanamadı \(error.localizedDescription)")
@@ -62,11 +64,14 @@ class RequestInfoAdminViewModel: ObservableObject {
     
     func rejectRequest(documentId: String){
         AdminUserFirestoreService.shared.rejectRequest(documentId: documentId, adminMessage: adminMessage) { result in
-            switch result{
-            case .success(_):
-                print("Talep onaylandı mesaj: \(self.adminMessage)")
-            case .failure(let error):
-                print("Hata Talep onaylanamadı \(error.localizedDescription)")
+            DispatchQueue.main.async {
+                switch result{
+                case .success(_):
+                    self.destinated = true
+                    print("Talep reddedildi mesaj: \(self.adminMessage)")
+                case .failure(let error):
+                    print("Hata Talep onaylanamadı \(error.localizedDescription)")
+                }
             }
         }
     }

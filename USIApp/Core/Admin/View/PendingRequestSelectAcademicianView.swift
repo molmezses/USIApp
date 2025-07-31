@@ -58,8 +58,11 @@ struct PendingRequestSelectAcademicianView: View {
             //
             if !viewModel.selectedAcademicians.isEmpty {
                 Button {
-                    viewModel.approveRequest(documentId: requestId)
-                    AdminUserFirestoreService.shared.moveOldRequests(from: "Requests", documentId: requestId, to: "OldRequests")
+                    DispatchQueue.main.async {
+                        viewModel.approveRequest(documentId: requestId)
+                        AdminUserFirestoreService.shared.moveOldRequests(from: "Requests", documentId: requestId, to: "OldRequests")
+                        viewModel.destinated = false
+                    }
                 } label: {
                     Label("Akademisyeni Ata ve Onayla", systemImage: "checkmark.circle.fill")
                         .font(.headline)
@@ -98,6 +101,10 @@ struct PendingRequestSelectAcademicianView: View {
             }
             .background(Color(.systemGroupedBackground))
         }
+        .navigationDestination(isPresented: $viewModel.destinated, destination: {
+            PendingRequestView()
+                .navigationBarBackButtonHidden()
+        })
         .onAppear {
             viewModel.loadAcademicians()
         }

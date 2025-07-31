@@ -13,91 +13,103 @@ struct AdminView: View {
     let rejectedRequests = 11
     let pendingRequests = 14
     
-    // Kart yüksekliği sabiti
+
     private let cardHeight: CGFloat = 160
+    @State var navigate: Bool = false
+    @State var goToProfile :Bool = false
+    @EnvironmentObject var authViewModel : AuthViewModel
+    
+    
     
     var body: some View {
-        VStack(spacing: 0) {
-            // Üst Bar
-            headerView
-            
-            ScrollView {
-                VStack(spacing: 20) {
-                    // Kullanıcı İstatistikleri
-                    userStatsSection
-                    
-                    // Talep İstatistikleri
-                    requestStatsSection
-                    
-                    ortakProjeStatus
-                    
-                    // Özet İstatistikler
-                    statsSummaryView
-                    
-                    VStack {
-                                                
+        NavigationStack{
+            VStack(spacing: 0) {
+                // Üst Bar
+                headerView
+                
+                ScrollView {
+                    VStack(spacing: 20) {
+                        // Kullanıcı İstatistikleri
+                        userStatsSection
                         
+                        // Talep İstatistikleri
+                        requestStatsSection
                         
-                        NavigationLink {
-                            PendingRequestView()
-                                .navigationBarBackButtonHidden()
-                        } label: {
-                            HStack {
-                                Image(systemName: "clock.fill")
-                                    .resizable()
-                                    .foregroundStyle(Color("usi"))
-                                    .frame(width: 28, height: 28)
-                                Text("Bekleyen Talepler")
-                                Spacer()
-                                Text("14")
-                                    .font(.footnote)
-                                    .padding(8)
-                                    .background(.green)
-                                    .foregroundStyle(.white)
-                                    .clipShape(Circle())
-                                Image(systemName: "chevron.right")
-                                
+                        ortakProjeStatus
+                        
+                        // Özet İstatistikler
+                        statsSummaryView
+                        
+                        VStack {
+                                                    
+                            
+                            
+                            NavigationLink {
+                                PendingRequestView()
+                                    .navigationBarBackButtonHidden()
+                            } label: {
+                                HStack {
+                                    Image(systemName: "clock.fill")
+                                        .resizable()
+                                        .foregroundStyle(Color("usi"))
+                                        .frame(width: 28, height: 28)
+                                    Text("Bekleyen Talepler")
+                                    Spacer()
+                                    Text("14")
+                                        .font(.footnote)
+                                        .padding(8)
+                                        .background(.green)
+                                        .foregroundStyle(.white)
+                                        .clipShape(Circle())
+                                    Image(systemName: "chevron.right")
+                                    
+                                }
+                                .padding(2)
+                                .foregroundStyle(.black)
                             }
-                            .padding(2)
-                            .foregroundStyle(.black)
+                            .badge(3)
+                            
+                            
+                            Divider()
+                                .padding(.vertical , 4)
+                            
+                            NavigationLink(destination: {
+                                EmptyView()
+                                    .navigationBarBackButtonHidden()
+                            }, label: {
+                                HStack {
+                                    Image(systemName: "calendar.badge.clock")
+                                        .resizable()
+                                        .foregroundStyle(Color("usi"))
+                                        .frame(width: 28, height: 28)
+                                    Text("Eski talepler")
+                                        .foregroundStyle(.black)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                    
+                                }
+                                .foregroundStyle(.black)
+                                .padding(2)
+                            })
+                            
+
+                             
                         }
-                        .badge(3)
-                        
-                        
-                        Divider()
-                            .padding(.vertical , 4)
-                        
-                        NavigationLink(destination: {
-                            EmptyView()
-                                .navigationBarBackButtonHidden()
-                        }, label: {
-                            HStack {
-                                Image(systemName: "calendar.badge.clock")
-                                    .resizable()
-                                    .foregroundStyle(Color("usi"))
-                                    .frame(width: 28, height: 28)
-                                Text("Eski talepler")
-                                    .foregroundStyle(.black)
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                                
-                            }
-                            .foregroundStyle(.black)
-                            .padding(2)
-                        })
-                        
+                        .padding()
+                        .background(.white)
+                        .cornerRadius(12)
+                        .padding(.horizontal)
 
-                         
                     }
-                    .padding()
-                    .background(.white)
-                    .cornerRadius(12)
-                    .padding(.horizontal)
-
+                    .padding(.vertical, 16)
                 }
-                .padding(.vertical, 16)
+                .background(Color(.systemGroupedBackground))
             }
-            .background(Color(.systemGroupedBackground))
+            .navigationDestination(isPresented: $goToProfile) {
+                AcademicianTabView()
+                    .navigationBarBackButtonHidden()
+                    .environmentObject(authViewModel)
+            }
         }
     }
     
@@ -105,8 +117,9 @@ struct AdminView: View {
     
     private var headerView: some View {
         HStack {
+            
             Button {
-                dismiss()
+                goToProfile = true
             } label: {
                 Image(systemName: "chevron.left")
                     .font(.system(size: 18, weight: .semibold))

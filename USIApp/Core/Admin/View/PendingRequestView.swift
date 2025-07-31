@@ -11,6 +11,9 @@ struct PendingRequestView: View {
     
     @Environment(\.dismiss) var dismiss
     @StateObject var viewModel = PendingRequestsViewModel()
+    @State var navigateToAdminView: Bool = false
+    
+    
     
     var body: some View {
         VStack(spacing: 0) {
@@ -18,7 +21,7 @@ struct PendingRequestView: View {
             // Başlık
             HStack {
                 Button {
-                    dismiss()
+                    navigateToAdminView = true
                 } label: {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 18, weight: .semibold))
@@ -64,6 +67,10 @@ struct PendingRequestView: View {
             }
             .background(Color(.systemGroupedBackground))
         }
+        .navigationDestination(isPresented: $navigateToAdminView, destination: {
+            AdminView()
+                .navigationBarBackButtonHidden()
+        })
         .onAppear {
             viewModel.loadRequests()
         }

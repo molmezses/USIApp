@@ -98,6 +98,7 @@ struct ProfileView: View {
                                     NavigationLink {
                                         AdminView()
                                             .navigationBarBackButtonHidden()
+                                            .environmentObject(authViewModel)
                                     } label: {
                                         HStack {
                                             Image(systemName: "key.icloud.fill")

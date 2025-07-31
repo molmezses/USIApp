@@ -165,6 +165,10 @@ struct RequestInfoAdminView: View {
             }
             .background(Color(.systemGroupedBackground))
         }
+        .navigationDestination(isPresented: $viewModel.destinated, destination: {
+            PendingRequestView()
+                .navigationBarBackButtonHidden()
+        })
         .onTapGesture {
             focusedField = false
         }
