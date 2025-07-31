@@ -8,6 +8,7 @@
 import Foundation
 import Firebase
 import FirebaseFirestore
+import SwiftUICore
 
 
 class AdminUserFirestoreService{
@@ -157,10 +158,42 @@ class AdminUserFirestoreService{
                 completion(.success(()))
             }
         }
-        
-        
-        
     }
+    
+    
+    
+    
+    
+    
+    
+    func fetchSelectedAcademiciansIdArray(documentId: String, completion: @escaping (Result<[String], Error>) -> Void) {
+        
+        let docRef = Firestore.firestore().collection("OldRequests").document(documentId)
+        
+        docRef.getDocument { snapshot, error in
+            if let error = error {
+                print("Hata: Doküman alınamadı \(error.localizedDescription)")
+                completion(.failure(error))
+                return
+            }
+            
+            guard let data = snapshot?.data() else {
+                print("Doküman bulunamadı")
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Doküman bulunamadı"])))
+                return
+            }
+            
+            if let selectedAcademiciansId = data["selectedAcademiciansId"] as? [String] {
+                completion(.success(selectedAcademiciansId))
+            } else {
+                print("Dizi bulunamadı veya format hatalı")
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Dizi formatı hatalı veya yok"])))
+            }
+        }
+    }
+
+    
+    
     
     
     

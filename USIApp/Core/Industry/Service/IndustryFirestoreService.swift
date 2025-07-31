@@ -294,6 +294,69 @@ class IndustryFirestoreService {
             completion(.success(requests))
         }
     }
+    
+    func fetchOldRequests(completion: @escaping (Result<[RequestModel], Error>) -> Void) {
+        
+        guard (IndustryAuthService.shared.getCurrentUser()?.id) != nil else {
+            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Kullanıcı ID bulunamadı"])))
+            return
+        }
+        
+        
+        let docRef = Firestore.firestore()
+                .collection("Requests")
+                .whereField("status", in: ["rejected", "approved"])
+        
+        docRef.getDocuments { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let documents = snapshot?.documents else {
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Belge bulunamadı"])))
+                return
+            }
+            
+            let requests: [RequestModel] = documents.compactMap { doc in
+                let data = doc.data()
+                
+                let title = data["requestTitle"] as? String ?? ""
+                let description = data["requestMessage"] as? String ?? ""
+                let date = data["createdDate"] as? String ?? ""
+                let selectedCategories = data["selectedCategories"] as? [String] ?? []
+                let status = data["status"] as? String ?? ""
+                let requesterID = data["requesterID"] as? String ?? ""
+                let requesterName = data["requesterName"] as? String ?? ""
+                let requesterCategories = data["requesterCategories"] as? String ?? ""
+                let requesterEmail = data["requesterEmail"] as? String ?? ""
+                let requesterPhone = data["requesterPhone"] as? String ?? ""
+                let adminMessage = data["adminMessage"] as? String ?? ""
+
+
+
+                
+                
+                return RequestModel(
+                    id: doc.documentID,
+                    title: title,
+                    description: description,
+                    date: date,
+                    selectedCategories: selectedCategories,
+                    status: self.stringToRequestStatus(string: status),
+                    requesterID: requesterID,
+                    requesterCategories: requesterCategories,
+                    requesterName: requesterName,
+                    requesterEmail: requesterEmail,
+                    requesterPhone: requesterPhone,
+                    adminMessage : adminMessage
+                    
+                )
+            }
+            
+            completion(.success(requests))
+        }
+    }
 
 
     

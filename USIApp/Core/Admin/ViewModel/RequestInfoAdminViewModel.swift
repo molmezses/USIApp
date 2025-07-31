@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import SwiftUICore
+import FirebaseFirestore
 
 class RequestInfoAdminViewModel: ObservableObject {
     
@@ -15,7 +17,9 @@ class RequestInfoAdminViewModel: ObservableObject {
     @Published  var searchText = ""
     @Published  var selectedAcademicians: [AcademicianInfo] = []
     @Published var destinated: Bool = false
-    
+    @Published var fetchedSelectedAcademicians: [AcademicianInfo] = []
+    @Published var isLoadingSelectedAcademician: Bool = false
+
         
     func stringToRequestStatus(string stringData: String) -> RequestStatus {
         
@@ -75,6 +79,40 @@ class RequestInfoAdminViewModel: ObservableObject {
             }
         }
     }
+    
+    
+    func getir(documentId: String) {
+        self.isLoadingSelectedAcademician = true
+        AdminUserFirestoreService.shared.fetchSelectedAcademiciansIdArray(documentId: documentId) { result in
+            switch result {
+            case .success(let academicianIds):
+                self.fetchedSelectedAcademicians = []
+
+                for academicianId in academicianIds {
+                    let currentId = academicianId // 🔒 sabitleme
+                    print("selected academicians Id : \(currentId)")
+
+                    FirestoreService.shared.fetchAcademicianInfoSelectAcademicianAdmin(byId: currentId) { result in
+                        switch result {
+                        case .success(let info):
+                            DispatchQueue.main.async {
+                                self.fetchedSelectedAcademicians.append(info)
+                            }
+                        case .failure(let failure):
+                            print("Hata Talep onaylanamadı \(failure.localizedDescription)")
+                        }
+                    }
+                    self.isLoadingSelectedAcademician = false
+                }
+
+            case .failure(let failure):
+                print("Hata: \(failure.localizedDescription)")
+            }
+        }
+    }
+
+
+   
     
     
     

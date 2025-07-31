@@ -130,6 +130,61 @@ class FirestoreService{
         
     }
     
+    func fetchAcademicianInfoSelectAcademicianAdmin(byId id:String , completion: @escaping (Result<AcademicianInfo , Error>) -> Void){
+        
+        let docRef = Firestore.firestore()
+            .collection("AcademicianInfo")
+            .document(id)
+        
+        docRef.getDocument { document , error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let document = document , document.exists , let data = document.data() else {
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey : "Belge bulunamadı"])))
+                return
+            }
+            
+            // Artık id sabit, fetch etmene gerek yok
+            let firmaDictArray = data["firmalar"] as? [[String: Any]] ?? []
+            let firmalar = firmaDictArray.map { dict in
+                Firma(
+                    id: dict["id"] as? String ?? UUID().uuidString,
+                    firmaAdi: dict["firmaAdi"] as? String ?? "",
+                    firmaCalismaAlani: dict["firmaCalismaAlani"] as? [String] ?? []
+                )
+            }
+
+            let info = AcademicianInfo(
+                id: id, // 👈 burada parametreyi kullan
+                email: data["email"] as? String ?? "",
+                unvan: data["unvan"] as? String ?? "",
+                program: data["program"] as? String ?? "",
+                photo: data["photo"] as? String ?? "",
+                bolum: data["bolum"] as? String ?? "",
+                adSoyad: data["adSoyad"] as? String ?? "",
+                personelTel: data["personelTel"] as? String ?? "",
+                kurumsalTel: data["kurumsalTel"] as? String ?? "",
+                il: data["il"] as? String ?? "",
+                ilce: data["ilce"] as? String ?? "",
+                webSite: data["web"] as? String ?? "",
+                akademikGecmis: data["akademikGecmis"] as? String ?? "",
+                ortakProjeTalep: data["ortakProjeTalep"] as? Bool ?? true,
+                firmalar: firmalar,
+                uzmanlikAlani: data["uzmanlikAlanlari"] as? [String] ?? [""],
+                verebilecegiDanismanlikKonuları: data["verebilecegiDanismanlikKonulari"] as? [String] ?? [""],
+                dahaOncekiDanismanliklar: data["dahaOncekiDanismanliklar"] as? [String] ?? [""],
+                verebilecegiEgitimler: data["verebilecegiEgitimler"] as? [String] ?? [""],
+                dahaOncekiVerdigiEgitimler: data["dahaOnceVerdigiEgitimler"] as? [String] ?? [""]
+            )
+            
+            completion(.success(info))
+        }
+    }
+
+    
     func fetchFirmalar(forAcademicianId id: String, completion: @escaping ([Firma]) -> Void) {
         let docRef = db.collection("AcademicianInfo").document(id)
 

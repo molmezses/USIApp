@@ -74,7 +74,7 @@ struct AdminView: View {
                                 .padding(.vertical , 4)
                             
                             NavigationLink(destination: {
-                                EmptyView()
+                                OldRequestView()
                                     .navigationBarBackButtonHidden()
                             }, label: {
                                 HStack {

@@ -7,7 +7,6 @@ struct RequestInfoAdminView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject var viewModel  = RequestInfoAdminViewModel()
     @FocusState var focusedField: Bool
-    @State var gogo = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -95,70 +94,25 @@ struct RequestInfoAdminView: View {
                                 }
                             }
                         }
-                    }
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(10)
-                    .shadow(radius: 2)
-                    
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("Mesajınız :")
-                            .font(.subheadline.bold())
-                        ZStack(alignment: .topLeading) {
-                            if viewModel.adminMessage == "" {
-                                Text("Mesajınızı buraya yazınız...")
-                                    .foregroundColor(.gray)
-                                    .padding(EdgeInsets(top: 12, leading: 16, bottom: 0, trailing: 0))
-                            }
-                            TextEditor(text: $viewModel.adminMessage)
-                                .frame(height: 80)
-                                .padding(8)
-                                .background(Color.white)
-                                .cornerRadius(8)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(Color.gray.opacity(0.3))
-                                )
-                                .padding(.horizontal)
-                                .focused($focusedField)
-                        }
-                    }
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(10)
-                    .shadow(radius: 2)
-                    
-                    HStack(spacing: 16) {
-                        Button {
-                            viewModel.rejectRequest(documentId: request.id)
-                        } label: {
-                           VStack{
-                                Label("Reddet", systemImage: "xmark")
-                                    .frame(maxWidth: .infinity)
-                            }
-                            .padding()
-                            .background(Color.red.opacity(0.9))
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
+                        
+                        Divider()
+                        
+                        
+                        
+                        if request.status == .pending{
+                            RequestAnswer()
+                        }else{
+                            SelectedAcademicianView()
                         }
                         
-                        NavigationLink {
-                            PendingRequestSelectAcademicianView(requestId: request.id)
-                                .environmentObject(viewModel)
-                                .navigationBarBackButtonHidden()
-                        } label: {
-                            VStack{
-                                 Label("Kabul Et", systemImage: "checkmark")
-                                     .frame(maxWidth: .infinity)
-                             }
-                             .padding()
-                             .background(Color.green.opacity(0.9))
-                             .foregroundColor(.white)
-                             .cornerRadius(10)
-                        }
-
+                        
                     }
-                    .padding(.horizontal)
+                    .padding()
+                    .background(Color.white)
+                    .cornerRadius(10)
+                    .shadow(radius: 2)
+                    
+                  
                     
                 }
                 .padding()
@@ -173,4 +127,156 @@ struct RequestInfoAdminView: View {
             focusedField = false
         }
     }
+    
+    
+    func SelectedAcademicianView() -> some View {
+        VStack {
+            Text("Atanan akedemisyenler :")
+                .font(.subheadline.bold())
+                .frame(maxWidth: .infinity , alignment: .leading)
+            
+            if !viewModel.isLoadingSelectedAcademician{
+                ForEach(viewModel.fetchedSelectedAcademicians) { academicians in
+                    AcademicianRowReadOnly(academician: academicians)
+                        .foregroundStyle(.black)
+                }
+            }else{
+                ProgressView()
+            }
+        }
+        .onAppear {
+            viewModel.getir(documentId: request.id)
+        }
+    }
+    
+    
+    func RequestAnswer() -> some View{
+        VStack {
+                Text("Mesajınız :")
+                    .font(.subheadline.bold())
+                    .frame(maxWidth: .infinity , alignment: .leading)
+                ZStack(alignment: .topLeading) {
+                    if viewModel.adminMessage == "" {
+                        Text("Mesajınızı buraya yazınız...")
+                            .foregroundColor(.gray)
+                            .padding(EdgeInsets(top: 12, leading: 16, bottom: 0, trailing: 0))
+                    }
+                    TextEditor(text: $viewModel.adminMessage)
+                        .frame(height: 80)
+                        .padding(8)
+                        .background(Color.white)
+                        .cornerRadius(8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.gray.opacity(0.3))
+                        )
+                        .focused($focusedField)
+                }
+            
+            
+            HStack(spacing: 16) {
+                Button {
+                    viewModel.rejectRequest(documentId: request.id)
+                } label: {
+                   VStack{
+                        Label("Reddet", systemImage: "xmark")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .padding()
+                    .background(Color.red.opacity(0.9))
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                }
+                
+                NavigationLink {
+                    PendingRequestSelectAcademicianView(requestId: request.id)
+                        .environmentObject(viewModel)
+                        .navigationBarBackButtonHidden()
+                } label: {
+                    VStack{
+                         Label("Kabul Et", systemImage: "checkmark")
+                             .frame(maxWidth: .infinity)
+                     }
+                     .padding()
+                     .background(Color.green.opacity(0.9))
+                     .foregroundColor(.white)
+                     .cornerRadius(10)
+                }
+
+            }
+        }
+    }
 }
+
+
+struct AcademicianRowReadOnly: View {
+    let academician: AcademicianInfo
+
+    var body: some View {
+        NavigationLink {
+            AcademicianDetailView(academician: academician)
+                .foregroundStyle(.black)
+                .navigationBarBackButtonHidden()
+        } label: {
+            HStack(alignment: .top, spacing: 12) {
+                if let url = URL(string: academician.photo) {
+                    AsyncImage(url: url) { phase in
+                        if let image = phase.image {
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        } else if phase.error != nil {
+                            Image(systemName: "person.crop.circle.badge.exclamationmark")
+                        } else {
+                            ProgressView()
+                        }
+                    }
+                    .frame(width: 50, height: 50)
+                    .clipShape(Circle())
+                } else {
+                    Image(systemName: "person.circle")
+                        .resizable()
+                        .frame(width: 50, height: 50)
+                        .foregroundColor(.blue)
+                        .clipShape(Circle())
+                }
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(academician.adSoyad)
+                        .font(.headline)
+                        .foregroundStyle(.black)
+                    Text(academician.unvan)
+                        .font(.subheadline)
+                        .foregroundStyle(.gray)
+
+                    if !(academician.uzmanlikAlani == [""] || academician.uzmanlikAlani.isEmpty) {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 6) {
+                                ForEach(academician.uzmanlikAlani, id: \.self) { item in
+                                    Text(item)
+                                        .font(.caption2)
+                                        .lineLimit(1)
+                                        .truncationMode(.tail)
+                                        .padding(.horizontal, 6)
+                                        .padding(.vertical, 3)
+                                        .background(Color("usi").opacity(0.2))
+                                        .cornerRadius(6)
+                                }
+                            }
+                            .padding(.top, 2)
+                        }
+                    }
+                }
+
+                Spacer()
+            }
+            .padding()
+            .background(Color.white)
+            .cornerRadius(12)
+            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+            .foregroundStyle(.black)
+        }
+        .foregroundStyle(.black)
+    }
+}
+
