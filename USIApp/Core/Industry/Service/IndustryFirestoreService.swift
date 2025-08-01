@@ -332,6 +332,8 @@ class IndustryFirestoreService {
                 let requesterEmail = data["requesterEmail"] as? String ?? ""
                 let requesterPhone = data["requesterPhone"] as? String ?? ""
                 let adminMessage = data["adminMessage"] as? String ?? ""
+                let approvedAcademicians = data["approvedAcademicians"] as? [String] ?? []
+                let rejectedAcademicians = data["rejectedAcademicians"] as? [String] ?? []
 
 
 
@@ -349,7 +351,9 @@ class IndustryFirestoreService {
                     requesterName: requesterName,
                     requesterEmail: requesterEmail,
                     requesterPhone: requesterPhone,
-                    adminMessage : adminMessage
+                    adminMessage : adminMessage,
+                    approvedAcademicians: approvedAcademicians,
+                    rejectedAcademicians: rejectedAcademicians
                     
                 )
             }

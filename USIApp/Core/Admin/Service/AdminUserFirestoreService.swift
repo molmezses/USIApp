@@ -114,11 +114,10 @@ class AdminUserFirestoreService{
     }
     
     
-    func moveOldRequests(from oldCollection: String , documentId: String , to newCollection: String){
+    func moveOldRequests(from oldCollection: String , documentId: String , to newCollection: String) {
         
         let oldDocRef = Firestore.firestore().collection(oldCollection).document(documentId)
         let newDocRef = Firestore.firestore().collection(newCollection).document(documentId)
-        
         
         oldDocRef.getDocument { documentSnapshot, error in
             
@@ -126,6 +125,7 @@ class AdminUserFirestoreService{
                 print("Hata: Doküman alınamadı \(error.localizedDescription)")
                 return
             }
+            
             guard let data = documentSnapshot?.data() else {
                 print("Doküman bulunamadı")
                 return
@@ -134,12 +134,33 @@ class AdminUserFirestoreService{
             newDocRef.setData(data) { error in
                 if let error = error {
                     print("Yeni koleksiyona yazılamadı \(error.localizedDescription)")
+                    return
                 } else {
                     print("Başarıyla kopyalandı.")
+                    
+                    if let selectedIds = data["selectedAcademiciansId"] as? [String] {
+                        var responseDict: [String: String] = [:]
+                        for id in selectedIds {
+                            responseDict[id] = "pending"
+                        }
+                        
+                        let updateData: [String: Any] = [
+                            "academicianResponses": responseDict
+                        ]
+                        
+                        newDocRef.updateData(updateData) { error in
+                            if let error = error {
+                                print("Akademisyen cevapları eklenemedi: \(error.localizedDescription)")
+                            } else {
+                                print("Akademisyen cevapları başarıyla güncellendi.")
+                            }
+                        }
+                    } else {
+                        print("selectedAcademiciansId alanı bulunamadı veya formatı hatalı.")
+                    }
                 }
             }
         }
-        
     }
     
     func saveSelectedAcademicians(documentId: String ,selectedAcademians: [AcademicianInfo] , completion: @escaping (Result<Void, Error>) -> Void){
@@ -159,12 +180,6 @@ class AdminUserFirestoreService{
             }
         }
     }
-    
-    
-    
-    
-    
-    
     
     func fetchSelectedAcademiciansIdArray(documentId: String, completion: @escaping (Result<[String], Error>) -> Void) {
         
@@ -191,6 +206,32 @@ class AdminUserFirestoreService{
             }
         }
     }
+    
+
+    func fetchAcademicianRequestStatus(requestId: String, academicianId: String, completion: @escaping (String?) -> Void) {
+        let docRef = Firestore.firestore().collection("OldRequests").document(requestId)
+        
+        docRef.getDocument { snapshot, error in
+            if let error = error {
+                print("Veri alınamadı: \(error.localizedDescription)")
+                completion(nil)
+                return
+            }
+            
+            guard let data = snapshot?.data(),
+                  let responses = data["academicianResponses"] as? [String: String] else {
+                print("Veri formatı hatalı veya eksik.")
+                completion(nil)
+                return
+            }
+            
+            let status = responses[academicianId]
+            completion(status)
+        }
+    }
+
+    
+    
 
     
     

@@ -20,5 +20,7 @@ struct RequestModel:Identifiable , Codable{
     var requesterEmail: String
     var requesterPhone: String
     var adminMessage: String
+    var approvedAcademicians: [String]?
+    var rejectedAcademicians: [String]?
     
 }

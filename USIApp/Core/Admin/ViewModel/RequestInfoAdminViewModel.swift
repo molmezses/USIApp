@@ -81,7 +81,7 @@ class RequestInfoAdminViewModel: ObservableObject {
     }
     
     
-    func getir(documentId: String) {
+    func fetchAcademicianSelectedAdmin(documentId: String) {
         self.isLoadingSelectedAcademician = true
         AdminUserFirestoreService.shared.fetchSelectedAcademiciansIdArray(documentId: documentId) { result in
             switch result {
@@ -110,6 +110,8 @@ class RequestInfoAdminViewModel: ObservableObject {
             }
         }
     }
+    
+    
 
 
    

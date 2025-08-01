@@ -88,8 +88,8 @@ struct RequestInfoAdminView: View {
                                         .font(.caption)
                                         .padding(.horizontal, 12)
                                         .padding(.vertical, 6)
-                                        .background(Color.blue.opacity(0.1))
-                                        .foregroundColor(.blue)
+                                        .background(Color("usi").opacity(0.8))
+                                        .foregroundColor(.white)
                                         .cornerRadius(10)
                                 }
                             }
@@ -145,7 +145,7 @@ struct RequestInfoAdminView: View {
             }
         }
         .onAppear {
-            viewModel.getir(documentId: request.id)
+            viewModel.fetchAcademicianSelectedAdmin(documentId: request.id)
         }
     }
     
@@ -218,57 +218,92 @@ struct AcademicianRowReadOnly: View {
                 .foregroundStyle(.black)
                 .navigationBarBackButtonHidden()
         } label: {
-            HStack(alignment: .top, spacing: 12) {
-                if let url = URL(string: academician.photo) {
-                    AsyncImage(url: url) { phase in
-                        if let image = phase.image {
-                            image
-                                .resizable()
-                                .scaledToFill()
-                        } else if phase.error != nil {
-                            Image(systemName: "person.crop.circle.badge.exclamationmark")
-                        } else {
-                            ProgressView()
-                        }
-                    }
-                    .frame(width: 50, height: 50)
-                    .clipShape(Circle())
-                } else {
-                    Image(systemName: "person.circle")
-                        .resizable()
-                        .frame(width: 50, height: 50)
-                        .foregroundColor(.blue)
-                        .clipShape(Circle())
-                }
-
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(academician.adSoyad)
-                        .font(.headline)
-                        .foregroundStyle(.black)
-                    Text(academician.unvan)
-                        .font(.subheadline)
-                        .foregroundStyle(.gray)
-
-                    if !(academician.uzmanlikAlani == [""] || academician.uzmanlikAlani.isEmpty) {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 6) {
-                                ForEach(academician.uzmanlikAlani, id: \.self) { item in
-                                    Text(item)
-                                        .font(.caption2)
-                                        .lineLimit(1)
-                                        .truncationMode(.tail)
-                                        .padding(.horizontal, 6)
-                                        .padding(.vertical, 3)
-                                        .background(Color("usi").opacity(0.2))
-                                        .cornerRadius(6)
-                                }
+            
+            
+            VStack {
+                HStack(alignment: .top, spacing: 12) {
+                    if let url = URL(string: academician.photo) {
+                        AsyncImage(url: url) { phase in
+                            if let image = phase.image {
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                            } else if phase.error != nil {
+                                Image(systemName: "person.crop.circle.badge.exclamationmark")
+                            } else {
+                                ProgressView()
                             }
-                            .padding(.top, 2)
                         }
+                        .frame(width: 50, height: 50)
+                        .clipShape(Circle())
+                    } else {
+                        Image(systemName: "person.circle")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .foregroundColor(.blue)
+                            .clipShape(Circle())
+                    }
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(academician.adSoyad)
+                            .font(.headline)
+                            .foregroundStyle(.black)
+                        Text(academician.unvan)
+                            .font(.subheadline)
+                            .foregroundStyle(.gray)
+                    }
+
+                    Spacer()
+                    
+//                    VStack{
+//                        HStack {
+//                            Image(systemName: "clock")
+//                                .foregroundStyle(.orange)
+//                            ProgressView()
+//                                .tint(.orange)
+//                        }
+//                        Text("Bekliyor")
+//                            .font(.caption)
+//                            .foregroundStyle(.orange)
+//                    }
+                    
+//                    VStack{
+//                        HStack {
+//                            Image(systemName: "checkmark.circle.fill")
+//                                .foregroundStyle(.green)
+//                        }
+//                        Text("Kabul edildi")
+//                            .font(.caption)
+//                            .foregroundStyle(.green)
+//                    }
+                    
+                    VStack{
+                        HStack {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.red)
+                        }
+                        Text("Reddedildi")
+                            .font(.caption)
+                            .foregroundStyle(.red)
                     }
                 }
-
-                Spacer()
+                if !(academician.uzmanlikAlani == [""] || academician.uzmanlikAlani.isEmpty) {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 6) {
+                            ForEach(academician.uzmanlikAlani, id: \.self) { item in
+                                Text(item)
+                                    .font(.caption2)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 3)
+                                    .background(Color("usi").opacity(0.2))
+                                    .cornerRadius(6)
+                            }
+                        }
+                        .padding(.top, 2)
+                    }
+                }
             }
             .padding()
             .background(Color.white)
