@@ -304,7 +304,7 @@ class IndustryFirestoreService {
         
         
         let docRef = Firestore.firestore()
-                .collection("Requests")
+                .collection("OldRequests")
                 .whereField("status", in: ["rejected", "approved"])
         
         docRef.getDocuments { snapshot, error in

@@ -48,63 +48,7 @@ struct PendingRequestAcademicianInfoView: View {
                             .navigationBarBackButtonHidden()
                             .foregroundStyle(.black)
                     } label: {
-                        VStack(alignment: .leading, spacing: 12) {
-                            
-                            HStack(alignment: .top, spacing: 12) {
-                                // Profil resmi
-                                Image("petlas")
-                                    .resizable()
-                                    .frame(width: 50, height: 50)
-                                    .clipShape(Circle())
-                                
-                                // Gönderen bilgisi
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("Mustafa Ölmezses")
-                                        .font(.headline)
-                                        .bold()
-                                        .foregroundStyle(.black)
-                                    Text("Petlas LTD .ŞTİ")
-                                        .font(.subheadline)
-                                        .foregroundColor(.gray)
-                                }
-                                
-                                Spacer()
-                                
-                                // Ok
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(.gray)
-                            }
-                            
-                            // Açıklama
-                            Text("Fabrikamızdaki ürünlerin birimler arasında iş gücü olmadan ve kolaylıkla taşınabilmesi için geliştirilmiş yapay zeka destekli gömülü sistem olan robotların yapımı ve alandaki maliyeti en aza indirmek.")
-                                .lineLimit(4)
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                            
-                            // Tarih
-                            Text("Tarih: 23.07.2025")
-                                .font(.caption2)
-                                .foregroundColor(.gray)
-                            
-                            // Kategoriler
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 8) {
-                                    ForEach(selectedCategories, id: \.self) { category in
-                                        Text(category)
-                                            .font(.caption)
-                                            .padding(.horizontal, 10)
-                                            .padding(.vertical, 6)
-                                            .background(Color("usi").opacity(0.1))
-                                            .foregroundColor(.blue)
-                                            .cornerRadius(8)
-                                    }
-                                }
-                            }
-                        }
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(10)
-                        .padding(.horizontal)
+                        PendingRequestAcademicianCard(firmName: "Petlas LTD ,ŞTİ", requestTitle: "Yapay Zeka Modeli", requestDescription: "Lorem ipsum dolor sit amet consectetur adipisicing elLorem ipsum dolor sit amet consectetur adipisicing elit. Quo, voluptatem! Quasi, voluptates!itLorem ipsum dolor sit amet consectetur adipisicing elit. Quo, voluptatem! Quasi, voluptates!. Quo, volupLorem ipsum dolor sit amet consectetur adipisicing elit. Quo, voluptatem! Quasi, voluptates!tatem! Quasi, voluptates!", selectedCategories: ["Yapzay zeka" , "Modek" , "CNc" , "BİLMEM NE "], date: "21.09.2002")
                     }
 
                 }

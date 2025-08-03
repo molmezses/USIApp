@@ -163,6 +163,35 @@ class AdminUserFirestoreService{
         }
     }
     
+    func moveOldRequestsReject(from oldCollection: String , documentId: String , to newCollection: String) {
+        
+        let oldDocRef = Firestore.firestore().collection(oldCollection).document(documentId)
+        let newDocRef = Firestore.firestore().collection(newCollection).document(documentId)
+        
+        oldDocRef.getDocument { documentSnapshot, error in
+            
+            if let error = error {
+                print("Hata: Doküman alınamadı \(error.localizedDescription)")
+                return
+            }
+            
+            guard let data = documentSnapshot?.data() else {
+                print("Doküman bulunamadı")
+                return
+            }
+            
+            newDocRef.setData(data) { error in
+                if let error = error {
+                    print("Yeni koleksiyona yazılamadı \(error.localizedDescription)")
+                    return
+                } else {
+                    print("Başarıyla kopyalandı.")
+                    
+                }
+            }
+        }
+    }
+    
     func saveSelectedAcademicians(documentId: String ,selectedAcademians: [AcademicianInfo] , completion: @escaping (Result<Void, Error>) -> Void){
         
         
@@ -208,27 +237,34 @@ class AdminUserFirestoreService{
     }
     
 
-    func fetchAcademicianRequestStatus(requestId: String, academicianId: String, completion: @escaping (String?) -> Void) {
-        let docRef = Firestore.firestore().collection("OldRequests").document(requestId)
-        
+    func fetchAcademicianStatuses(for requestId: String, completion: @escaping ([String: String]) -> Void) {
+        let docRef = Firestore.firestore().collection("Requests").document(requestId)
         docRef.getDocument { snapshot, error in
-            if let error = error {
-                print("Veri alınamadı: \(error.localizedDescription)")
-                completion(nil)
-                return
-            }
-            
             guard let data = snapshot?.data(),
                   let responses = data["academicianResponses"] as? [String: String] else {
-                print("Veri formatı hatalı veya eksik.")
-                completion(nil)
+                completion([:])
                 return
             }
-            
-            let status = responses[academicianId]
-            completion(status)
+            completion(responses)
         }
     }
+
+    func updateAcademicianRequestStatus(requestId: String, academicianId: String, newStatus: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        let docRef = Firestore.firestore().collection("OldRequests").document(requestId)
+
+        let updateField = "academicianResponses.\(academicianId)"
+        
+        docRef.updateData([
+            updateField: newStatus
+        ]) { error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(()))
+            }
+        }
+    }
+
 
     
     

@@ -73,6 +73,7 @@ class RequestInfoAdminViewModel: ObservableObject {
                 case .success(_):
                     self.destinated = true
                     print("Talep reddedildi mesaj: \(self.adminMessage)")
+                    AdminUserFirestoreService.shared.moveOldRequestsReject(from: "Requests", documentId: documentId, to: "OldRequests")
                 case .failure(let error):
                     print("Hata Talep onaylanamadı \(error.localizedDescription)")
                 }
@@ -110,6 +111,8 @@ class RequestInfoAdminViewModel: ObservableObject {
             }
         }
     }
+    
+    
     
     
 

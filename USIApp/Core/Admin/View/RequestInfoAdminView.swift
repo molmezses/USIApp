@@ -93,6 +93,9 @@ struct RequestInfoAdminView: View {
                                         .cornerRadius(10)
                                 }
                             }
+                            
+                            
+
                         }
                         
                         Divider()
@@ -137,7 +140,7 @@ struct RequestInfoAdminView: View {
             
             if !viewModel.isLoadingSelectedAcademician{
                 ForEach(viewModel.fetchedSelectedAcademicians) { academicians in
-                    AcademicianRowReadOnly(academician: academicians)
+                    AcademicianRowReadOnly(request: request, academician: academicians)
                         .foregroundStyle(.black)
                 }
             }else{
@@ -210,7 +213,9 @@ struct RequestInfoAdminView: View {
 
 
 struct AcademicianRowReadOnly: View {
+    var request: RequestModel
     let academician: AcademicianInfo
+    @StateObject var viewModel = AcademicianRowReadOnlyViewModel()
 
     var body: some View {
         NavigationLink {
@@ -221,6 +226,7 @@ struct AcademicianRowReadOnly: View {
             
             
             VStack {
+                
                 HStack(alignment: .top, spacing: 12) {
                     if let url = URL(string: academician.photo) {
                         AsyncImage(url: url) { phase in
@@ -255,37 +261,47 @@ struct AcademicianRowReadOnly: View {
 
                     Spacer()
                     
-//                    VStack{
-//                        HStack {
-//                            Image(systemName: "clock")
-//                                .foregroundStyle(.orange)
-//                            ProgressView()
-//                                .tint(.orange)
-//                        }
-//                        Text("Bekliyor")
-//                            .font(.caption)
-//                            .foregroundStyle(.orange)
-//                    }
-                    
-//                    VStack{
-//                        HStack {
-//                            Image(systemName: "checkmark.circle.fill")
-//                                .foregroundStyle(.green)
-//                        }
-//                        Text("Kabul edildi")
-//                            .font(.caption)
-//                            .foregroundStyle(.green)
-//                    }
-                    
-                    VStack{
-                        HStack {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundStyle(.red)
+                    VStack {
+                        if viewModel.status == "pending" {
+                            VStack {
+                                HStack {
+                                    Image(systemName: "clock")
+                                        .foregroundStyle(.orange)
+                                    ProgressView()
+                                        .tint(.orange)
+                                }
+                                Text("Bekliyor")
+                                    .font(.caption)
+                                    .foregroundStyle(.orange)
+                            }
+                        } else if viewModel.status == "approved" {
+                            VStack {
+                                HStack {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundStyle(.green)
+                                }
+                                Text("Reddedildi")
+                                    .font(.caption)
+                                    .foregroundStyle(.orange)
+                            }
+                        } else if viewModel.status == "rejected" {
+                            VStack {
+                                HStack {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .foregroundStyle(.green)
+                                }
+                                Text("Kabul edildi")
+                                    .font(.caption)
+                                    .foregroundStyle(.orange)
+                            }
+                        } else {
+                            ProgressView()
                         }
-                        Text("Reddedildi")
-                            .font(.caption)
-                            .foregroundStyle(.red)
                     }
+
+                    
+                    
+                    
                 }
                 if !(academician.uzmanlikAlani == [""] || academician.uzmanlikAlani.isEmpty) {
                     ScrollView(.horizontal, showsIndicators: false) {
@@ -304,6 +320,9 @@ struct AcademicianRowReadOnly: View {
                         .padding(.top, 2)
                     }
                 }
+            }
+            .onAppear {
+                viewModel.loadAcademicianRequestStatus(requestId: request.id, academicianId: academician.id)
             }
             .padding()
             .background(Color.white)
