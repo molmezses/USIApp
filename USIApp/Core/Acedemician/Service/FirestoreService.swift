@@ -247,9 +247,6 @@ class FirestoreService{
     }
 
 
-
-
-    
     func deleteExpertArea(index: String , completion: @escaping (Error?) -> Void){
         FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
             
@@ -423,6 +420,39 @@ class FirestoreService{
             }
         }
     }
+    
+
+    func fetchMatchingOldRequestDocumentIDs(id: String, completion: @escaping (Result<[String], Error>) -> Void) {
+        let db = Firestore.firestore()
+        
+        db.collection("OldRequests").getDocuments { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let documents = snapshot?.documents else {
+                completion(.failure(
+                    NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey  :"Hata"])
+                ))
+                return
+            }
+            
+            var matchingDocumentIDs: [String] = []
+            
+            for document in documents {
+                let data = document.data()
+                
+                if let selectedIds = data["selectedAcademiciansId"] as? [String],
+                   selectedIds.contains(id) {
+                    matchingDocumentIDs.append(document.documentID)
+                }
+            }
+            
+            completion(.success(matchingDocumentIDs))
+        }
+    }
+
 
 
 

@@ -15,6 +15,7 @@ struct AcademicianRequestDetailView: View {
     @Environment(\.dismiss) var dismiss
     @State private var isApproved = false
     @State private var isRejected = false
+    var selectedCategories: [String] = ["asd", "sadasd","asd", "sadasd","asd", "sadasd","asd", "sadasd"]
     
     var body: some View {
         VStack{
@@ -47,38 +48,39 @@ struct AcademicianRequestDetailView: View {
                     // Admin Bilgisi
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Yönetici Bilgisi")
+                            .frame(maxWidth: .infinity , alignment: .leading)
                             .font(.headline)
                             .padding(.bottom, 4)
                         
                         
-                        HStack(spacing: 15) {
-                            Image("rektorhoca")
+                        HStack(alignment: .top, spacing: 12) {
+                            
+                            Image("ünilogo")
                                 .resizable()
-                                .frame(width: 60, height: 60)
-                                .foregroundColor(.gray)
-                                .clipShape(Circle())
+                                .frame(width: 40, height: 40)
+                                .foregroundColor(.blue)
                             
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("Mustafa Kasım KARAHOCAGİL")
+                                Text("Üniversite Sanayi İşbirliği")
+                                    .font(.subheadline.bold())
+                                Text("Talep Değerlendirme Kurulu ")
                                     .font(.subheadline)
-                                    .bold()
-                                
-                                Text("Ahi Evran Üniversitesi Rektörü")
+                                Text("Mail: tto@ahievran.edu.tr")
                                     .font(.caption)
-                                    .foregroundColor(.gray)
-                                
-                                Text("mustafa.karahocagil@ahievran.edu.tr")
+                                    .foregroundColor(.secondary)
+                                Text("Tel: 0850-441-02-44")
                                     .font(.caption)
-                                    .foregroundColor(.blue)
+                                    .foregroundColor(.secondary)
                             }
-                            
-                            Spacer()
                         }
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(12)
-                        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+                        
                     }
+                    .padding()
+                    .background(Color.white)
+                    .cornerRadius(12)
+                    .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+                    
+                   
                     
                     // Talep Bilgileri
                     VStack(alignment: .leading, spacing: 12) {
@@ -202,11 +204,35 @@ struct AcademicianRequestDetailView: View {
                                 .background(Color.gray.opacity(0.1))
                                 .cornerRadius(8)
                         }
+                        
+                        // Talep Alanı
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Talep Alanı")
+                                .font(.subheadline)
+                                .bold()
+                            
+                            // Kategoriler
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 8) {
+                                    ForEach(selectedCategories, id: \.self) { category in
+                                        Text(category)
+                                            .font(.caption)
+                                            .padding(.horizontal, 10)
+                                            .padding(.vertical, 6)
+                                            .background(Color("usi").opacity(0.1))
+                                            .foregroundColor(.blue)
+                                            .cornerRadius(8)
+                                    }
+                                }
+                            }
+                        }
                     }
                     .padding()
                     .background(Color.white)
                     .cornerRadius(12)
                     .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+                    
+                    
                     
                     // Onay/Red Butonları
                     HStack(spacing: 20) {

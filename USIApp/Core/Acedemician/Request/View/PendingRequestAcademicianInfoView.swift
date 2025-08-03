@@ -4,16 +4,12 @@
 //
 //  Created by Mustafa Ölmezses on 23.07.2025.
 //
-
-
-
 import SwiftUI
 
 struct PendingRequestAcademicianInfoView: View {
     
     @Environment(\.dismiss) var dismiss
-    var selectedCategories = ["Yapay Zeka", "Robot", "Makine", "Gömülü Sistem"]
-    var selectedCategories2 = ["Şişe tasarımı", "Bakteri", "Yapay Zeka", "Kimya",]
+    @StateObject var viewModel = PendingRequestAcademicianInfoViewModel()
 
     
     var body: some View {
@@ -54,7 +50,13 @@ struct PendingRequestAcademicianInfoView: View {
                 }
                 .padding(.top)
             }
+            .refreshable {
+                viewModel.fetchMatchingOldRequestDocumentIDs()
+            }
             .background(Color(.systemGroupedBackground))
+        }
+        .onAppear {
+            viewModel.fetchMatchingOldRequestDocumentIDs()
         }
     }
 }
