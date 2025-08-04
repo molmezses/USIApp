@@ -38,13 +38,15 @@ struct PendingRequestAcademicianInfoView: View {
             ScrollView {
                 VStack(spacing: 20) {
 
-                    //petlas
-                    NavigationLink {
-                        AcademicianRequestDetailView()
-                            .navigationBarBackButtonHidden()
-                            .foregroundStyle(.black)
-                    } label: {
-                        PendingRequestAcademicianCard(firmName: "Petlas LTD ,ŞTİ", requestTitle: "Yapay Zeka Modeli", requestDescription: "Lorem ipsum dolor sit amet consectetur adipisicing elLorem ipsum dolor sit amet consectetur adipisicing elit. Quo, voluptatem! Quasi, voluptates!itLorem ipsum dolor sit amet consectetur adipisicing elit. Quo, voluptatem! Quasi, voluptates!. Quo, volupLorem ipsum dolor sit amet consectetur adipisicing elit. Quo, voluptatem! Quasi, voluptates!tatem! Quasi, voluptates!", selectedCategories: ["Yapzay zeka" , "Modek" , "CNc" , "BİLMEM NE "], date: "21.09.2002")
+                    
+                    ForEach(viewModel.requests) { request in
+                        NavigationLink {
+                            AcademicianRequestDetailView()
+                                .navigationBarBackButtonHidden()
+                                .foregroundStyle(.black)
+                        } label: {
+                            PendingRequestAcademicianCard(firmName: request.requesterName, requestTitle: request.title, requestDescription: request.description, selectedCategories:request.selectedCategories, date: request.date)
+                        }
                     }
 
                 }
@@ -52,11 +54,13 @@ struct PendingRequestAcademicianInfoView: View {
             }
             .refreshable {
                 viewModel.fetchMatchingOldRequestDocumentIDs()
+                viewModel.fetchAcademicianPendingRequests()
             }
             .background(Color(.systemGroupedBackground))
         }
         .onAppear {
             viewModel.fetchMatchingOldRequestDocumentIDs()
+            viewModel.fetchAcademicianPendingRequests()
         }
     }
 }

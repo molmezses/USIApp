@@ -422,7 +422,7 @@ class FirestoreService{
     }
     
 
-    func fetchMatchingOldRequestDocumentIDs(id: String, completion: @escaping (Result<[String], Error>) -> Void) {
+    func fetchMatchingOldRequestDocumentIDs(completion: @escaping (Result<[String], Error>) -> Void) {
         let db = Firestore.firestore()
         
         db.collection("OldRequests").getDocuments { snapshot, error in
@@ -439,19 +439,120 @@ class FirestoreService{
             }
             
             var matchingDocumentIDs: [String] = []
-            
-            for document in documents {
-                let data = document.data()
-                
-                if let selectedIds = data["selectedAcademiciansId"] as? [String],
-                   selectedIds.contains(id) {
-                    matchingDocumentIDs.append(document.documentID)
+            self.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
+                switch result {
+                case .success(let documentId):
+                    
+                    for document in documents {
+                        let data = document.data()
+                        
+                        if let selectedIds = data["selectedAcademiciansId"] as? [String],
+                           selectedIds.contains(documentId) {
+                            matchingDocumentIDs.append(document.documentID)
+                        }
+                    }
+                    
+                    completion(.success(matchingDocumentIDs))
+
+                    
+                case .failure(let failure):
+                    print("Usr ->Document ID alınamadı: \(failure.localizedDescription)")
                 }
             }
             
-            completion(.success(matchingDocumentIDs))
+            
+            
+            
         }
     }
+    
+    func stringToRequestStatus(string stringData: String) -> RequestStatus {
+        
+        switch stringData{
+        case "pending":
+            return .pending
+        case "approved":
+            return .approved
+        case "rejected":
+            return .rejected
+        default:
+            return .pending
+        }
+        
+    }
+    
+    func fetchAcademicianPendingRequests(completion: @escaping (Result<[RequestModel], Error>) -> Void) {
+        fetchMatchingOldRequestDocumentIDs { result in
+            switch result {
+            case .success(let matchingDocumentIDs):
+                var fetchedRequests: [RequestModel] = []
+                let group = DispatchGroup()
+                let docRef = Firestore.firestore().collection("OldRequests")
+
+                for documentId in matchingDocumentIDs {
+                    group.enter()
+
+                    docRef.document(documentId).getDocument { snapshot, error in
+                        defer { group.leave() }
+
+                        if let error = error {
+                            print("Hata: \(error.localizedDescription)")
+                            return
+                        }
+
+                        guard let snapshot = snapshot, let data = snapshot.data() else {
+                            print("Veri yok: \(documentId)")
+                            return
+                        }
+
+                        let id = snapshot.documentID
+                        let title = data["requestTitle"] as? String ?? ""
+                        let description = data["requestMessage"] as? String ?? ""
+                        let date = data["createdDate"] as? String ?? ""
+                        let selectedCategories = data["selectedCategories"] as? [String] ?? []
+                        let statusString = data["status"] as? String ?? "pending"
+                        let status =  self.stringToRequestStatus(string: statusString)
+                        let requesterID = data["requesterID"] as? String ?? ""
+                        let requesterCategories = data["requesterCategories"] as? String ?? ""
+                        let requesterName = data["requesterName"] as? String ?? ""
+                        let requesterEmail = data["requesterEmail"] as? String ?? ""
+                        let requesterPhone = data["requesterPhone"] as? String ?? ""
+                        let adminMessage = data["adminMessage"] as? String ?? ""
+                        
+                        
+                        
+
+                        let request = RequestModel(
+                            id: id,
+                            title: title,
+                            description: description,
+                            date: date,
+                            selectedCategories: selectedCategories,
+                            status: status,
+                            requesterID: requesterID,
+                            requesterCategories: requesterCategories,
+                            requesterName: requesterName,
+                            requesterEmail: requesterEmail,
+                            requesterPhone: requesterPhone,
+                            adminMessage: adminMessage,
+                        )
+
+                        fetchedRequests.append(request)
+                    }
+                }
+
+                group.notify(queue: .main) {
+                    completion(.success(fetchedRequests))
+                }
+
+            case .failure(let error):
+                print("ID'leri çekerken hata: \(error.localizedDescription)")
+                completion(.failure(error))
+            }
+        }
+    }
+
+
 
 
 
