@@ -15,7 +15,9 @@ struct AcademicianRequestDetailView: View {
     @Environment(\.dismiss) var dismiss
     @State private var isApproved = false
     @State private var isRejected = false
-    var selectedCategories: [String] = ["asd", "sadasd","asd", "sadasd","asd", "sadasd","asd", "sadasd"]
+    @StateObject var viewModel = AcademicianRequestDetailViewModel()
+    var request: RequestModel
+    
     
     var body: some View {
         VStack{
@@ -111,7 +113,7 @@ struct AcademicianRequestDetailView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                             Spacer()
-                            Text("Mehmet Yılmaz")
+                            Text(request.requesterName)
                                 .font(.subheadline)
                                 .bold()
                         }
@@ -125,7 +127,7 @@ struct AcademicianRequestDetailView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                             Spacer()
-                            Text("mehmet@firma.com")
+                            Text(request.requesterEmail)
                                 .font(.subheadline)
                                 .bold()
                         }
@@ -139,7 +141,7 @@ struct AcademicianRequestDetailView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                             Spacer()
-                            Text("+90 555 123 4567")
+                            Text(request.requesterPhone)
                                 .font(.subheadline)
                                 .bold()
                         }
@@ -153,7 +155,7 @@ struct AcademicianRequestDetailView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                             Spacer()
-                            Text("İstanbul, Türkiye")
+                            Text(request.requesterAddress)
                                 .font(.subheadline)
                                 .bold()
                                 .multilineTextAlignment(.trailing)
@@ -170,7 +172,7 @@ struct AcademicianRequestDetailView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                             Spacer()
-                            Text("23 Temmuz 2025, 14:30")
+                            Text(request.date)
                                 .font(.subheadline)
                                 .bold()
                         }
@@ -184,10 +186,10 @@ struct AcademicianRequestDetailView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                             Spacer()
-                            Text("Beklemede")
+                            Text(viewModel.academicianResponse)
                                 .font(.subheadline)
                                 .bold()
-                                .foregroundColor(.orange)
+                                .foregroundColor(viewModel.academicianResponse == "Kabul ettiniz" ? .green : viewModel.academicianResponse == "Reddetiniz" ? .red : .orange)
                         }
                         
                         Divider()
@@ -198,7 +200,7 @@ struct AcademicianRequestDetailView: View {
                                 .font(.subheadline)
                                 .bold()
                             
-                            Text("Yapay zeka tabanlı üretim hattı için makine öğrenmesi uzmanına ihtiyacımız var. Proje 6 ay sürecek ve tam zamanlı çalışma gerektiriyor. Özellikle TensorFlow ve Python tecrübesi olan bir uzman arıyoruz.")
+                            Text(request.description)
                                 .font(.body)
                                 .padding()
                                 .background(Color.gray.opacity(0.1))
@@ -214,7 +216,7 @@ struct AcademicianRequestDetailView: View {
                             // Kategoriler
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 8) {
-                                    ForEach(selectedCategories, id: \.self) { category in
+                                    ForEach(request.selectedCategories, id: \.self) { category in
                                         Text(category)
                                             .font(.caption)
                                             .padding(.horizontal, 10)
@@ -236,43 +238,118 @@ struct AcademicianRequestDetailView: View {
                     
                     // Onay/Red Butonları
                     HStack(spacing: 20) {
-                        Button(action: {
-                            isRejected = true
-                        }) {
-                            Text("Reddet")
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.red)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
-                        }
-                        
-                        Button(action: {
-                            isApproved = true
-                        }) {
-                            Text("Onayla")
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.green)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
-                        }
-                    }
+                                if !isApproved {
+                                    if isRejected {
+                                        Button(action: {
+                                            DispatchQueue.main.async {
+                                                isRejected = false
+                                                viewModel.pendResponse(documentID: request.id)
+                                                viewModel.getAcademicianResponse(requestId: request.id)
+                                            }
+                                        }) {
+                                            Text("Reddettiniz, değiştirmek için tıklayın")
+                                                .frame(maxWidth: .infinity)
+                                                .padding()
+                                                .background(Color.red)
+                                                .foregroundColor(.white)
+                                                .cornerRadius(10)
+                                        }
+                                        .transition(.move(edge: .leading).combined(with: .opacity))
+                                        .animation(.easeInOut(duration: 0.4), value: isRejected)
+                                    } else {
+                                        Button(action: {
+                                            withAnimation {
+                                                DispatchQueue.main.async {
+                                                    isRejected = true
+                                                    viewModel.rejectResponse(documentID: request.id)
+                                                    viewModel.getAcademicianResponse(requestId: request.id)
+                                                }
+                                            }
+                                        }) {
+                                            Text("Reddet")
+                                                .frame(maxWidth: .infinity)
+                                                .padding()
+                                                .background(Color.red)
+                                                .foregroundColor(.white)
+                                                .cornerRadius(10)
+                                        }
+                                        .transition(.opacity)
+                                    }
+                                }
+
+                                if !isRejected {
+                                    if isApproved {
+                                        // Onaylandı animasyonu
+                                        Button(action: {
+                                            DispatchQueue.main.async {
+                                                isApproved = false
+                                                viewModel.pendResponse(documentID: request.id)
+                                                viewModel.getAcademicianResponse(requestId: request.id)
+                                            }
+
+                                        }) {
+                                            Text("Kabul ettiniz, değiştirmek için tıklayın")
+                                                .frame(maxWidth: .infinity)
+                                                .padding()
+                                                .background(Color.green)
+                                                .foregroundColor(.white)
+                                                .cornerRadius(10)
+                                        }
+                                        .transition(.move(edge: .trailing).combined(with: .opacity))
+                                        .animation(.easeInOut(duration: 0.4), value: isApproved)
+                                    } else {
+                                    
+                                        Button(action: {
+                                            withAnimation {
+                                                DispatchQueue.main.async {
+                                                    isApproved = true
+                                                    viewModel.approvResponse(documentID: request.id)
+                                                    viewModel.getAcademicianResponse(requestId: request.id)
+                                                }
+                                            }
+                                        }) {
+                                            Text("Onayla")
+                                                .frame(maxWidth: .infinity)
+                                                .padding()
+                                                .background(Color.green)
+                                                .foregroundColor(.white)
+                                                .cornerRadius(10)
+                                        }
+                                        .transition(.opacity)
+                                    }
+                                }
+                            }
+                            .padding()
+                            .animation(.easeInOut, value: isApproved || isRejected)
+                            .onAppear {
+                                viewModel.getAcademicianResponse(requestId: request.id)
+                            }
+                            .onChange(of: viewModel.academicianResponse) { newValue in
+                                if newValue == "Kabul ettiniz" {
+                                    self.isApproved = true
+                                    self.isRejected = false
+                                } else if newValue == "Reddetiniz" {
+                                    self.isApproved = false
+                                    self.isRejected = true
+                                } else {
+                                    self.isApproved = false
+                                    self.isRejected = false
+                                }
+                            }
+
                 }
                 .padding()
             }
+            .refreshable{
+                viewModel.getAcademicianResponse(requestId: request.id)
+            }
             .background(Color(.systemGroupedBackground))
         }
+        .onAppear{
+            viewModel.getAcademicianResponse(requestId: request.id)
+        }
         .navigationBarHidden(true)
-        .alert("Onaylandı", isPresented: $isApproved) {
-            Button("Tamam", role: .cancel) { }
-        }
-        .alert("Reddedildi", isPresented: $isRejected) {
-            Button("Tamam", role: .cancel) { }
-        }
     }
 }
 
-#Preview {
-    AcademicianRequestDetailView()
-}
+

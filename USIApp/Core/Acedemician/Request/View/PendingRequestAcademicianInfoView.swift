@@ -41,7 +41,7 @@ struct PendingRequestAcademicianInfoView: View {
                     
                     ForEach(viewModel.requests) { request in
                         NavigationLink {
-                            AcademicianRequestDetailView()
+                            AcademicianRequestDetailView(request:request)
                                 .navigationBarBackButtonHidden()
                                 .foregroundStyle(.black)
                         } label: {

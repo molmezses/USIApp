@@ -280,19 +280,19 @@ struct AcademicianRowReadOnly: View {
                                     Image(systemName: "checkmark.circle.fill")
                                         .foregroundStyle(.green)
                                 }
-                                Text("Reddedildi")
+                                Text("Kabul edildi")
                                     .font(.caption)
-                                    .foregroundStyle(.orange)
+                                    .foregroundStyle(.green)
                             }
                         } else if viewModel.status == "rejected" {
                             VStack {
                                 HStack {
                                     Image(systemName: "xmark.circle.fill")
-                                        .foregroundStyle(.green)
+                                        .foregroundStyle(.red)
                                 }
-                                Text("Kabul edildi")
+                                Text("Reddedildi")
                                     .font(.caption)
-                                    .foregroundStyle(.orange)
+                                    .foregroundStyle(.red)
                             }
                         } else {
                             ProgressView()

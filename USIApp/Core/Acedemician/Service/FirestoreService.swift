@@ -518,9 +518,7 @@ class FirestoreService{
                         let requesterEmail = data["requesterEmail"] as? String ?? ""
                         let requesterPhone = data["requesterPhone"] as? String ?? ""
                         let adminMessage = data["adminMessage"] as? String ?? ""
-                        
-                        
-                        
+                        let requesterAddress = data["requesterAddress"] as? String ?? ""
 
                         let request = RequestModel(
                             id: id,
@@ -532,6 +530,7 @@ class FirestoreService{
                             requesterID: requesterID,
                             requesterCategories: requesterCategories,
                             requesterName: requesterName,
+                            requesterAddress: requesterAddress,
                             requesterEmail: requesterEmail,
                             requesterPhone: requesterPhone,
                             adminMessage: adminMessage,
@@ -551,6 +550,66 @@ class FirestoreService{
             }
         }
     }
+    
+
+    func getAcademicianResponse(for documentID: String, completion: @escaping (String?) -> Void) {
+        let db = Firestore.firestore()
+        let docRef = db.collection("OldRequests").document(documentID)
+
+        docRef.getDocument { (document, error) in
+            if let error = error {
+                print("Hata oluştu: \(error)")
+                completion(nil)
+                return
+            }
+
+            guard let data = document?.data(),
+                  let responses = data["academicianResponses"] as? [String: String] else {
+                completion(nil)
+                return
+            }
+            
+            self.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
+                switch result {
+                case .success(let documentId):
+                    
+                    let response = responses[documentId]
+                    completion(response)
+                    
+                case .failure(let failure):
+                    print("Hata : Document ıd alaınamadı \(failure.localizedDescription)")
+                }
+            }
+        }
+    }
+    
+
+    func updateAcademicianResponse(documentID: String, newStatus: String, completion: @escaping (Error?) -> Void) {
+        let db = Firestore.firestore()
+        let docRef = db.collection("OldRequests").document(documentID)
+        
+        fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
+            switch result {
+            case .success(let documentId):
+                
+                docRef.updateData([
+                    "academicianResponses.\(documentId)": newStatus
+                ]) { error in
+                    if let error = error {
+                        print("Güncelleme hatası: \(error)")
+                        completion(error)
+                    } else {
+                        print("Başarıyla güncellendi.")
+                    }
+                }
+                
+            case .failure(let failure):
+                print("Hata : Document ıd alaınamadı \(failure.localizedDescription)")
+
+            }
+        }
+    }
+
 
 
 

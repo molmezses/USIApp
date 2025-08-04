@@ -117,7 +117,8 @@ class IndustryFirestoreService {
                     "requestTitle" : requestTitle,
                     "requestMessage" : requestMessage,
                     "createdDate" : self.getCurrentDateAsString(),
-                    "status" : "pending"
+                    "status" : "pending",
+                    "requesterAddress" : info.adres
                 ]
                 
                 Firestore.firestore()
@@ -210,6 +211,8 @@ class IndustryFirestoreService {
                 let requesterEmail = data["requesterEmail"] as? String ?? ""
                 let requesterPhone = data["requesterPhone"] as? String ?? ""
                 let adminMessage = data["adminMessage"] as? String ?? ""
+                let requesterAddress = data["requesterAddress"] as? String ?? ""
+
                 
                 
                 return RequestModel(
@@ -222,6 +225,7 @@ class IndustryFirestoreService {
                     requesterID: requesterID,
                     requesterCategories: requesterCategories,
                     requesterName : requesterName,
+                    requesterAddress: requesterAddress,
                     requesterEmail: requesterEmail,
                     requesterPhone: requesterPhone,
                     adminMessage : adminMessage
@@ -269,6 +273,8 @@ class IndustryFirestoreService {
                 let requesterEmail = data["requesterEmail"] as? String ?? ""
                 let requesterPhone = data["requesterPhone"] as? String ?? ""
                 let adminMessage = data["adminMessage"] as? String ?? ""
+                let requesterAddress = data["requesterAddress"] as? String ?? ""
+
 
 
 
@@ -284,6 +290,7 @@ class IndustryFirestoreService {
                     requesterID: requesterID,
                     requesterCategories: requesterCategories,
                     requesterName: requesterName,
+                    requesterAddress: requesterAddress,
                     requesterEmail: requesterEmail,
                     requesterPhone: requesterPhone,
                     adminMessage : adminMessage
@@ -334,6 +341,8 @@ class IndustryFirestoreService {
                 let adminMessage = data["adminMessage"] as? String ?? ""
                 let approvedAcademicians = data["approvedAcademicians"] as? [String] ?? []
                 let rejectedAcademicians = data["rejectedAcademicians"] as? [String] ?? []
+                let requesterAddress = data["requesterAddress"] as? String ?? ""
+
 
 
 
@@ -349,6 +358,7 @@ class IndustryFirestoreService {
                     requesterID: requesterID,
                     requesterCategories: requesterCategories,
                     requesterName: requesterName,
+                    requesterAddress: requesterAddress,
                     requesterEmail: requesterEmail,
                     requesterPhone: requesterPhone,
                     adminMessage : adminMessage,

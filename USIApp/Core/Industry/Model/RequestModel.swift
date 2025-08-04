@@ -17,6 +17,7 @@ struct RequestModel:Identifiable , Codable{
     var requesterID: String
     var requesterCategories : String
     var requesterName : String
+    var requesterAddress : String
     var requesterEmail: String
     var requesterPhone: String
     var adminMessage: String
