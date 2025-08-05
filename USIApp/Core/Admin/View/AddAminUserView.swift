@@ -8,14 +8,11 @@
 import SwiftUI
 import FirebaseFirestore
 
-struct AdminUser: Identifiable {
-    var id: String
-    var email: String
-}
-
 struct AddAminUserView: View {
     @Environment(\.dismiss) var dismiss
     @FocusState private var focusedField: Bool
+    @StateObject var viewModel = AddAdminUserViewModel()
+    
 
     var body: some View {
         NavigationStack {
@@ -46,7 +43,25 @@ struct AddAminUserView: View {
                 ScrollView {
                     VStack(spacing: 20) {
 
+                        TextField("Email giriniz :", text: $viewModel.email)
+                            .padding()
+                            .background(Color.white)
+                            .cornerRadius(10)
+                            .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.gray.opacity(0.3)))
+                            .focused($focusedField)
+                            .padding(.horizontal)
                         
+                        Button {
+                    
+                        } label: {
+                            Text("Kaydet")
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 50)
+                                .background(Color("usi"))
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                                .padding(.horizontal)
+                        }
 
 
                         

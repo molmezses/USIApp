@@ -265,6 +265,24 @@ class AdminUserFirestoreService{
         }
     }
 
+    func addAdminUser(email: String, completion: @escaping(Error?) -> Void) {
+        let docRef = Firestore.firestore().collection("AdminUsers")
+
+        let newDocRef = docRef.document()
+        let adminUser = AdminUser(id: newDocRef.documentID, email: email)
+
+        do {
+            let data = try Firestore.Encoder().encode(adminUser)
+            newDocRef.setData(data) { error in
+                if let error = error{
+                    completion(error)
+                }
+            }
+        } catch {
+            completion(error)
+        }
+    }
+    
 
     
     
