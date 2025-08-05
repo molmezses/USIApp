@@ -369,17 +369,28 @@ struct ProfileView: View {
                             
                             //MARK: SİGN BUTTON
                             
-                            HStack {
-                                Spacer()
-                                Button {
-                                    authViewModel.logOut()
-                                } label: {
-                                    Text("Çıkış yap")
-                                        .foregroundStyle(.red)
-                                        .font(.headline)
+                            VStack {
+                                
+                                HStack {
+                                    Spacer()
+                                    Button {
+                                        authViewModel.logOut()
+                                    } label: {
+                                        Text("Çıkış yap")
+                                            .foregroundStyle(.white)
+                                            .font(.headline)
+                                    }
+                                    Spacer()
                                 }
-                                Spacer()
+                                
+                                
                             }
+                            .padding()
+                            .background(.red)
+                            .mask(RoundedRectangle(cornerRadius: 10))
+                            .padding(.bottom)
+                            
+                            
                             
                             
                         }

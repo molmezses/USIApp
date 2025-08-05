@@ -92,6 +92,28 @@ struct AdminView: View {
                                 .padding(2)
                             })
                             
+                            Divider()
+                                .padding(.vertical , 4)
+                            
+                            NavigationLink(destination: {
+                                AddAminUserView()
+                                    .navigationBarBackButtonHidden()
+                            }, label: {
+                                HStack {
+                                    Image(systemName: "person.circle.fill")
+                                        .resizable()
+                                        .foregroundStyle(Color("usi"))
+                                        .frame(width: 28, height: 28)
+                                    Text("Admin kullanıcısı ekle")
+                                        .foregroundStyle(.black)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                    
+                                }
+                                .foregroundStyle(.black)
+                                .padding(2)
+                            })
+                            
 
                              
                         }
@@ -144,7 +166,7 @@ struct AdminView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
             
-            HStack(spacing: 16) {
+            HStack(spacing: 10) {
                 // Akademisyen Girişleri
                 StatsProgressView(
                     title: "Akademisyen",

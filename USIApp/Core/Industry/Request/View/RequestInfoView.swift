@@ -167,14 +167,21 @@ struct RequestInfoView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Kategoriler")
                                 .font(.subheadline.bold())
-                            WrapHStack(items: request.selectedCategories) { category in
-                                Text(category)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
-                                    .background(Color.blue.opacity(0.1))
-                                    .cornerRadius(12)
+
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 8) {
+                                    ForEach(request.selectedCategories, id: \.self) { category in
+                                        Text(category)
+                                            .padding(.horizontal, 12)
+                                            .padding(.vertical, 6)
+                                            .background(Color.blue.opacity(0.1))
+                                            .foregroundColor(.blue)
+                                            .clipShape(Capsule())
+                                    }
+                                }
                             }
                         }
+
                         
                     }
                     .padding()

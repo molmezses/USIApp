@@ -40,8 +40,6 @@ struct RequestView: View {
                     } else {
                         ForEach(viewModel.requests) { request in
                             NavigationLink {
-                                
-                                
                                 RequestInfoView(request: request)
                                     .navigationBarBackButtonHidden()
                                 
@@ -90,26 +88,15 @@ struct RequestView: View {
     func requestCard(for request: RequestModel) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(request.title)
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.primary)
-                    
-                    Text(request.description)
-                        .font(.body)
-                        .foregroundColor(.secondary)
-                        .lineLimit(3)
-                    
-                    Text("📅 \(request.date)")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                }
-                
+            // Başlık ve Sil Butonu
+            HStack(alignment: .center) {
+                Text(request.title)
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.primary)
+
                 Spacer()
-                
-                // Sil Butonu
+
                 Button(action: {
                     viewModel.deleteRequest(documentID: request.id)
                 }) {
@@ -121,6 +108,19 @@ struct RequestView: View {
                 }
                 .buttonStyle(PlainButtonStyle())
             }
+            
+            // Açıklama
+            Text(request.description)
+                .font(.body)
+                .foregroundColor(.secondary)
+                .lineLimit(3)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading) // Ekstra hizalama garantisi
+            
+            // Tarih
+            Text("📅 \(request.date)")
+                .font(.caption)
+                .foregroundColor(.gray)
             
             // Kategori Etiketleri
             if !request.selectedCategories.isEmpty {
@@ -146,6 +146,8 @@ struct RequestView: View {
         .shadow(color: Color.black.opacity(0.07), radius: 6, x: 0, y: 3)
         .padding(.horizontal)
     }
+
+
     
 }
 

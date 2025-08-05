@@ -76,7 +76,7 @@ struct PendingRequestView: View {
         }
     }
     
-    func requestCard(for request: RequestModel) -> some View{
+    func requestCard(for request: RequestModel) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             
             HStack(alignment: .top, spacing: 12) {
@@ -86,21 +86,19 @@ struct PendingRequestView: View {
                     .frame(width: 50, height: 50)
                     .clipShape(Circle())
                 
-                
                 VStack(alignment: .leading, spacing: 4) {
                     Text(request.requesterName)
                         .font(.headline)
                         .bold()
                         .foregroundStyle(.black)
+                    
                     Text(request.requesterCategories)
                         .font(.subheadline)
                         .foregroundColor(.gray)
                 }
                 
-                
                 Spacer()
                 
-                // Ok
                 Image(systemName: "chevron.right")
                     .foregroundColor(.gray)
             }
@@ -110,11 +108,14 @@ struct PendingRequestView: View {
                 .lineLimit(4)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading) // Hiza düzeltici
             
             // Tarih
             Text("Tarih: \(request.date)")
                 .font(.caption2)
                 .foregroundColor(.gray)
+                .frame(maxWidth: .infinity, alignment: .leading) // Opsiyonel hizalama
             
             // Kategoriler
             ScrollView(.horizontal, showsIndicators: false) {
@@ -136,6 +137,7 @@ struct PendingRequestView: View {
         .cornerRadius(10)
         .padding(.horizontal)
     }
+
 }
 
 #Preview {

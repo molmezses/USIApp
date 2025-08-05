@@ -13,6 +13,7 @@ struct AddRequestMessageView: View {
     @EnvironmentObject var authViewModel : IndustryAuthViewModel
     @Environment(\.dismiss) var dismiss
     @State var navigateRequestView: Bool = false
+    @State var selectedTab = 0
 
     var body: some View {
         VStack(spacing: 0) {
@@ -119,7 +120,7 @@ struct AddRequestMessageView: View {
             .background(Color(.systemGroupedBackground))
         }
         .navigationDestination(isPresented: $navigateRequestView) {
-            RequestView()
+            IndustryTabView(selectedTab: $selectedTab)
                 .environmentObject(authViewModel)
                 .environmentObject(viewModel)
                 .navigationBarBackButtonHidden()

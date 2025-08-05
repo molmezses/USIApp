@@ -18,6 +18,7 @@ struct IndustryLoginView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var authViewModel: IndustryAuthViewModel
     @EnvironmentObject var requestViewModel: RequestViewModel
+    @State var selectedTab = 1
 
     var body: some View {
         VStack {
@@ -146,7 +147,7 @@ struct IndustryLoginView: View {
                 }
                 .ignoresSafeArea()
             } else {
-                IndustryTabView()
+                IndustryTabView(selectedTab: $selectedTab)
                     .environmentObject(authViewModel)
                     .environmentObject(requestViewModel)
             }

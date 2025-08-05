@@ -14,6 +14,7 @@ struct IndustryRegisterView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var authViewModel : IndustryAuthViewModel
     @EnvironmentObject var requestViewModel: RequestViewModel
+    @State var selectedTab = 1
 
     
     
@@ -140,7 +141,7 @@ struct IndustryRegisterView: View {
                     
                 }
                 .navigationDestination(isPresented: $viewModel.navigateToIndustryTabView) {
-                    IndustryTabView()
+                    IndustryTabView(selectedTab: $selectedTab)
                         .environmentObject(authViewModel)
                         .environmentObject(requestViewModel)
                         .navigationBarBackButtonHidden()

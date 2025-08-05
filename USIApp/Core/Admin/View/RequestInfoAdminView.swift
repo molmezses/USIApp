@@ -86,13 +86,19 @@ struct RequestInfoAdminView: View {
                                 ForEach(request.selectedCategories, id: \.self) { category in
                                     Text(category)
                                         .font(.caption)
+                                        .foregroundColor(.black)
                                         .padding(.horizontal, 12)
                                         .padding(.vertical, 6)
-                                        .background(Color("usi").opacity(0.8))
-                                        .foregroundColor(.white)
+                                        .background(
+                                            Color("usi")
+                                                .opacity(0.4) // biraz daha soft ton
+                                        )
                                         .cornerRadius(10)
+                                        .frame(maxWidth: .infinity, alignment: .leading) // ← her hücreyi sola hizala
                                 }
                             }
+                            .frame(maxWidth: .infinity, alignment: .leading) // ← tüm grid sola hizalı
+
                             
                             
 

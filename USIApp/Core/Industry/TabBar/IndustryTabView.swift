@@ -9,7 +9,7 @@ import SwiftUI
 
 struct IndustryTabView: View {
     
-    @State private var selectedTab = 1
+    @Binding var selectedTab: Int
     @EnvironmentObject var authViewModel : IndustryAuthViewModel
     @EnvironmentObject var requestViewModel : RequestViewModel
 
@@ -49,8 +49,4 @@ struct IndustryTabView: View {
     }
 }
 
-#Preview {
-    IndustryTabView()
-        .environmentObject(IndustryAuthViewModel())
 
-}

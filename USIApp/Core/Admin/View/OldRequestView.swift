@@ -70,31 +70,28 @@ struct OldRequestView: View {
         }
     }
     
-    func requestCard(for request: RequestModel) -> some View{
+    func requestCard(for request: RequestModel) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             
+            // Üst Bilgi
             HStack(alignment: .top, spacing: 12) {
-                
                 Image("ben")
                     .resizable()
                     .frame(width: 50, height: 50)
                     .clipShape(Circle())
                 
-                
                 VStack(alignment: .leading, spacing: 4) {
                     Text(request.requesterName)
                         .font(.headline)
                         .bold()
-                        .foregroundStyle(.black)
+                        .foregroundColor(.black) // .foregroundStyle yerine bu daha güvenli
                     Text(request.requesterCategories)
                         .font(.subheadline)
                         .foregroundColor(.gray)
                 }
                 
-                
                 Spacer()
                 
-                // Ok
                 Image(systemName: "chevron.right")
                     .foregroundColor(.gray)
             }
@@ -104,11 +101,14 @@ struct OldRequestView: View {
                 .lineLimit(4)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading) // ← hizalama düzeltme
             
             // Tarih
             Text("Tarih: \(request.date)")
                 .font(.caption2)
                 .foregroundColor(.gray)
+                .frame(maxWidth: .infinity, alignment: .leading) // ← hizalama düzeltme
             
             // Kategoriler
             ScrollView(.horizontal, showsIndicators: false) {
@@ -128,8 +128,10 @@ struct OldRequestView: View {
         .padding()
         .background(Color.white)
         .cornerRadius(10)
+        .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2) // küçük gölge ekledim
         .padding(.horizontal)
     }
+
 }
 
 
