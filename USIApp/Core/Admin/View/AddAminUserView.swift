@@ -50,9 +50,13 @@ struct AddAminUserView: View {
                             .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.gray.opacity(0.3)))
                             .focused($focusedField)
                             .padding(.horizontal)
+                            .autocorrectionDisabled()
+                            .textInputAutocapitalization(.never)
                         
                         Button {
-                    
+                            viewModel.addAdminUser()
+                            viewModel.email = ""
+                            viewModel.fetchAdmins()
                         } label: {
                             Text("Kaydet")
                                 .frame(maxWidth: .infinity)
@@ -62,20 +66,56 @@ struct AddAminUserView: View {
                                 .cornerRadius(10)
                                 .padding(.horizontal)
                         }
-
+                        
+                        ForEach(viewModel.admins) { user in
+                            HStack {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Admin Email")
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                    Text(user.email)
+                                        .font(.headline)
+                                }
+                                
+                                Spacer()
+                                
+                                Button(action: {
+                                    viewModel.deleteAdmin(id: user.id)
+                                }) {
+                                    Image(systemName: "trash")
+                                        .foregroundColor(.red)
+                                        .padding()
+                                        .background(Color(.systemGray6))
+                                        .clipShape(Circle())
+                                }
+                            }
+                            .padding()
+                            .background(Color.white)
+                            .cornerRadius(12)
+                            .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+                            .padding(.horizontal)
+                        }
 
                         
                     }
                     .padding(.top)
+                }
+                .refreshable {
+                    viewModel.fetchAdmins()
                 }
                 .background(Color(.systemGroupedBackground))
                 .onTapGesture {
                     focusedField = false
                 }
             }
+            .onAppear{
+                viewModel.fetchAdmins()
+            }
         }
     }
 }
+
+
 
 #Preview {
     AddAminUserView()

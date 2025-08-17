@@ -94,7 +94,7 @@ class RequestViewModel: ObservableObject {
     func saveRequestData(){
         IndustryFirestoreService.shared.saveRequest(selectedCategories: selectedCategories, requestTitle: requestTitle, requestMessage: requestMessage) { error in
             if let error = error {
-                print("Hata: \(error.localizedDescription)")
+                print("Hataaaaaa: \(error.localizedDescription)")
             } else {
                 print("Başarılı : Document added successfully!")
             }
@@ -109,9 +109,9 @@ class RequestViewModel: ObservableObject {
             case .success(let requests):
                 
                 self.requests = requests
-                print("Başarılı : Document added successfully!")
+                print("Başarılı : Document getirildi successfully!")
             case .failure(let failure):
-                print("Hata: \(failure.localizedDescription)")
+                print("Hataaaaa: \(failure.localizedDescription)")
             }
         }
     }

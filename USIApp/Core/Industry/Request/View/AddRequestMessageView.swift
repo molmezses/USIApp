@@ -101,6 +101,7 @@ struct AddRequestMessageView: View {
                     
                     Button(action: {
                         viewModel.saveRequestData()
+                        viewModel.loadRequests()
                         navigateRequestView = true
                         viewModel.clearFields()
                     }) {

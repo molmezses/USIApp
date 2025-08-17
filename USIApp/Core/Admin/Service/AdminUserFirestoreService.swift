@@ -22,7 +22,7 @@ class AdminUserFirestoreService{
     func approvRequest(documentId: String , adminMessage: String, selectedAcademians: [AcademicianInfo] , completion: @escaping (Result<Void, Error>) -> Void){
         
         let academiciansIdArray = selectedAcademians.map{ $0.id}
-
+        
         
         db.document(documentId).updateData([
             "status": "approved",
@@ -236,7 +236,7 @@ class AdminUserFirestoreService{
         }
     }
     
-
+    
     func fetchAcademicianStatuses(for requestId: String, completion: @escaping ([String: String]) -> Void) {
         let docRef = Firestore.firestore().collection("Requests").document(requestId)
         docRef.getDocument { snapshot, error in
@@ -248,10 +248,10 @@ class AdminUserFirestoreService{
             completion(responses)
         }
     }
-
+    
     func updateAcademicianRequestStatus(requestId: String, academicianId: String, newStatus: String, completion: @escaping (Result<Void, Error>) -> Void) {
         let docRef = Firestore.firestore().collection("OldRequests").document(requestId)
-
+        
         let updateField = "academicianResponses.\(academicianId)"
         
         docRef.updateData([
@@ -264,13 +264,13 @@ class AdminUserFirestoreService{
             }
         }
     }
-
+    
     func addAdminUser(email: String, completion: @escaping(Error?) -> Void) {
-        let docRef = Firestore.firestore().collection("AdminUsers")
-
+        let docRef = Firestore.firestore().collection("Admins")
+        
         let newDocRef = docRef.document()
         let adminUser = AdminUser(id: newDocRef.documentID, email: email)
-
+        
         do {
             let data = try Firestore.Encoder().encode(adminUser)
             newDocRef.setData(data) { error in
@@ -283,10 +283,176 @@ class AdminUserFirestoreService{
         }
     }
     
+    func getUserCountByDomain(domain: String, completion: @escaping (Int) -> Void) {
+        Firestore.firestore().collection("UserDomains")
+            .whereField("domain", isEqualTo: domain)
+            .getDocuments { snapshot, error in
+                if let documents = snapshot?.documents {
+                    completion(documents.count)
+                } else {
+                    completion(0)
+                }
+            }
+    }
+    
+    func getUserCountAcademician(completion: @escaping (Int) -> Void) {
+        Firestore.firestore().collection("AcademicianInfo")
+            .getDocuments { snapshot, error in
+                if let documents = snapshot?.documents {
+                    print("çekilen")
+                    print(documents.count)
+                    completion(documents.count)
+                } else {
+                    completion(0)
+                }
+            }
+    }
+    
+    func getUserCountIndustry(completion: @escaping (Int) -> Void) {
+        Firestore.firestore().collection("UserDomains")
+            .getDocuments { snapshot, error in
+                if let documents = snapshot?.documents {
+                    print("çekilen")
+                    
+                    self.getUserCountByDomain(domain: "ahievran.edu.tr") { academicianLogginCount in
+                        let industryCount = (documents.count) - academicianLogginCount
+                        completion(industryCount)
+                    }
+                    
+                    
+                } else {
+                    completion(0)
+                }
+            }
+    }
+    
+    func getRequestCount(completion: @escaping (Int) -> Void) {
+        Firestore.firestore().collection("Requests")
+            .getDocuments { snapshot, error in
+                if let documents = snapshot?.documents {
+                    print("çekilen talep sayısı :")
+                    completion(documents.count)
+                } else {
+                    completion(0)
+                }
+            }
+    }
+    
+    func getApprovedRequestCount(completion: @escaping (Int) -> Void) {
+        Firestore.firestore().collection("OldRequests")
+            .whereField("status", isEqualTo: "approved")
+            .getDocuments { snapshot, error in
+                if let documents = snapshot?.documents {
+                    print("çekilen Onaylanmış talep  sayısı :")
+                    completion(documents.count)
+                } else {
+                    completion(0)
+                }
+            }
+    }
+    
+    func getRejectedRequestCount(completion: @escaping (Int) -> Void) {
+        Firestore.firestore().collection("OldRequests")
+            .whereField("status", isEqualTo: "rejected")
+            .getDocuments { snapshot, error in
+                if let documents = snapshot?.documents {
+                    print("çekilen Onaylanmış talep  sayısı :")
+                    completion(documents.count)
+                } else {
+                    completion(0)
+                }
+            }
+    }
+    
+    func getPendingRequestCount(completion: @escaping (Int) -> Void) {
+        Firestore.firestore().collection("Requests")
+            .whereField("status", isEqualTo: "pending")
+            .getDocuments { snapshot, error in
+                if let documents = snapshot?.documents {
+                    print("çekilen Onaylanmış talep  sayısı :")
+                    completion(documents.count)
+                } else {
+                    completion(0)
+                }
+            }
+    }
+    
+    func fetchAcademicianResponseCounts(completion: @escaping (Int) -> Void) {
+        let db = Firestore.firestore()
+        let collectionRef = db.collection("OldRequests")
+        
+        var uniqueAcademicianIDs = Set<String>()
+        
+        collectionRef.getDocuments { (snapshot, error) in
+            if let error = error {
+                print("Hata oluştu: \(error.localizedDescription)")
+                completion(0)
+                return
+            }
+
+            guard let documents = snapshot?.documents else {
+                completion(0)
+                return
+            }
+
+            for document in documents {
+                let data = document.data()
+                if let responses = data["academicianResponses"] as? [String: String] {
+                    for key in responses.keys {
+                        uniqueAcademicianIDs.insert(key)
+                    }
+                }
+            }
+
+            completion(uniqueAcademicianIDs.count)
+        }
+    }
 
     
     
+    func getUserCountAcademicianOrtakTalepFalse(completion: @escaping (Int) -> Void) {
+        Firestore.firestore().collection("AcademicianInfo")
+            .whereField("ortakProjeTalep", isEqualTo: "Hayır")
+            .getDocuments { snapshot, error in
+                if let documents = snapshot?.documents {
+                    print("çekilen ortak prohe hayır olan kişi sayısı:")
+                    print(documents.count)
+                    completion(documents.count)
+                } else {
+                    completion(0)
+                }
+            }
+    }
+    
 
+    func isAdminUser(completion: @escaping (Bool) -> Void) {
+        let email = AuthService.shared.getCurrentUser()?.email ?? "admin@admin.admin"
+        
+        Firestore.firestore().collection("Admins")
+            .whereField("email", isEqualTo: email)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    print("Admin kontrol hatası: \(error)")
+                    completion(false)
+                    return
+                }
+
+                let isAdmin = !(snapshot?.isEmpty ?? true)
+                completion(isAdmin)
+            }
+    }
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     

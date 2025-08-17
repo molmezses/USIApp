@@ -44,6 +44,17 @@ class IndustryRegisterViewModel: ObservableObject{
                     self.db.document(authViewModel.industryUserSession?.id ?? "id bulunamadı").setData(
                         ["email":authViewModel.industryUserSession?.email ?? "email bulunamadı"]
                     )
+                    
+                    let domain = self.email.components(separatedBy: "@").last ?? "unknown"
+                    let data: [String: Any] = [
+                        "email": self.email,
+                        "domain": domain,
+                        "id": session.id
+                    ]
+                    
+                    Firestore.firestore().collection("UserDomains").document(session.id).setData(data)
+                    
+                    
                     self.navigateToIndustryTabView = true
                     print("session başarılı")
                     
@@ -61,13 +72,17 @@ class IndustryRegisterViewModel: ObservableObject{
             switch result {
             case .success(let session):
                 authViewModel.industryUserSession = session
-                self.db.document(authViewModel.industryUserSession?.id ?? "id bulunamadı").updateData(
-                    ["email":authViewModel.industryUserSession?.email ?? "email bulunamadı"]
-                )
+                
+                self.db.document(authViewModel.industryUserSession?.id ?? "id bulunamadı").setData(
+                    ["email":authViewModel.industryUserSession?.email ?? "email bulunamadı"]) { error in
+                        if let error = error {
+                            print("Hata Industry : \(error.localizedDescription)")
+                        }
+                    }
                 self.navigateToIndustryTabView = true
             case .failure(let error):
                 self.errorMessage = error.localizedDescription
-                print("Hata :\(self.errorMessage)")
+                print("Hata ındustry :\(self.errorMessage)")
                 
             }
         }

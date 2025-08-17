@@ -97,33 +97,33 @@ struct IndustryRegisterView: View {
                                     dismiss()
                                 }
                             
-                            HStack {
-                                RoundedRectangle(cornerRadius: 1)
-                                    .frame(height: 2)
-                                    .foregroundStyle(.gray)
-                                Text("veya")
-                                    .font(.footnote)
-                                    .foregroundStyle(.gray)
-                                RoundedRectangle(cornerRadius: 1)
-                                    .frame(height: 2)
-                                    .foregroundStyle(.gray)
-                            }
-                            .padding(.vertical , 20)
-                            .padding(.top , 6)
-                            
-                            Button {
-                                viewModel.signGoogle(authViewModel: authViewModel)
-                            } label: {
-                                HStack{
-                                    Image("googleLogo")
-                                        .resizable()
-                                        .frame(width:50 , height: 50)
-                                    Text("Countinue with Google Account")
-                                        .font(.headline)
-                                        .foregroundStyle(.blue)
-                                }
-                                .padding(.vertical , 8)
-                            }
+//                            HStack {
+//                                RoundedRectangle(cornerRadius: 1)
+//                                    .frame(height: 2)
+//                                    .foregroundStyle(.gray)
+//                                Text("veya")
+//                                    .font(.footnote)
+//                                    .foregroundStyle(.gray)
+//                                RoundedRectangle(cornerRadius: 1)
+//                                    .frame(height: 2)
+//                                    .foregroundStyle(.gray)
+//                            }
+//                            .padding(.vertical , 20)
+//                            .padding(.top , 6)
+//                            
+//                            Button {
+//                                viewModel.signGoogle(authViewModel: authViewModel)
+//                            } label: {
+//                                HStack{
+//                                    Image("googleLogo")
+//                                        .resizable()
+//                                        .frame(width:50 , height: 50)
+//                                    Text("Countinue with Google Account")
+//                                        .font(.headline)
+//                                        .foregroundStyle(.blue)
+//                                }
+//                                .padding(.vertical , 8)
+//                            }
 
                             
                             Spacer()

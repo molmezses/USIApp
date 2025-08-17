@@ -94,7 +94,7 @@ struct ProfileView: View {
                             
                             VStack {
                                 
-                                if viewModel.isAdminUser() {
+                                if viewModel.isAdminUserAccount{
                                     NavigationLink {
                                         AdminView()
                                             .navigationBarBackButtonHidden()
@@ -399,11 +399,13 @@ struct ProfileView: View {
                     .padding(.top)
                     .refreshable {
                         viewModel.loadAcademicianInfo()
+                        viewModel.isAdminUser()
                     }
                 }
             }
             .onAppear{
                 viewModel.loadAcademicianInfo()
+                viewModel.isAdminUser()
             }
             .navigationDestination(isPresented: $navSignOut, destination: {
                 LoginView()

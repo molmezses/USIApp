@@ -61,6 +61,29 @@ class IndustryFirestoreService {
         }
     }
     
+    func fetchIndustryProfileSignGoogle(id: String , completion: @escaping (Result<Bool , Error>) -> Void){
+        
+        let docRef = Firestore.firestore()
+            .collection("Industry")
+            .document("\(id)")
+        
+        docRef.getDocument { document, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let document = document , document.exists , let data = document.data() else {
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey : "Belge bulunamadı"])))
+                return
+            }
+            print(data)
+            
+
+            completion(.success(true))
+        }
+    }
+    
     func fetchIndustryProfileDataWithID(industryID: String , completion: @escaping (Result<IndustryInfo , Error>) -> Void){
         
         let docRef = Firestore.firestore()

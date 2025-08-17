@@ -35,22 +35,29 @@ final class AuthService{
     func register(email: String , password: String , completion: @escaping (Result<Void , Error>) -> Void) {
         Auth.auth().createUser(withEmail: email, password: password) { result, error in
             if let error = error {
-                print("HATA1")
                 return completion(.failure(error))
             }
-
+            
             result?.user.sendEmailVerification(completion: { error in
                 if let error = error {
-                    print("HATA2")
                     completion(.failure(error))
                 } else {
-                    print("HATA3")
+                    
+                    let domain = email.components(separatedBy: "@").last ?? "unknown"
+                    let data: [String: Any] = [
+                        "email": email,
+                        "domain": domain,
+                        "id": result?.user.uid ?? "unkown"
+                    ]
+                    
+                    Firestore.firestore().collection("UserDomains").document(result?.user.uid ?? "unkown").setData(data)
+                    
                     completion(.success(()))
                 }
             })
         }
     }
-
+    
     
     func logOut() throws{
         do {
@@ -67,8 +74,8 @@ final class AuthService{
     }
     
     
-
     
-
+    
+    
     
 }

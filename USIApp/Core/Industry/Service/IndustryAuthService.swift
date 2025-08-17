@@ -64,11 +64,11 @@ final class IndustryAuthService{
     
     func signInWithGoogle(completion: @escaping (Result<IndustryUserSession , Error>) -> Void) {
         guard let clientID = FirebaseApp.app()?.options.clientID else {
-            print("clientID alınamadı") // ← Hata kontrolü
+            print("clientID alınamadı")
             return
         }
         
-        print("clientID bulundu: \(clientID)") // ← Bunu ekle, clientID geliyor mu kontrol et
+        print("clientID bulundu: \(clientID)") 
 
         _ = GIDConfiguration(clientID: clientID)
 

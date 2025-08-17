@@ -19,6 +19,7 @@ class IndustryLoginViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var errorMessage = ""
     @Published var isLoading: Bool = false
+    @Published var isAlreadyRegister : Bool = false
     
     
     func login(authViewModel : IndustryAuthViewModel){
@@ -40,6 +41,17 @@ class IndustryLoginViewModel: ObservableObject {
         IndustryAuthService.shared.signInWithGoogle { result in
             switch result {
             case .success(let session):
+                
+                IndustryFirestoreService.shared.fetchIndustryProfileSignGoogle(id: session.id) { result in
+                    switch result {
+                    case .success(_):
+                        authViewModel.industryUserSession = session
+                    case .failure(let failure):
+                        authViewModel.industryUserSession = nil
+                        print("Daha çnce kayırr olmamıs \(failure.localizedDescription)")
+                    }
+                }
+                
                 authViewModel.industryUserSession = session
             case .failure(let error):
                 self.errorMessage = error.localizedDescription

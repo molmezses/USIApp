@@ -15,6 +15,7 @@ class ProfileViewModel: ObservableObject {
     @Published var email: String = ""
     @Published var unvan: String = ""
     @Published var photo: String = ""
+    @Published var isAdminUserAccount: Bool = false
     
     
     func loadAcademicianInfo(){
@@ -49,19 +50,19 @@ class ProfileViewModel: ObservableObject {
         
     }
     
-    func isAdminUser() -> Bool {
-       
-        if AuthService.shared.getCurrentUser()?.email == "mustafaolmezses@gmail.com"{
-            return true
+    func isAdminUser(){
+        AdminUserFirestoreService.shared.isAdminUser { isAdmin in
+            if isAdmin {
+                print("Bu kullanıcı bir admin.")
+                self.isAdminUserAccount = true
+            } else {
+                print("Admin değil.")
+            }
         }
-        
-        if AuthService.shared.getCurrentUser()?.email == "mahmutsari@ahievran.edu.tr"{
-            return true
-        }
-        
-        return false
-       
+
     }
+   
+
     
     
     

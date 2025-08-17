@@ -39,6 +39,8 @@ struct AcademicianRegisterView: View {
                         .multilineTextAlignment(.leading)
                         .keyboardType(.emailAddress)
                         .focused($focusedField)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
                     
                     SecureFieldWithButton(title: "Şifrenizi giriniz:", text: $viewModel.password)
                         .frame(height: 55)
@@ -47,6 +49,8 @@ struct AcademicianRegisterView: View {
                         .mask(RoundedRectangle(cornerRadius: 10))
                         .multilineTextAlignment(.leading)
                         .focused($focusedField)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
                     
                     SecureFieldWithButton(title: "Şifrenizi tekrar giriniz:", text: $viewModel.confirmPassword)
                         .frame(height: 55)
@@ -56,6 +60,8 @@ struct AcademicianRegisterView: View {
                         .mask(RoundedRectangle(cornerRadius: 10))
                         .multilineTextAlignment(.leading)
                         .focused($focusedField)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
                     
                     VStack {
                         Button {
