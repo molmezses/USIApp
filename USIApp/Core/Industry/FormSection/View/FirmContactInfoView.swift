@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct FirmContactInfoView: View {
-    @State private var firmPhoneNumber = ""
-    @State private var firmWebAdress = ""
+    
     @Environment(\.dismiss) var dismiss
+    @StateObject var viewModel = FirmContactInfoViewModel()
+    @FocusState var fosucedField: FirmContactInfoEnum?
 
     var body: some View {
         VStack(spacing: 18) {                     
@@ -49,7 +50,7 @@ struct FirmContactInfoView: View {
                         Text("Telefon numarası")
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.leading)
-                        TextField("Telefon numarası", text: $firmPhoneNumber)
+                        TextField("Telefon numarası", text: $viewModel.firmPhoneNumber)
                             .padding()
                             .background(Color.white)
                             .cornerRadius(10)
@@ -59,13 +60,17 @@ struct FirmContactInfoView: View {
                                 )
                             )
                             .padding(.horizontal)
+                            .focused($fosucedField, equals: .phone)
+                            .autocorrectionDisabled()
+                            .textInputAutocapitalization(.never)
+
                     }
 
                     VStack(spacing: 6) {
                         Text("Web sitesi")
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.leading)
-                        TextField("Firma web sitesi", text: $firmWebAdress)
+                        TextField("Firma web sitesi", text: $viewModel.firmWebAdress)
                             .padding()
                             .background(Color.white)
                             .cornerRadius(10)
@@ -75,10 +80,18 @@ struct FirmContactInfoView: View {
                                 )
                             )
                             .padding(.horizontal)
+                            .focused($fosucedField, equals: .web)
+                            .autocorrectionDisabled()
+                            .textInputAutocapitalization(.never)
                     }
                     
 
-                    Button(action: {}) {
+                    Button(action: {
+                        viewModel.saveIndustryProfileData()
+                        if !viewModel.showAlert {
+                            dismiss()
+                        }
+                    }) {
                         Text("Kaydet")
                             .frame(maxWidth: .infinity)
                             .padding()
@@ -90,9 +103,23 @@ struct FirmContactInfoView: View {
                     Spacer()
                     Spacer()
                 }
+                .onTapGesture {
+                    fosucedField = nil
+                }
             }
         }
-        .background(Color(.systemGroupedBackground).ignoresSafeArea())
+        .background(Color(.systemGroupedBackground).ignoresSafeArea(.all, edges: .top))
+        .onAppear {
+            viewModel.loadIndustryProfileData()
+        }
+        .alert(isPresented: $viewModel.showAlert){
+            Alert(title: Text("Hata"),
+                  message: Text(viewModel.errorMessage),
+                  dismissButton: .default(Text("Tamam")){
+                viewModel.errorMessage = ""
+                }
+            )
+        }
     }
 }
 

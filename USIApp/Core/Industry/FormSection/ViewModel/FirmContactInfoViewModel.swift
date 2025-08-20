@@ -1,26 +1,27 @@
 //
-//  FirmInformationViewModel.swift
+//  FirmContactInfoViewModel.swift
 //  USIApp
 //
-//  Created by Mustafa Ölmezses on 17.08.2025.
+//  Created by Mustafa Ölmezses on 21.08.2025.
 //
 
 import Foundation
 
-enum FirmInformationEnum {
-    case name
-    case workArea
+enum FirmContactInfoEnum {
+    case phone
+    case web
 }
 
+class FirmContactInfoViewModel: ObservableObject {
 
-
-
-class FirmInformationViewModel: ObservableObject {
-    
-    @Published  var firmName = ""
-    @Published  var firmWorkArea = ""
-    @Published var errorMessage = ""
-    
+    @Published var firmPhoneNumber = ""
+    @Published var firmWebAdress = ""
+    @Published var errorMessage = "" {
+            didSet {
+                showAlert = !errorMessage.isEmpty
+            }
+        }
+        @Published var showAlert = false
     
     init() {
         self.loadIndustryProfileData()
@@ -29,14 +30,14 @@ class FirmInformationViewModel: ObservableObject {
     
     func saveIndustryProfileData() {
         
-        guard !firmName.isEmpty && !firmWorkArea.isEmpty else {
+        guard !firmPhoneNumber.isEmpty && !firmWebAdress.isEmpty else {
             errorMessage = "Lütfen tüm alanları doldurun"
             return
         }
         
         let industryData: [String : Any] = [
-            "firmaAdi" : firmName,
-            "calismaAlanlari" : firmWorkArea
+            "firmaWebSite" : firmWebAdress,
+            "telefon" : firmPhoneNumber
         ]
         
         IndustryFirestoreService.shared.saveIndustrydata(industryData: industryData) { error in
@@ -44,6 +45,7 @@ class FirmInformationViewModel: ObservableObject {
                 self.errorMessage = error.localizedDescription
             }else{
                 print("Veriler başarıyla güncellendi -> IndustryFirmInformation")
+                self.errorMessage = ""
             }
         }
 
@@ -54,17 +56,15 @@ class FirmInformationViewModel: ObservableObject {
             switch result {
             case .success(let info):
                 
-                self?.firmName = info.firmaAdi
-                self?.firmWorkArea = info.calismaAlani
+                self?.firmPhoneNumber = info.tel
+                self?.firmWebAdress = info.web
                 print("Başrılı : loadIndustryProfileData -> veriler çekildi")
+                self?.errorMessage = ""
             case .failure(let failure):
                 self?.errorMessage = failure.localizedDescription
                 print("Hata : loadIndustryProfileData ->  \(failure.localizedDescription)")
             }
         }
     }
+    
 }
-
-
-
-

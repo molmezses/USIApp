@@ -14,4 +14,5 @@ struct IndustryInfo {
     var adres: String
     var tel: String
     var email: String
+    var web: String
 }

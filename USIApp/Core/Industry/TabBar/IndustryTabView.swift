@@ -37,19 +37,8 @@ struct IndustryTabView: View {
                             }
                             .tag(1)
                         
-                        IndustryHomeView()
-                            .environmentObject(authViewModel)
-                            .tabItem {
-                                Image(systemName: "person.fill")
-                                Text("Profil")
-                            }
-                            .tag(2)
-                        
-                       
-                        
-                        
-                        
                     }
+                    .tabViewStyle(.automatic)
 
                 }else{
                     LoginView()

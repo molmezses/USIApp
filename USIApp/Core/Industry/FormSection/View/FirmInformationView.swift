@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct FirmInformationView: View {
-    @State private var firmaAdi = ""
-    @State private var calismaAlani = ""
-    @State private var digerCalismaAlani = ""
+
     @Environment(\.dismiss) var dismiss
+    @StateObject var viewModel = FirmInformationViewModel()
+    @FocusState  var focusedField: FirmInformationEnum?
+    
 
     var body: some View {
         VStack(spacing: 18) {
@@ -50,7 +51,7 @@ struct FirmInformationView: View {
                         Text("Firma Adı")
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.leading)
-                        TextField("Firma Adı", text: $firmaAdi)
+                        TextField("Firma Adı", text: $viewModel.firmName)
                             .padding()
                             .background(Color.white)
                             .cornerRadius(10)
@@ -60,13 +61,17 @@ struct FirmInformationView: View {
                                 )
                             )
                             .padding(.horizontal)
+                            .focused($focusedField , equals: .name)
+                            .autocorrectionDisabled()
+                            .textInputAutocapitalization(.never)
+
                     }
 
                     VStack(spacing: 6) {
                         Text("Çalışma Alanı")
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.leading)
-                        TextField("Çalışma Alanı", text: $calismaAlani)
+                        TextField("Çalışma Alanı", text: $viewModel.firmWorkArea)
                             .padding()
                             .background(Color.white)
                             .cornerRadius(10)
@@ -76,9 +81,12 @@ struct FirmInformationView: View {
                                 )
                             )
                             .padding(.horizontal)
+                            .focused($focusedField , equals: .workArea)
+                            .autocorrectionDisabled()
+                            .textInputAutocapitalization(.never)
                     }
 
-                    Button(action: {}) {
+                    Button(action: {viewModel.saveIndustryProfileData()}) {
                         Text("Kaydet")
                             .frame(maxWidth: .infinity)
                             .padding()
@@ -90,9 +98,15 @@ struct FirmInformationView: View {
                     Spacer()
                     Spacer()
                 }
+                .onTapGesture {
+                    focusedField = nil
+                }
             }
         }
         .background(Color(.systemGroupedBackground).ignoresSafeArea())
+        .onAppear {
+            viewModel.loadIndustryProfileData()
+        }
     }
 }
 

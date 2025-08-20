@@ -54,7 +54,8 @@ class IndustryFirestoreService {
                 calismaAlani: data["calismaAlanlari"] as? String ?? "",
                 adres: data["adres"] as? String ?? "",
                 tel: data["telefon"] as? String ?? "",
-                email: data["email"] as? String ?? ""
+                email: data["email"] as? String ?? "",
+                web: data["firmaWebSite"] as? String ?? ""
             )
 
             completion(.success(info))
@@ -107,7 +108,9 @@ class IndustryFirestoreService {
                 calismaAlani: data["calismaAlanlari"] as? String ?? "",
                 adres: data["adres"] as? String ?? "",
                 tel: data["telefon"] as? String ?? "",
-                email: data["email"] as? String ?? ""
+                email: data["email"] as? String ?? "",
+                web: data["firmaWebSite"] as? String ?? ""
+
             )
 
             completion(.success(info))
