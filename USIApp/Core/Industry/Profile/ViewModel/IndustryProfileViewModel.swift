@@ -34,10 +34,8 @@ class IndustryProfileViewModel: ObservableObject {
         isUploading = true
 
         do {
-            let fileName = "\(UUID().uuidString).jpg"
             let imageRef = storage.reference().child("industry_images/\(firmId)")
 
-            // Storage'a yükleme
             try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
                 let uploadTask = imageRef.putData(imageData, metadata: nil) { metadata, error in
                     if let error = error {
@@ -54,10 +52,8 @@ class IndustryProfileViewModel: ObservableObject {
                 }
             }
 
-            // Yükleme tamamlandı, şimdi URL al
             let downloadURL = try await imageRef.downloadURL()
 
-            // Firestore'a kaydet
             try await firestore.collection("Industry").document(firmId)
                 .updateData(["firmImage": downloadURL.absoluteString])
 
@@ -65,10 +61,10 @@ class IndustryProfileViewModel: ObservableObject {
                 self.firmImageURL = downloadURL.absoluteString
             }
 
-            print("✅ Resim başarıyla kaydedildi.")
+            print(" Resim başarıyla kaydedildi.")
 
         } catch {
-            print("❌ HATA: \(error.localizedDescription)")
+            print(" HATA: \(error.localizedDescription)")
         }
 
         isUploading = false

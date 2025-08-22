@@ -81,10 +81,26 @@ struct PendingRequestView: View {
             
             HStack(alignment: .top, spacing: 12) {
                 
-                Image("ben")
-                    .resizable()
-                    .frame(width: 50, height: 50)
-                    .clipShape(Circle())
+                if let urlString = request.firmImage,
+                          let url = URL(string: urlString) {
+                    AsyncImage(url: url) { image in
+                        image.resizable()
+                             .scaledToFill()
+                             .frame(width: 50, height: 50)
+                             .clipShape(Circle())
+                    } placeholder: {
+                        ProgressView()
+                            .frame(width: 50, height: 50)
+                    }
+                } else {
+                    Image("DefaultProfilePhoto")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 50, height: 50)
+                        .clipShape(Circle())
+                }
+                
+
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(request.requesterName)

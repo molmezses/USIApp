@@ -24,5 +24,6 @@ struct RequestModel:Identifiable , Codable{
     var adminMessage: String
     var approvedAcademicians: [String]?
     var rejectedAcademicians: [String]?
+    var firmImage: String?
     
 }
