@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct FirmAdressView: View {
-    @State private var firmAdress = ""
+    
     @Environment(\.dismiss) var dismiss
+    @StateObject var viewModel = FirmAdressViewModel()
+    @FocusState var focusedField : Bool
 
     var body: some View {
         VStack(spacing: 18) {
@@ -38,6 +40,9 @@ struct FirmAdressView: View {
                     .foregroundStyle(Color("usi"))
             }
             .background(Color("usi"))
+            .onAppear{
+                viewModel.loadIndustryProfileData()
+            }
             
             
             ScrollView {
@@ -49,7 +54,7 @@ struct FirmAdressView: View {
                             .padding(.leading)
                        
                         
-                        TextEditor(text: $firmAdress)
+                        TextEditor(text: $viewModel.firmAdress)
                             .frame(height: UIScreen.main.bounds.height * 0.3)
                             .padding(12)
                             .background(
@@ -62,9 +67,17 @@ struct FirmAdressView: View {
                                     .stroke(Color.gray.opacity(0.3), lineWidth: 1)
                             )
                             .padding(.horizontal)
+                            .textInputAutocapitalization(.never)
+                            .autocorrectionDisabled()
+                            .focused($focusedField)
                     }
 
-                    Button(action: {}) {
+                    Button(action: {
+                        viewModel.saveIndustryProfileData()
+                        if !viewModel.showAlert{
+                            dismiss()
+                        }
+                    }) {
                         Text("Kaydet")
                             .frame(maxWidth: .infinity)
                             .padding()
@@ -76,9 +89,23 @@ struct FirmAdressView: View {
                     Spacer()
                     Spacer()
                 }
+                .onTapGesture {
+                    focusedField = false
+                }
             }
         }
         .background(Color(.systemGroupedBackground).ignoresSafeArea())
+        .onAppear{
+            viewModel.loadIndustryProfileData()
+        }
+        .alert(isPresented: $viewModel.showAlert){
+            Alert(title: Text("Hata"),
+                  message: Text(viewModel.errorMessage),
+                  dismissButton: .default(Text("Tamam")){
+                viewModel.errorMessage = ""
+                }
+            )
+        }
     }
 }
 

@@ -1,30 +1,22 @@
 //
-//  FirmInformationViewModel.swift
+//  FirmAdressViewModel.swift
 //  USIApp
 //
-//  Created by Mustafa Ölmezses on 17.08.2025.
+//  Created by Mustafa Ölmezses on 21.08.2025.
 //
 
 import Foundation
 
-enum FirmInformationEnum {
-    case name
-    case workArea
-}
-
-
-
-
-class FirmInformationViewModel: ObservableObject {
+class FirmAdressViewModel: ObservableObject{
     
-    @Published  var firmName = ""
-    @Published  var firmWorkArea = ""
+    @Published var firmAdress = ""
     @Published var errorMessage = "" {
             didSet {
                 showAlert = !errorMessage.isEmpty
             }
         }
     @Published var showAlert = false
+
     
     
     init() {
@@ -34,14 +26,13 @@ class FirmInformationViewModel: ObservableObject {
     
     func saveIndustryProfileData() {
         
-        guard !firmName.isEmpty && !firmWorkArea.isEmpty else {
+        guard !firmAdress.isEmpty else {
             errorMessage = "Lütfen tüm alanları doldurun"
             return
         }
         
         let industryData: [String : Any] = [
-            "firmaAdi" : firmName,
-            "calismaAlanlari" : firmWorkArea
+            "adres" : firmAdress,
         ]
         
         IndustryFirestoreService.shared.saveIndustrydata(industryData: industryData) { error in
@@ -60,8 +51,7 @@ class FirmInformationViewModel: ObservableObject {
             switch result {
             case .success(let info):
                 
-                self?.firmName = info.firmaAdi
-                self?.firmWorkArea = info.calismaAlani
+                self?.firmAdress = info.adres
                 print("Başrılı : loadIndustryProfileData -> veriler çekildi")
                 self?.errorMessage = ""
             case .failure(let failure):
@@ -70,8 +60,6 @@ class FirmInformationViewModel: ObservableObject {
             }
         }
     }
+    
+    
 }
-
-
-
-

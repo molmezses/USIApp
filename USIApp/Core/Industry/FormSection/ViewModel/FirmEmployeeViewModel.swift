@@ -1,31 +1,30 @@
 //
-//  FirmInformationViewModel.swift
+//  FirmEmployeeViewModel.swift
 //  USIApp
 //
-//  Created by Mustafa Ölmezses on 17.08.2025.
+//  Created by Mustafa Ölmezses on 22.08.2025.
 //
 
 import Foundation
 
-enum FirmInformationEnum {
-    case name
-    case workArea
+
+enum FirmEmployeeEnum {
+    case ad
+    case pozisyon
 }
 
-
-
-
-class FirmInformationViewModel: ObservableObject {
+class FirmEmployeeViewModel: ObservableObject {
     
-    @Published  var firmName = ""
-    @Published  var firmWorkArea = ""
+    
+    @Published var firmEmployeeName = ""
+    @Published var firmEmployeePosition = ""
+    
     @Published var errorMessage = "" {
             didSet {
                 showAlert = !errorMessage.isEmpty
             }
         }
     @Published var showAlert = false
-    
     
     init() {
         self.loadIndustryProfileData()
@@ -34,14 +33,14 @@ class FirmInformationViewModel: ObservableObject {
     
     func saveIndustryProfileData() {
         
-        guard !firmName.isEmpty && !firmWorkArea.isEmpty else {
+        guard !firmEmployeeName.isEmpty && !firmEmployeePosition.isEmpty else {
             errorMessage = "Lütfen tüm alanları doldurun"
             return
         }
         
         let industryData: [String : Any] = [
-            "firmaAdi" : firmName,
-            "calismaAlanlari" : firmWorkArea
+            "calisanAd" : firmEmployeeName,
+            "calisanPozisyon" : firmEmployeePosition
         ]
         
         IndustryFirestoreService.shared.saveIndustrydata(industryData: industryData) { error in
@@ -60,8 +59,8 @@ class FirmInformationViewModel: ObservableObject {
             switch result {
             case .success(let info):
                 
-                self?.firmName = info.firmaAdi
-                self?.firmWorkArea = info.calismaAlani
+                self?.firmEmployeeName = info.calisanAd
+                self?.firmEmployeePosition = info.calisanPozisyon
                 print("Başrılı : loadIndustryProfileData -> veriler çekildi")
                 self?.errorMessage = ""
             case .failure(let failure):
@@ -70,8 +69,8 @@ class FirmInformationViewModel: ObservableObject {
             }
         }
     }
+    
 }
-
 
 
 

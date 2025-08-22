@@ -86,7 +86,12 @@ struct FirmInformationView: View {
                             .textInputAutocapitalization(.never)
                     }
 
-                    Button(action: {viewModel.saveIndustryProfileData()}) {
+                    Button(action: {
+                        viewModel.saveIndustryProfileData()
+                        if !viewModel.showAlert{
+                            dismiss()
+                        }
+                    }) {
                         Text("Kaydet")
                             .frame(maxWidth: .infinity)
                             .padding()
@@ -106,6 +111,14 @@ struct FirmInformationView: View {
         .background(Color(.systemGroupedBackground).ignoresSafeArea())
         .onAppear {
             viewModel.loadIndustryProfileData()
+        }
+        .alert(isPresented: $viewModel.showAlert){
+            Alert(title: Text("Hata"),
+                  message: Text(viewModel.errorMessage),
+                  dismissButton: .default(Text("Tamam")){
+                viewModel.errorMessage = ""
+                }
+            )
         }
     }
 }

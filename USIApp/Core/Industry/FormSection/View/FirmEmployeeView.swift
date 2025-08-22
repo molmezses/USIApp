@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct FirmEmployeeView: View {
-    @State private var firmEmployeeName = ""
-    @State private var firmEmployeePosition = ""
+    
     @Environment(\.dismiss) var dismiss
-
+    @StateObject var viewModel = FirmEmployeeViewModel()
+    @FocusState var focusedField : FirmEmployeeEnum?
+    
     var body: some View {
         VStack(spacing: 18) {
             
@@ -49,7 +50,7 @@ struct FirmEmployeeView: View {
                         Text("Çalışanın adı : ")
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.leading)
-                        TextField("Adınız :", text: $firmEmployeeName)
+                        TextField("Adınız :", text: $viewModel.firmEmployeeName)
                             .padding()
                             .background(Color.white)
                             .cornerRadius(10)
@@ -59,13 +60,17 @@ struct FirmEmployeeView: View {
                                 )
                             )
                             .padding(.horizontal)
+                            .autocorrectionDisabled()
+                            .textInputAutocapitalization(.never)
+                            .focused($focusedField, equals: .ad)
+
                     }
 
                     VStack(spacing: 6) {
                         Text("Çalışanın pozisyonu : ")
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.leading)
-                        TextField("Çalışma pozisyonunuz", text: $firmEmployeePosition)
+                        TextField("Çalışma pozisyonunuz", text: $viewModel.firmEmployeePosition)
                             .padding()
                             .background(Color.white)
                             .cornerRadius(10)
@@ -75,10 +80,18 @@ struct FirmEmployeeView: View {
                                 )
                             )
                             .padding(.horizontal)
+                            .autocorrectionDisabled()
+                            .textInputAutocapitalization(.never)
+                            .focused($focusedField, equals: .pozisyon)
                     }
                     
 
-                    Button(action: {}) {
+                    Button(action: {
+                        viewModel.saveIndustryProfileData()
+                        if !viewModel.showAlert{
+                            dismiss()
+                        }
+                    }) {
                         Text("Kaydet")
                             .frame(maxWidth: .infinity)
                             .padding()
@@ -93,6 +106,20 @@ struct FirmEmployeeView: View {
             }
         }
         .background(Color(.systemGroupedBackground).ignoresSafeArea())
+        .onAppear{
+            viewModel.loadIndustryProfileData()
+        }
+        .onTapGesture {
+            focusedField = nil
+        }
+        .alert(isPresented: $viewModel.showAlert){
+            Alert(title: Text("Hata"),
+                  message: Text(viewModel.errorMessage),
+                  dismissButton: .default(Text("Tamam")){
+                viewModel.errorMessage = ""
+                }
+            )
+        }
     }
 }
 

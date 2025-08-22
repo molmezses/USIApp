@@ -5,87 +5,87 @@
 //  Created by Mustafa Ölmezses on 20.07.2025.
 //
 
+import Firebase
+import FirebaseStorage
 import Foundation
+import PhotosUI
+import SwiftUI
 
-class IndustryProfileViewModel: ObservableObject{
-    @Published  var isEditing = false
-    @Published  var companyName: String = ""
-    @Published  var selectedWorkArea: String = ""
-    @Published  var customWorkArea: String = ""
-    @Published  var address: String = ""
-    @Published  var phoneNumber: String = ""
-    @Published var errorMessage: String = ""
-    
+class IndustryProfileViewModel: ObservableObject {
+    @Published var selectedImage: UIImage? = nil
+    @Published var isUploading = false
+    @Published var uploadProgress: Double = 0.0
+    @Published var firmImageURL: String? = nil
+
+    private let storage = Storage.storage()
+    private let firestore = Firestore.firestore()
+
     init() {
-        self.loadIndustryProfileData()
+        loadIndustryProfileData()
     }
-    
-    
-    func saveIndustryData(){
-        
-        guard !companyName.isEmpty else {
-            errorMessage = "Lütfen firma adını giriniz."
+
+    @MainActor
+    func uploadImageAndSaveLink(firmId: String) async {
+        guard let imageData = selectedImage?.jpegData(compressionQuality: 0.5) else {
+            print("HATA: Resim seçilmedi.")
             return
         }
-        
-        guard !selectedWorkArea.isEmpty else {
-            errorMessage = "Lütfen çalışma alanını seçiniz."
-            return
-        }
-        
-        guard !address.isEmpty else {
-            errorMessage = "Lütfen adresinizi giriniz."
-            return
-        }
-        
-        guard !phoneNumber.isEmpty else {
-            errorMessage = "Lütfen telefon numaranızı giriniz"
-            return
-        }
-        
-        if !(customWorkArea == "") {
-            selectedWorkArea = customWorkArea
-        }
-        
-        let industryData: [String: Any] = [
-            "firmaAdi" : companyName,
-            "calismaAlanlari" : selectedWorkArea,
-            "adres" : address,
-            "telefon" : phoneNumber
-        ]
-        
-        IndustryFirestoreService.shared.saveIndustrydata(industryData: industryData) { error in
-            if let error = error{
-                print("Hata :Industry data save error \(error.localizedDescription)")
-            }else{
-                print("Veri kaydedildi")
+
+        isUploading = true
+
+        do {
+            let fileName = "\(UUID().uuidString).jpg"
+            let imageRef = storage.reference().child("industry_images/\(firmId)")
+
+            // Storage'a yükleme
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                let uploadTask = imageRef.putData(imageData, metadata: nil) { metadata, error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume(returning: ())
+                    }
+                }
+
+                uploadTask.observe(.progress) { snapshot in
+                    DispatchQueue.main.async {
+                        self.uploadProgress = Double(snapshot.progress?.fractionCompleted ?? 0)
+                    }
+                }
             }
+
+            // Yükleme tamamlandı, şimdi URL al
+            let downloadURL = try await imageRef.downloadURL()
+
+            // Firestore'a kaydet
+            try await firestore.collection("Industry").document(firmId)
+                .updateData(["firmImage": downloadURL.absoluteString])
+
+            DispatchQueue.main.async {
+                self.firmImageURL = downloadURL.absoluteString
+            }
+
+            print("✅ Resim başarıyla kaydedildi.")
+
+        } catch {
+            print("❌ HATA: \(error.localizedDescription)")
         }
-        
-        
+
+        isUploading = false
     }
-    
-    func loadIndustryProfileData(){
-        
-        IndustryFirestoreService.shared.fetchIndustryProfileData { result in
+
+
+
+    func loadIndustryProfileData() {
+        IndustryFirestoreService.shared.fetchIndustryProfileData { [weak self] result in
             switch result {
             case .success(let info):
-                
-                self.companyName = info.firmaAdi
-                self.selectedWorkArea = info.calismaAlani
-                self.address = info.adres
-                self.selectedWorkArea = info.calismaAlani
-                self.phoneNumber = info.tel
-                
-            case .failure(let failure):
-                self.errorMessage = "Hata : \(failure.localizedDescription)"
-                print(self.errorMessage)
+                DispatchQueue.main.async {
+                    self?.firmImageURL = info.firmImage
+                }
+            case .failure(let error):
+                print("HATA loadIndustryProfileData: \(error.localizedDescription)")
             }
         }
-        
     }
-    
-    
-    
-    
 }

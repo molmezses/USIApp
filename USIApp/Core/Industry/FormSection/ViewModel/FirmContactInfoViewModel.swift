@@ -21,7 +21,7 @@ class FirmContactInfoViewModel: ObservableObject {
                 showAlert = !errorMessage.isEmpty
             }
         }
-        @Published var showAlert = false
+    @Published var showAlert = false
     
     init() {
         self.loadIndustryProfileData()

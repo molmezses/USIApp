@@ -55,7 +55,10 @@ class IndustryFirestoreService {
                 adres: data["adres"] as? String ?? "",
                 tel: data["telefon"] as? String ?? "",
                 email: data["email"] as? String ?? "",
-                web: data["firmaWebSite"] as? String ?? ""
+                web: data["firmaWebSite"] as? String ?? "",
+                calisanAd: data["calisanAd"] as? String ?? "",
+                calisanPozisyon: data["calisanPozisyon"] as? String ?? "",
+                firmImage: data["firmImage"] as? String ?? "",
             )
 
             completion(.success(info))
@@ -109,7 +112,11 @@ class IndustryFirestoreService {
                 adres: data["adres"] as? String ?? "",
                 tel: data["telefon"] as? String ?? "",
                 email: data["email"] as? String ?? "",
-                web: data["firmaWebSite"] as? String ?? ""
+                web: data["firmaWebSite"] as? String ?? "",
+                calisanAd: data["calisanAd"] as? String ?? "",
+                calisanPozisyon: data["calisanPozisyon"] as? String ?? "",
+                firmImage: data["firmImage"] as? String ?? "",
+
 
             )
 
