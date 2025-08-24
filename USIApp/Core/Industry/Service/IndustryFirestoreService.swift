@@ -152,7 +152,8 @@ class IndustryFirestoreService {
                     "createdDate" : self.getCurrentDateAsString(),
                     "status" : "pending",
                     "requesterAddress" : info.adres,
-                    "requesterImage" : info.requesterImage
+                    "requesterImage" : info.requesterImage,
+                    "requesterType" : "industry"
                 ]
                 
                 Firestore.firestore()
@@ -218,7 +219,7 @@ class IndustryFirestoreService {
         
         let docRef = Firestore.firestore()
                 .collection("Requests")
-            .whereField("requesterID", isEqualTo: requesterId )
+            .whereField("requesterID", isEqualTo: requesterId)
         
         docRef.getDocuments { snapshot, error in
             if let error = error {
@@ -247,6 +248,7 @@ class IndustryFirestoreService {
                 let adminMessage = data["adminMessage"] as? String ?? ""
                 let requesterAddress = data["requesterAddress"] as? String ?? ""
                 let requesterImage = data["requesterImage"] as? String ?? ""
+                let requesterType = data["requesterType"] as? String ?? ""
 
                 
                 
@@ -264,7 +266,8 @@ class IndustryFirestoreService {
                     requesterEmail: requesterEmail,
                     requesterPhone: requesterPhone,
                     adminMessage : adminMessage,
-                    requesterImage: requesterImage
+                    requesterImage: requesterImage,
+                    requesterType: requesterType
 
                 )
             }
@@ -312,6 +315,8 @@ class IndustryFirestoreService {
                 let adminMessage = data["adminMessage"] as? String ?? ""
                 let requesterAddress = data["requesterAddress"] as? String ?? ""
                 let requesterImage = data["requesterImage"] as? String ?? ""
+                let requesterType = data["requesterType"] as? String ?? ""
+
 
 
 
@@ -332,7 +337,8 @@ class IndustryFirestoreService {
                     requesterEmail: requesterEmail,
                     requesterPhone: requesterPhone,
                     adminMessage : adminMessage,
-                    requesterImage: requesterImage
+                    requesterImage: requesterImage,
+                    requesterType: requesterType
 
                     
                 )
@@ -383,6 +389,8 @@ class IndustryFirestoreService {
                 let rejectedAcademicians = data["rejectedAcademicians"] as? [String] ?? []
                 let requesterAddress = data["requesterAddress"] as? String ?? ""
                 let requesterImage = data["requesterImage"] as? String ?? ""
+                let requesterType = data["requesterType"] as? String ?? ""
+
 
 
 
@@ -406,7 +414,8 @@ class IndustryFirestoreService {
                     adminMessage : adminMessage,
                     approvedAcademicians: approvedAcademicians,
                     rejectedAcademicians: rejectedAcademicians,
-                    requesterImage: requesterImage
+                    requesterImage: requesterImage,
+                    requesterType: requesterType
                     
                 )
             }

@@ -520,6 +520,7 @@ class FirestoreService{
                         let adminMessage = data["adminMessage"] as? String ?? ""
                         let requesterAddress = data["requesterAddress"] as? String ?? ""
                         let requesterImage = data["requesterImage"] as? String ?? ""
+                        let requesterType = data["requesterType"] as? String ?? ""
 
                         let request = RequestModel(
                             id: id,
@@ -535,7 +536,8 @@ class FirestoreService{
                             requesterEmail: requesterEmail,
                             requesterPhone: requesterPhone,
                             adminMessage: adminMessage,
-                            requesterImage: requesterImage
+                            requesterImage: requesterImage,
+                            requesterType: requesterType
                         )
 
                         fetchedRequests.append(request)

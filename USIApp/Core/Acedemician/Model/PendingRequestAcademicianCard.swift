@@ -13,18 +13,31 @@ struct PendingRequestAcademicianCard: View {
     var requestDescription: String
     var selectedCategories: [String]
     var date: String
+    var requesterImage : String
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             
             HStack(alignment: .top, spacing: 12) {
                 // Profil resmi
-                Image("ben")
-                    .resizable()
-                    .frame(width: 50, height: 50)
-                    .clipShape(Circle())
+                if let url = URL(string: requesterImage) {
+                    AsyncImage(url: url) { image in
+                        image.resizable()
+                             .scaledToFill()
+                             .frame(width: 50, height: 50)
+                             .clipShape(Circle())
+                    } placeholder: {
+                        ProgressView()
+                            .frame(width: 50, height: 50)
+                    }
+                } else {
+                    Image("DefaultProfilePhoto")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 50, height: 50)
+                        .clipShape(Circle())
+                }
                 
-                // Firma, başlık ve açıklama hizalı şekilde aynı VStack içinde
                 VStack(alignment: .leading, spacing: 6) {
                     Text(firmName)
                         .font(.headline)

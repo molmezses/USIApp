@@ -7,7 +7,7 @@
 
 import Foundation
 
-class RequestInfoViewModel: ObservableObject {
+class RequestInfoIndustryViewModel: ObservableObject {
     
     @Published var adminMessage: String = ""
     @Published var request: RequestModel?

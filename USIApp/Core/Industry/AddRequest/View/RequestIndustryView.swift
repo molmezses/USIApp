@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct RequestView: View {
+struct RequestIndustryView: View {
     
-    @EnvironmentObject var viewModel: RequestViewModel
+    @EnvironmentObject var viewModel: RequestIndustryViewModel
     @EnvironmentObject var authViewModel : IndustryAuthViewModel
     
     
@@ -40,7 +40,7 @@ struct RequestView: View {
                     } else {
                         ForEach(viewModel.requests) { request in
                             NavigationLink {
-                                RequestInfoView(request: request)
+                                RequestInfoIndustryView(request: request)
                                     .navigationBarBackButtonHidden()
                                 
                             } label: {
@@ -153,8 +153,3 @@ struct RequestView: View {
 
 
 
-
-#Preview {
-    RequestView()
-        .environmentObject(RequestViewModel())
-}

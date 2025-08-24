@@ -13,7 +13,7 @@ struct IndustryRegisterView: View {
     @FocusState private var focusedField: Bool
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var authViewModel : IndustryAuthViewModel
-    @EnvironmentObject var requestViewModel: RequestViewModel
+    @EnvironmentObject var requestViewModel: RequestIndustryViewModel
     @State var selectedTab = 1
 
     

@@ -3,6 +3,7 @@ import SwiftUI
 struct RequestInfoAdminView: View {
     var request: RequestModel
     var status: RequestStatus?
+    var requesterImage : String
     
     @Environment(\.dismiss) var dismiss
     @StateObject var viewModel  = RequestInfoAdminViewModel()
@@ -33,10 +34,23 @@ struct RequestInfoAdminView: View {
                     
                     VStack(alignment: .leading, spacing: 12) {
                         HStack(spacing: 16) {
-                            Image("ben") // Firma logosu
-                                .resizable()
-                                .frame(width: 60, height: 60)
-                                .clipShape(Circle())
+                            if let url = URL(string: requesterImage) {
+                                AsyncImage(url: url) { image in
+                                    image.resizable()
+                                         .scaledToFill()
+                                         .frame(width: 50, height: 50)
+                                         .clipShape(Circle())
+                                } placeholder: {
+                                    ProgressView()
+                                        .frame(width: 50, height: 50)
+                                }
+                            } else {
+                                Image("DefaultProfilePhoto")
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 50, height: 50)
+                                    .clipShape(Circle())
+                            }
                             
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(request.requesterName)
@@ -91,13 +105,13 @@ struct RequestInfoAdminView: View {
                                         .padding(.vertical, 6)
                                         .background(
                                             Color("usi")
-                                                .opacity(0.4) // biraz daha soft ton
+                                                .opacity(0.4)
                                         )
                                         .cornerRadius(10)
-                                        .frame(maxWidth: .infinity, alignment: .leading) // ← her hücreyi sola hizala
+                                        .frame(maxWidth: .infinity, alignment: .leading)
                                 }
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading) // ← tüm grid sola hizalı
+                            .frame(maxWidth: .infinity, alignment: .leading)
 
                             
                             

@@ -17,7 +17,6 @@ struct RequestModel:Identifiable , Codable{
     var requesterID: String
     var requesterCategories : String
     var requesterName : String
-    var eda: String?
     var requesterAddress : String
     var requesterEmail: String
     var requesterPhone: String
@@ -25,5 +24,6 @@ struct RequestModel:Identifiable , Codable{
     var approvedAcademicians: [String]?
     var rejectedAcademicians: [String]?
     var requesterImage: String?
+    var requesterType: String
     
 }

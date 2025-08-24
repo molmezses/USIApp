@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct RequestInfoView: View {
+struct RequestInfoIndustryView: View {
     var request: RequestModel
     
     @Environment(\.dismiss) var dismiss
-    @State var viewModel = RequestInfoViewModel()
+    @State var viewModel = RequestInfoIndustryViewModel()
     
     var body: some View {
         VStack(spacing: 0) {

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class RequestViewModel: ObservableObject {
+class RequestIndustryViewModel: ObservableObject {
     
     @Published var requests: [RequestModel] = []
     

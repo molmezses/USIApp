@@ -29,7 +29,7 @@ struct USIAppApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject var authViewModel = AuthViewModel()
     @StateObject var industryAuthViewModel = IndustryAuthViewModel()
-    @StateObject var requestViewModel = RequestViewModel()
+    @StateObject var requestViewModel = RequestIndustryViewModel()
     
     var body: some Scene {
         WindowGroup {

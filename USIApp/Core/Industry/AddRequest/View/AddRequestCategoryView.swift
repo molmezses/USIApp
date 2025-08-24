@@ -10,7 +10,7 @@ import SwiftUI
 
 struct AddRequestCategoryView: View {
     
-    @EnvironmentObject var viewModel: RequestViewModel
+    @EnvironmentObject var viewModel: RequestIndustryViewModel
     @EnvironmentObject var authViewModel : IndustryAuthViewModel
     @Environment(\.dismiss) var dismiss
     @State var nextPage: Bool = false
@@ -219,7 +219,4 @@ struct AddRequestCategoryView: View {
 
 
 
-#Preview {
-    AddRequestCategoryView()
-        .environmentObject(RequestViewModel())
-}
+

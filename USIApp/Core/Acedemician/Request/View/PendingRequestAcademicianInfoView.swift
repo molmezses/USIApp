@@ -45,7 +45,7 @@ struct PendingRequestAcademicianInfoView: View {
                                 .navigationBarBackButtonHidden()
                                 .foregroundStyle(.black)
                         } label: {
-                            PendingRequestAcademicianCard(firmName: request.requesterName, requestTitle: request.title, requestDescription: request.description, selectedCategories:request.selectedCategories, date: request.date)
+                            PendingRequestAcademicianCard(firmName: request.requesterName, requestTitle: request.title, requestDescription: request.description, selectedCategories:request.selectedCategories, date: request.date ,requesterImage: request.requesterImage ?? "")
                         }
                     }
 

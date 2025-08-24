@@ -51,7 +51,7 @@ struct PendingRequestView: View {
                         
                         ForEach(viewModel.pendingRequests) { request in
                             NavigationLink {
-                                RequestInfoAdminView(request: request)
+                                RequestInfoAdminView(request: request, requesterImage: request.requesterImage ?? "")
                                     .navigationBarBackButtonHidden()
                             } label: {
                                 requestCard(for: request)

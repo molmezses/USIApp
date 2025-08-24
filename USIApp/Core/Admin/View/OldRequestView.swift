@@ -49,7 +49,7 @@ struct OldRequestView: View {
                         
                         ForEach(viewModel.oldRequests) { request in
                             NavigationLink {
-                                RequestInfoAdminView(request: request)
+                                RequestInfoAdminView(request: request, requesterImage: request.requesterImage ?? "")
                                     .navigationBarBackButtonHidden()
                             } label: {
                                 requestCard(for: request)
@@ -75,10 +75,25 @@ struct OldRequestView: View {
             
             // Üst Bilgi
             HStack(alignment: .top, spacing: 12) {
-                Image("ben")
-                    .resizable()
-                    .frame(width: 50, height: 50)
-                    .clipShape(Circle())
+                
+                if let urlString = request.requesterImage,
+                          let url = URL(string: urlString) {
+                    AsyncImage(url: url) { image in
+                        image.resizable()
+                             .scaledToFill()
+                             .frame(width: 50, height: 50)
+                             .clipShape(Circle())
+                    } placeholder: {
+                        ProgressView()
+                            .frame(width: 50, height: 50)
+                    }
+                } else {
+                    Image("DefaultProfilePhoto")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 50, height: 50)
+                        .clipShape(Circle())
+                }
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(request.requesterName)

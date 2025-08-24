@@ -11,7 +11,7 @@ struct IndustryTabView: View {
     
     @Binding var selectedTab: Int
     @EnvironmentObject var authViewModel : IndustryAuthViewModel
-    @EnvironmentObject var requestViewModel : RequestViewModel
+    @EnvironmentObject var requestViewModel : RequestIndustryViewModel
 
     var body: some View {
             VStack {
@@ -20,7 +20,7 @@ struct IndustryTabView: View {
                     
                     TabView(selection: $selectedTab) {
                         
-                        RequestView()
+                        RequestIndustryView()
                             .environmentObject(authViewModel)
                             .environmentObject(requestViewModel)
                             .tabItem {

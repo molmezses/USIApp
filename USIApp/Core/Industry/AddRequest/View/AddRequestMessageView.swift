@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AddRequestMessageView: View {
     
-    @EnvironmentObject var viewModel: RequestViewModel
+    @EnvironmentObject var viewModel: RequestIndustryViewModel
     @EnvironmentObject var authViewModel : IndustryAuthViewModel
     @Environment(\.dismiss) var dismiss
     @State var navigateRequestView: Bool = false
@@ -131,7 +131,4 @@ struct AddRequestMessageView: View {
 
 
 
-#Preview {
-    AddRequestMessageView()
-        .environmentObject(RequestViewModel())
-}
+
