@@ -81,7 +81,7 @@ struct PendingRequestView: View {
             
             HStack(alignment: .top, spacing: 12) {
                 
-                if let urlString = request.firmImage,
+                if let urlString = request.requesterImage,
                           let url = URL(string: urlString) {
                     AsyncImage(url: url) { image in
                         image.resizable()
@@ -119,19 +119,19 @@ struct PendingRequestView: View {
                     .foregroundColor(.gray)
             }
             
-            // Açıklama
+            
             Text(request.description)
                 .lineLimit(4)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading) // Hiza düzeltici
+                .frame(maxWidth: .infinity, alignment: .leading)
             
-            // Tarih
+           
             Text("Tarih: \(request.date)")
                 .font(.caption2)
                 .foregroundColor(.gray)
-                .frame(maxWidth: .infinity, alignment: .leading) // Opsiyonel hizalama
+                .frame(maxWidth: .infinity, alignment: .leading)
             
             // Kategoriler
             ScrollView(.horizontal, showsIndicators: false) {

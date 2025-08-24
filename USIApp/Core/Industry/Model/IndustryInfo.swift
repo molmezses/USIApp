@@ -17,5 +17,5 @@ struct IndustryInfo {
     var web: String
     var calisanAd: String
     var calisanPozisyon: String
-    var firmImage : String
+    var requesterImage : String
 }

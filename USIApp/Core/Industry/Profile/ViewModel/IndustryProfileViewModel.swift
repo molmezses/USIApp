@@ -15,8 +15,7 @@ class IndustryProfileViewModel: ObservableObject {
     @Published var selectedImage: UIImage? = nil
     @Published var isUploading = false
     @Published var uploadProgress: Double = 0.0
-    @Published var firmImageURL: String? = nil
-
+    @Published var requesterImageURL: String? = nil
     private let storage = Storage.storage()
     private let firestore = Firestore.firestore()
 
@@ -55,10 +54,10 @@ class IndustryProfileViewModel: ObservableObject {
             let downloadURL = try await imageRef.downloadURL()
 
             try await firestore.collection("Industry").document(firmId)
-                .updateData(["firmImage": downloadURL.absoluteString])
+                .updateData(["requesterImage": downloadURL.absoluteString])
 
             DispatchQueue.main.async {
-                self.firmImageURL = downloadURL.absoluteString
+                self.requesterImageURL = downloadURL.absoluteString
             }
 
             print(" Resim başarıyla kaydedildi.")
@@ -77,7 +76,7 @@ class IndustryProfileViewModel: ObservableObject {
             switch result {
             case .success(let info):
                 DispatchQueue.main.async {
-                    self?.firmImageURL = info.firmImage
+                    self?.requesterImageURL = info.requesterImage
                 }
             case .failure(let error):
                 print("HATA loadIndustryProfileData: \(error.localizedDescription)")

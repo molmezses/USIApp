@@ -58,7 +58,7 @@ class IndustryFirestoreService {
                 web: data["firmaWebSite"] as? String ?? "",
                 calisanAd: data["calisanAd"] as? String ?? "",
                 calisanPozisyon: data["calisanPozisyon"] as? String ?? "",
-                firmImage: data["firmImage"] as? String ?? "",
+                requesterImage: data["requesterImage"] as? String ?? "",
             )
 
             completion(.success(info))
@@ -115,7 +115,7 @@ class IndustryFirestoreService {
                 web: data["firmaWebSite"] as? String ?? "",
                 calisanAd: data["calisanAd"] as? String ?? "",
                 calisanPozisyon: data["calisanPozisyon"] as? String ?? "",
-                firmImage: data["firmImage"] as? String ?? "",
+                requesterImage: data["requesterImage"] as? String ?? "",
 
 
             )
@@ -152,7 +152,7 @@ class IndustryFirestoreService {
                     "createdDate" : self.getCurrentDateAsString(),
                     "status" : "pending",
                     "requesterAddress" : info.adres,
-                    "firmImage" : info.firmImage
+                    "requesterImage" : info.requesterImage
                 ]
                 
                 Firestore.firestore()
@@ -246,7 +246,7 @@ class IndustryFirestoreService {
                 let requesterPhone = data["requesterPhone"] as? String ?? ""
                 let adminMessage = data["adminMessage"] as? String ?? ""
                 let requesterAddress = data["requesterAddress"] as? String ?? ""
-                let firmImage = data["firmImage"] as? String ?? ""
+                let requesterImage = data["requesterImage"] as? String ?? ""
 
                 
                 
@@ -264,7 +264,7 @@ class IndustryFirestoreService {
                     requesterEmail: requesterEmail,
                     requesterPhone: requesterPhone,
                     adminMessage : adminMessage,
-                    firmImage: firmImage
+                    requesterImage: requesterImage
 
                 )
             }
@@ -311,7 +311,7 @@ class IndustryFirestoreService {
                 let requesterPhone = data["requesterPhone"] as? String ?? ""
                 let adminMessage = data["adminMessage"] as? String ?? ""
                 let requesterAddress = data["requesterAddress"] as? String ?? ""
-                let firmImage = data["firmImage"] as? String ?? ""
+                let requesterImage = data["requesterImage"] as? String ?? ""
 
 
 
@@ -332,7 +332,7 @@ class IndustryFirestoreService {
                     requesterEmail: requesterEmail,
                     requesterPhone: requesterPhone,
                     adminMessage : adminMessage,
-                    firmImage: firmImage
+                    requesterImage: requesterImage
 
                     
                 )
@@ -382,7 +382,7 @@ class IndustryFirestoreService {
                 let approvedAcademicians = data["approvedAcademicians"] as? [String] ?? []
                 let rejectedAcademicians = data["rejectedAcademicians"] as? [String] ?? []
                 let requesterAddress = data["requesterAddress"] as? String ?? ""
-                let firmImage = data["firmImage"] as? String ?? ""
+                let requesterImage = data["requesterImage"] as? String ?? ""
 
 
 
@@ -406,7 +406,7 @@ class IndustryFirestoreService {
                     adminMessage : adminMessage,
                     approvedAcademicians: approvedAcademicians,
                     rejectedAcademicians: rejectedAcademicians,
-                    firmImage: firmImage
+                    requesterImage: requesterImage
                     
                 )
             }

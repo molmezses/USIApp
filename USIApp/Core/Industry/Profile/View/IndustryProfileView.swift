@@ -18,7 +18,6 @@ struct IndustryProfileView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                // Üst Başlık
                 HStack {
                     Spacer()
                     Text("Sanayi Profili")
@@ -32,7 +31,6 @@ struct IndustryProfileView: View {
                 ScrollView {
                     VStack(spacing: 16) {
                         VStack {
-                            // Profil Fotoğrafı
                             ZStack(alignment: .bottomTrailing) {
                                 if let selectedImage = viewModel.selectedImage {
                                     Image(uiImage: selectedImage)
@@ -40,7 +38,7 @@ struct IndustryProfileView: View {
                                         .scaledToFill()
                                         .frame(width: 140, height: 140)
                                         .clipShape(Circle())
-                                } else if let urlString = viewModel.firmImageURL,
+                                } else if let urlString = viewModel.requesterImageURL,
                                           let url = URL(string: urlString) {
                                     AsyncImage(url: url) { image in
                                         image.resizable()

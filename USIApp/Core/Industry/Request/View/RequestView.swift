@@ -88,12 +88,12 @@ struct RequestView: View {
     func requestCard(for request: RequestModel) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             
-            // Başlık ve Sil Butonu
             HStack(alignment: .center) {
                 Text(request.title)
-                    .font(.title3)
+                    .font(.body)
                     .fontWeight(.semibold)
                     .foregroundColor(.primary)
+                    .multilineTextAlignment(.leading)
 
                 Spacer()
 
@@ -111,7 +111,7 @@ struct RequestView: View {
             
             // Açıklama
             Text(request.description)
-                .font(.body)
+                .font(.subheadline)
                 .foregroundColor(.secondary)
                 .lineLimit(3)
                 .multilineTextAlignment(.leading)

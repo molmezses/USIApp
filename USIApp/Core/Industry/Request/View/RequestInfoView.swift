@@ -145,15 +145,26 @@ struct RequestInfoView: View {
                     VStack(alignment: .leading, spacing: 16) {
                         
                         
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Talep Başlığı")
+                                .font(.body.bold())
+                                .frame(maxWidth: .infinity , alignment:.leading)
+                                .multilineTextAlignment(.leading)
+                            Text(request.title)
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
                         
-                        Text(request.title)
-                            .font(.title2.bold())
+                        
+                        
                         
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Açıklama")
-                                .font(.subheadline.bold())
+                                .font(.body.bold())
                                 .frame(maxWidth: .infinity , alignment:.leading)
+                                .multilineTextAlignment(.leading)
                             Text(request.description)
+                                .font(.subheadline)
                                 .foregroundColor(.secondary)
                         }
                         
