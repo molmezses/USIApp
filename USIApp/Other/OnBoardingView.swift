@@ -15,25 +15,21 @@ struct OnBoardingView: View {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 14) {
                     
-                    // MARK: - Header Image
                     Image("launch")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 160, height: 160)
                         .padding(.top, 20)
                     
-                    // MARK: - Title
                     Text("Buluşturuyoruz..")
                         .font(.system(size: 28, weight: .bold))
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
                     
-                    // MARK: - Subtitle
                     Text("İnovasyonu ve işbirliğini teşvik eden\n10 üniversite, 1000 akademisyen ve 500 öğrencidenoluşan güçlü bir ağa katılın.")
                         .foregroundColor(.gray)
                         .multilineTextAlignment(.center)
                     
-                    // MARK: - Stats
                     HStack(spacing: 30) {
                         statBox(number: "8+", label: "Üniversite", color: .black)
                         statBox(number: "1000+", label: "Akademisyen", color: .black)
@@ -44,7 +40,6 @@ struct OnBoardingView: View {
                     Divider()
                         .padding(.horizontal)
                     
-                    // MARK: - Üniversiteler
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Üniversiteler")
                             .font(.title2)
@@ -67,7 +62,6 @@ struct OnBoardingView: View {
                         }
                     }
                     
-                    // MARK: - Sanayi Ortakları
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Sanayi Ortakları")
                             .font(.title2)
@@ -115,7 +109,6 @@ struct OnBoardingView: View {
         }
     }
     
-    // MARK: - Stat Box Component
     private func statBox(number: String, label: String, color: Color) -> some View {
         VStack(spacing: 6) {
             Text(number)
