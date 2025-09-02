@@ -147,7 +147,6 @@ class FirestoreService{
                 return
             }
             
-            // Artık id sabit, fetch etmene gerek yok
             let firmaDictArray = data["firmalar"] as? [[String: Any]] ?? []
             let firmalar = firmaDictArray.map { dict in
                 Firma(
@@ -158,7 +157,7 @@ class FirestoreService{
             }
 
             let info = AcademicianInfo(
-                id: id, // 👈 burada parametreyi kullan
+                id: id,
                 email: data["email"] as? String ?? "",
                 unvan: data["unvan"] as? String ?? "",
                 program: data["program"] as? String ?? "",
@@ -612,6 +611,66 @@ class FirestoreService{
 
             }
         }
+    }
+    
+    func getCurrentDateAsString() -> String {
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        return formatter.string(from: date)
+    }
+    
+    func saveRequest(requestTitle: String , requestMessage: String, requestCategory: String ,completion: @escaping (Error?) -> Void){
+        
+        
+        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
+            switch result {
+            case .success(let id):
+                
+                FirestoreService.shared.fetchAcademicianInfo(byId: id) { result in
+                    switch result {
+                    case .success(let info):
+                        
+                        let document: [String: Any] = [
+                            "requesterName" : info.adSoyad,
+                            "requesterCategories" : info.uzmanlikAlani,
+                            "requesterEmail" : info.email,
+                            "requesterID" : id,
+                            "selectedCategories" : requestCategory,
+                            "requestTitle" : requestTitle,
+                            "requestMessage" : requestMessage,
+                            "createdDate" : self.getCurrentDateAsString(),
+                            "status" : "pending",
+                            "requesterAddress" : "",
+                            "requesterImage" : info.photo,
+                            "requesterType" : "academician"
+                        ]
+                        
+                        Firestore.firestore()
+                            .collection("Requests")
+                            .addDocument(data: document) { error in
+                                if let error = error {
+                                    print("Hata: \(error.localizedDescription)")
+                                } else {
+                                    print("Başarılı")
+                                }
+                                completion(error)
+                            }
+                        
+                    case .failure(let failure):
+                        print("Hata : saverequets : \(failure.localizedDescription)")
+                    }
+                }
+                
+            case .failure(let failure):
+                print("AcademicianId çekilemedi \(failure.localizedDescription)")
+            }
+        }
+        
+
+        
+        
+        
     }
 
     

@@ -227,7 +227,9 @@ struct AddAcademicianRequestCategoryView: View {
                     Spacer()
                     
                     NavigationLink {
-                        OnBoardingView()
+                        AddAcademicianRequestView()
+                            .environmentObject(academicianRequestViewModel)
+                            .navigationBarBackButtonHidden()
                     } label: {
                         Text("İleri")
                             .fontWeight(.semibold)
