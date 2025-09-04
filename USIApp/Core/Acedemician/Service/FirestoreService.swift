@@ -520,6 +520,7 @@ class FirestoreService{
                         let requesterAddress = data["requesterAddress"] as? String ?? ""
                         let requesterImage = data["requesterImage"] as? String ?? ""
                         let requesterType = data["requesterType"] as? String ?? ""
+                        let requestCategory = data["requestCategory"] as? String ?? "Kategori bulunamadı"
 
                         let request = RequestModel(
                             id: id,
@@ -536,7 +537,8 @@ class FirestoreService{
                             requesterPhone: requesterPhone,
                             adminMessage: adminMessage,
                             requesterImage: requesterImage,
-                            requesterType: requesterType
+                            requesterType: requesterType,
+                            requestCategory:requestCategory,
                         )
 
                         fetchedRequests.append(request)
@@ -643,7 +645,8 @@ class FirestoreService{
                             "status" : "pending",
                             "requesterAddress" : "",
                             "requesterImage" : info.photo,
-                            "requesterType" : "academician"
+                            "requesterType" : "academician",
+                            "requesterPhone" : info.personelTel != "" ? info.personelTel : info.kurumsalTel == "" ? "Bulunamadı" : info.kurumsalTel
                         ]
                         
                         Firestore.firestore()

@@ -153,7 +153,8 @@ class IndustryFirestoreService {
                     "status" : "pending",
                     "requesterAddress" : info.adres,
                     "requesterImage" : info.requesterImage,
-                    "requesterType" : "industry"
+                    "requesterType" : "industry",
+                    "requesterPhone": info.tel
                 ]
                 
                 Firestore.firestore()

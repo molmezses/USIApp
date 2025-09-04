@@ -141,14 +141,26 @@ struct PendingRequestView: View {
             // Kategoriler
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
-                    ForEach(request.selectedCategories, id: \.self) { category in
-                        Text(category)
+                    if request.requesterType == "industry" {
+                        ForEach(request.selectedCategories, id: \.self) { category in
+                            Text(category)
+                                .font(.caption)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 6)
+                                .background(Color("usi").opacity(0.1))
+                                .foregroundColor(.blue)
+                                .cornerRadius(8)
+                        }
+                    } else if request.requesterType == "academician" {
+
+                        Text(request.requestCategory ?? "Kategori bulunamadı")
                             .font(.caption)
                             .padding(.horizontal, 10)
                             .padding(.vertical, 6)
                             .background(Color("usi").opacity(0.1))
                             .foregroundColor(.blue)
                             .cornerRadius(8)
+
                     }
                 }
             }

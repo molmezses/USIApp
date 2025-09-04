@@ -3,17 +3,19 @@ import SwiftUI
 struct RequestInfoAdminView: View {
     var request: RequestModel
     var status: RequestStatus?
-    var requesterImage : String
-    
+    var requesterImage: String
+
     @Environment(\.dismiss) var dismiss
-    @StateObject var viewModel  = RequestInfoAdminViewModel()
+    @StateObject var viewModel = RequestInfoAdminViewModel()
     @FocusState var focusedField: Bool
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Başlık
             HStack {
-                Button { dismiss() } label: {
+                Button {
+                    dismiss()
+                } label: {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundColor(.white)
@@ -27,19 +29,18 @@ struct RequestInfoAdminView: View {
             }
             .padding()
             .background(Color("usi"))
-            
+
             ScrollView {
                 VStack(spacing: 20) {
-                    
-                    
+
                     VStack(alignment: .leading, spacing: 12) {
                         HStack(spacing: 16) {
                             if let url = URL(string: requesterImage) {
                                 AsyncImage(url: url) { image in
                                     image.resizable()
-                                         .scaledToFill()
-                                         .frame(width: 50, height: 50)
-                                         .clipShape(Circle())
+                                        .scaledToFill()
+                                        .frame(width: 50, height: 50)
+                                        .clipShape(Circle())
                                 } placeholder: {
                                     ProgressView()
                                         .frame(width: 50, height: 50)
@@ -51,23 +52,25 @@ struct RequestInfoAdminView: View {
                                     .frame(width: 50, height: 50)
                                     .clipShape(Circle())
                             }
-                            
+
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(request.requesterName)
-                                    .frame(maxWidth: .infinity , alignment: .leading)
+                                    .frame(
+                                        maxWidth: .infinity,
+                                        alignment: .leading
+                                    )
                                     .font(.headline)
-                                Text(request.requesterType)
+                                Text(request.requesterType == "industry" ? "Sanayi" : request.requesterType == "student" ? "Öğrenci" : "Akademisyen")
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
                                 Text("📧 \(request.requesterEmail)")
                                     .font(.footnote)
                                     .foregroundColor(.secondary)
-                                
-                                if request.requesterType == "industry"{
-                                    Text("📞 \(request.requesterPhone)")
-                                        .font(.footnote)
-                                        .foregroundColor(.secondary)
-                                }
+
+                                Text("📞 \(request.requesterPhone)")
+                                    .font(.footnote)
+                                    .foregroundColor(.secondary)
+
                             }
                         }
                     }
@@ -75,33 +78,43 @@ struct RequestInfoAdminView: View {
                     .background(Color.white)
                     .cornerRadius(10)
                     .shadow(radius: 2)
-                    
-                    
+
                     VStack(alignment: .leading, spacing: 16) {
                         Text(request.title)
                             .font(.title3.bold())
-                        
+
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Açıklama")
                                 .font(.subheadline.bold())
                             Text(request.description)
                                 .foregroundColor(.secondary)
                         }
-                        
+
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Oluşturulma Tarihi")
                                 .font(.subheadline.bold())
                             Text(request.date)
                                 .foregroundColor(.gray)
                         }
-                        
-                        if request.requesterType == "industry"{
+
+                        if request.requesterType == "industry" {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("Kategoriler")
                                     .font(.subheadline.bold())
-                                
-                                LazyVGrid(columns: [GridItem(.adaptive(minimum: 100), spacing: 8)], spacing: 8) {
-                                    ForEach(request.selectedCategories, id: \.self) { category in
+
+                                LazyVGrid(
+                                    columns: [
+                                        GridItem(
+                                            .adaptive(minimum: 100),
+                                            spacing: 8
+                                        )
+                                    ],
+                                    spacing: 8
+                                ) {
+                                    ForEach(
+                                        request.selectedCategories,
+                                        id: \.self
+                                    ) { category in
                                         Text(category)
                                             .font(.caption)
                                             .foregroundColor(.black)
@@ -112,20 +125,20 @@ struct RequestInfoAdminView: View {
                                                     .opacity(0.4)
                                             )
                                             .cornerRadius(10)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .frame(
+                                                maxWidth: .infinity,
+                                                alignment: .leading
+                                            )
                                     }
                                 }
                                 .frame(maxWidth: .infinity, alignment: .leading)
 
-                                
-                                
-
                             }
-                        }else if request.requesterType == "academician"{
+                        } else if request.requesterType == "academician" {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("Talep Kategorisi")
                                     .font(.subheadline.bold())
-                                
+
                                 Text(request.requestCategory ?? "")
                                     .font(.caption)
                                     .foregroundColor(.black)
@@ -136,60 +149,60 @@ struct RequestInfoAdminView: View {
                                             .opacity(0.4)
                                     )
                                     .cornerRadius(10)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                                
-                                
+                                    .frame(
+                                        maxWidth: .infinity,
+                                        alignment: .leading
+                                    )
 
                             }
                         }
-                        
+
                         Divider()
-                        
-                        
-                        
-                        if request.status == .pending{
+
+                        if request.status == .pending {
                             RequestAnswer()
-                        }else{
+                        } else {
                             SelectedAcademicianView()
                         }
-                        
-                        
+
                     }
                     .padding()
                     .background(Color.white)
                     .cornerRadius(10)
                     .shadow(radius: 2)
-                    
-                  
-                    
+
                 }
                 .padding()
             }
             .background(Color(.systemGroupedBackground))
         }
-        .navigationDestination(isPresented: $viewModel.destinated, destination: {
-            PendingRequestView()
-                .navigationBarBackButtonHidden()
-        })
+        .navigationDestination(
+            isPresented: $viewModel.destinated,
+            destination: {
+                PendingRequestView()
+                    .navigationBarBackButtonHidden()
+            }
+        )
         .onTapGesture {
             focusedField = false
         }
     }
-    
-    
+
     func SelectedAcademicianView() -> some View {
         VStack {
             Text("Atanan akedemisyenler :")
                 .font(.subheadline.bold())
-                .frame(maxWidth: .infinity , alignment: .leading)
-            
-            if !viewModel.isLoadingSelectedAcademician{
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            if !viewModel.isLoadingSelectedAcademician {
                 ForEach(viewModel.fetchedSelectedAcademicians) { academicians in
-                    AcademicianRowReadOnly(request: request, academician: academicians)
-                        .foregroundStyle(.black)
+                    AcademicianRowReadOnly(
+                        request: request,
+                        academician: academicians
+                    )
+                    .foregroundStyle(.black)
                 }
-            }else{
+            } else {
                 ProgressView()
             }
         }
@@ -197,37 +210,42 @@ struct RequestInfoAdminView: View {
             viewModel.fetchAcademicianSelectedAdmin(documentId: request.id)
         }
     }
-    
-    
-    func RequestAnswer() -> some View{
+
+    func RequestAnswer() -> some View {
         VStack {
-                Text("Mesajınız :")
-                    .font(.subheadline.bold())
-                    .frame(maxWidth: .infinity , alignment: .leading)
-                ZStack(alignment: .topLeading) {
-                    if viewModel.adminMessage == "" {
-                        Text("Mesajınızı buraya yazınız...")
-                            .foregroundColor(.gray)
-                            .padding(EdgeInsets(top: 12, leading: 16, bottom: 0, trailing: 0))
-                    }
-                    TextEditor(text: $viewModel.adminMessage)
-                        .frame(height: 80)
-                        .padding(8)
-                        .background(Color.white)
-                        .cornerRadius(8)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.gray.opacity(0.3))
+            Text("Mesajınız :")
+                .font(.subheadline.bold())
+                .frame(maxWidth: .infinity, alignment: .leading)
+            ZStack(alignment: .topLeading) {
+                if viewModel.adminMessage == "" {
+                    Text("Mesajınızı buraya yazınız...")
+                        .foregroundColor(.gray)
+                        .padding(
+                            EdgeInsets(
+                                top: 12,
+                                leading: 16,
+                                bottom: 0,
+                                trailing: 0
+                            )
                         )
-                        .focused($focusedField)
                 }
-            
-            
+                TextEditor(text: $viewModel.adminMessage)
+                    .frame(height: 80)
+                    .padding(8)
+                    .background(Color.white)
+                    .cornerRadius(8)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.gray.opacity(0.3))
+                    )
+                    .focused($focusedField)
+            }
+
             HStack(spacing: 16) {
                 Button {
                     viewModel.rejectRequest(documentId: request.id)
                 } label: {
-                   VStack{
+                    VStack {
                         Label("Reddet", systemImage: "xmark")
                             .frame(maxWidth: .infinity)
                     }
@@ -236,27 +254,26 @@ struct RequestInfoAdminView: View {
                     .foregroundColor(.white)
                     .cornerRadius(10)
                 }
-                
+
                 NavigationLink {
                     PendingRequestSelectAcademicianView(requestId: request.id)
                         .environmentObject(viewModel)
                         .navigationBarBackButtonHidden()
                 } label: {
-                    VStack{
-                         Label("Kabul Et", systemImage: "checkmark")
-                             .frame(maxWidth: .infinity)
-                     }
-                     .padding()
-                     .background(Color.green.opacity(0.9))
-                     .foregroundColor(.white)
-                     .cornerRadius(10)
+                    VStack {
+                        Label("Kabul Et", systemImage: "checkmark")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .padding()
+                    .background(Color.green.opacity(0.9))
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
                 }
 
             }
         }
     }
 }
-
 
 struct AcademicianRowReadOnly: View {
     var request: RequestModel
@@ -269,10 +286,9 @@ struct AcademicianRowReadOnly: View {
                 .foregroundStyle(.black)
                 .navigationBarBackButtonHidden()
         } label: {
-            
-            
+
             VStack {
-                
+
                 HStack(alignment: .top, spacing: 12) {
                     if let url = URL(string: academician.photo) {
                         AsyncImage(url: url) { phase in
@@ -281,7 +297,10 @@ struct AcademicianRowReadOnly: View {
                                     .resizable()
                                     .scaledToFill()
                             } else if phase.error != nil {
-                                Image(systemName: "person.crop.circle.badge.exclamationmark")
+                                Image(
+                                    systemName:
+                                        "person.crop.circle.badge.exclamationmark"
+                                )
                             } else {
                                 ProgressView()
                             }
@@ -306,7 +325,7 @@ struct AcademicianRowReadOnly: View {
                     }
 
                     Spacer()
-                    
+
                     VStack {
                         if viewModel.status == "pending" {
                             VStack {
@@ -345,14 +364,14 @@ struct AcademicianRowReadOnly: View {
                         }
                     }
 
-                    
-                    
-                    
                 }
-                if !(academician.uzmanlikAlani == [""] || academician.uzmanlikAlani.isEmpty) {
+                if !(academician.uzmanlikAlani == [""]
+                    || academician.uzmanlikAlani.isEmpty)
+                {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 6) {
-                            ForEach(academician.uzmanlikAlani, id: \.self) { item in
+                            ForEach(academician.uzmanlikAlani, id: \.self) {
+                                item in
                                 Text(item)
                                     .font(.caption2)
                                     .lineLimit(1)
@@ -368,7 +387,10 @@ struct AcademicianRowReadOnly: View {
                 }
             }
             .onAppear {
-                viewModel.loadAcademicianRequestStatus(requestId: request.id, academicianId: academician.id)
+                viewModel.loadAcademicianRequestStatus(
+                    requestId: request.id,
+                    academicianId: academician.id
+                )
             }
             .padding()
             .background(Color.white)
@@ -379,4 +401,3 @@ struct AcademicianRowReadOnly: View {
         .foregroundStyle(.black)
     }
 }
-

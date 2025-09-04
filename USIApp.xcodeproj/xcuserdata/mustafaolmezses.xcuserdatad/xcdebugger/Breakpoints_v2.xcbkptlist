@@ -30,8 +30,8 @@
             filePath = "USIApp/Core/Acedemician/Service/FirestoreService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "542"
-            endingLineNumber = "542"
+            startingLineNumber = "544"
+            endingLineNumber = "544"
             landmarkName = "fetchAcademicianPendingRequests(completion:)"
             landmarkType = "7">
          </BreakpointContent>
