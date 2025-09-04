@@ -316,6 +316,9 @@ class IndustryFirestoreService {
                 let requesterAddress = data["requesterAddress"] as? String ?? ""
                 let requesterImage = data["requesterImage"] as? String ?? ""
                 let requesterType = data["requesterType"] as? String ?? ""
+                let requestCategory = data["requestCategory"] as? String ?? ""
+                
+
 
 
 
@@ -338,7 +341,8 @@ class IndustryFirestoreService {
                     requesterPhone: requesterPhone,
                     adminMessage : adminMessage,
                     requesterImage: requesterImage,
-                    requesterType: requesterType
+                    requesterType: requesterType,
+                    requestCategory: requestCategory,
 
                     
                 )
@@ -390,6 +394,8 @@ class IndustryFirestoreService {
                 let requesterAddress = data["requesterAddress"] as? String ?? ""
                 let requesterImage = data["requesterImage"] as? String ?? ""
                 let requesterType = data["requesterType"] as? String ?? ""
+                let requestCategory = data["requestCategory"] as? String ?? ""
+
 
 
 
@@ -415,7 +421,9 @@ class IndustryFirestoreService {
                     approvedAcademicians: approvedAcademicians,
                     rejectedAcademicians: rejectedAcademicians,
                     requesterImage: requesterImage,
-                    requesterType: requesterType
+                    requesterType: requesterType,
+                    requestCategory: requestCategory,
+
                     
                 )
             }

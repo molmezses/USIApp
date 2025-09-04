@@ -25,5 +25,6 @@ struct RequestModel:Identifiable , Codable{
     var rejectedAcademicians: [String]?
     var requesterImage: String?
     var requesterType: String
+    var requestCategory : String?
     
 }

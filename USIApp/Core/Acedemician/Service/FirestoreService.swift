@@ -636,7 +636,7 @@ class FirestoreService{
                             "requesterCategories" : info.uzmanlikAlani,
                             "requesterEmail" : info.email,
                             "requesterID" : id,
-                            "selectedCategories" : requestCategory,
+                            "requestCategory" : requestCategory,
                             "requestTitle" : requestTitle,
                             "requestMessage" : requestMessage,
                             "createdDate" : self.getCurrentDateAsString(),

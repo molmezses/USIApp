@@ -108,9 +108,14 @@ struct PendingRequestView: View {
                         .bold()
                         .foregroundStyle(.black)
                     
-                    Text(request.requesterCategories)
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
+                    Text(request.requesterType == "industry" ? "Sanayi" : request.requesterType == "academician" ? "Akademisyen" : "Öğrenci")
+                        .font(.footnote)
+                        .foregroundColor(.white)
+                        .padding(2)
+                        .background(
+                            RoundedRectangle(cornerRadius: 4)
+                                .foregroundStyle(request.requesterType == "industry" ? Color("sari").opacity(0.8) : request.requesterType == "academician" ? Color("usi").opacity(0.8) : .green.opacity(0.8))
+                        )
                 }
                 
                 Spacer()

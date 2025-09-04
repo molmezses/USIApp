@@ -56,15 +56,18 @@ struct RequestInfoAdminView: View {
                                 Text(request.requesterName)
                                     .frame(maxWidth: .infinity , alignment: .leading)
                                     .font(.headline)
-                                Text(request.requesterCategories)
+                                Text(request.requesterType)
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
                                 Text("📧 \(request.requesterEmail)")
                                     .font(.footnote)
                                     .foregroundColor(.secondary)
-                                Text("📞 \(request.requesterPhone)")
-                                    .font(.footnote)
-                                    .foregroundColor(.secondary)
+                                
+                                if request.requesterType == "industry"{
+                                    Text("📞 \(request.requesterPhone)")
+                                        .font(.footnote)
+                                        .foregroundColor(.secondary)
+                                }
                             }
                         }
                     }
@@ -92,30 +95,53 @@ struct RequestInfoAdminView: View {
                                 .foregroundColor(.gray)
                         }
                         
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Kategoriler")
-                                .font(.subheadline.bold())
-                            
-                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 100), spacing: 8)], spacing: 8) {
-                                ForEach(request.selectedCategories, id: \.self) { category in
-                                    Text(category)
-                                        .font(.caption)
-                                        .foregroundColor(.black)
-                                        .padding(.horizontal, 12)
-                                        .padding(.vertical, 6)
-                                        .background(
-                                            Color("usi")
-                                                .opacity(0.4)
-                                        )
-                                        .cornerRadius(10)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
+                        if request.requesterType == "industry"{
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Kategoriler")
+                                    .font(.subheadline.bold())
+                                
+                                LazyVGrid(columns: [GridItem(.adaptive(minimum: 100), spacing: 8)], spacing: 8) {
+                                    ForEach(request.selectedCategories, id: \.self) { category in
+                                        Text(category)
+                                            .font(.caption)
+                                            .foregroundColor(.black)
+                                            .padding(.horizontal, 12)
+                                            .padding(.vertical, 6)
+                                            .background(
+                                                Color("usi")
+                                                    .opacity(0.4)
+                                            )
+                                            .cornerRadius(10)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                    }
                                 }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+
+                                
+                                
+
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }else if request.requesterType == "academician"{
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Talep Kategorisi")
+                                    .font(.subheadline.bold())
+                                
+                                Text(request.requestCategory ?? "")
+                                    .font(.caption)
+                                    .foregroundColor(.black)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(
+                                        Color("usi")
+                                            .opacity(0.4)
+                                    )
+                                    .cornerRadius(10)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
 
-                            
-                            
+                                
+                                
 
+                            }
                         }
                         
                         Divider()
