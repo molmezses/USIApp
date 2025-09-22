@@ -24,11 +24,14 @@ class LoginViewModel: ObservableObject{
                 switch result {
                 case .success(let session):
                     authViewModel.userSession = session
+                    self.email = ""
+                    self.password = ""
                 case .failure(let error):
                     if let nsError = error as NSError? {
                         self.errorMessage = self.translateFirebaseError(nsError)
                     }
                     self.showAlert = true
+                    print("Hatalı giriş")
                 }
             }
         }

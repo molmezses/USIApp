@@ -18,69 +18,95 @@ struct VerficationView: View {
     
     
     var body: some View {
-        NavigationStack {
+        HStack {
+            Button {
+                
+            } label: {
+                Image(systemName: "chevron.left")
+                    .imageScale(.large)
+                    .foregroundStyle(.black)
+            }
+
+            Spacer()
+        }
+        .padding(.top)
+        .padding(.leading)
+        ScrollView {
             VStack {
                 
-                HeaderView()
-                
                 Spacer()
-                
-                VStack(spacing: 30) {
-                    Spacer()
-                    
-                    Image(systemName: "envelope.badge.shield.half.filled.fill")
+                VStack {
+                    Image("usiLogo")
                         .resizable()
-                        .frame(width: 120, height: 120)
-                        .foregroundStyle(.gray)
-                        .padding(.leading)
+                        .scaledToFit()
+                        .frame(width: 140, height: 140)
                     
-                    Text("Hesabını doğrulaman için mailine bir doğrulama linki gönderdik. Lütfen spam klasörünü de kontrol et ve doğrulama linkine tıkla.")
+                    Text("Hesap Doğrulama")
+                        .font(.title2)
+                        .bold()
+                }
+                .padding(.bottom ,20)
+
+                
+                VStack(spacing: 12){
+                    Image("mailLogo")
+                        .resizable()
+                        .frame(width: 160, height: 160)
+                    
+                    Text("Hesabınızı doğrulamanız için Mail adresinize bir doğrulama maili gönderdik. Lütfen Spam klasörünü kontrol edip onayladıktan sonra Onayladım butonuna basınız.")
                         .multilineTextAlignment(.center)
-                        .foregroundStyle(.gray)
-                    
-                    VStack {
-                        if viewModel.isChecking{
-                            ProgressView("Kontrol Ediliyor")
-                        }else{
-                            Button {
-                                viewModel.checkVerificationStatus(authViewModel: authViewModel)
-                            } label: {
-                                Text("Hesabımı Doğruladım")
-                                    .font(.headline)
-                                    .foregroundStyle(.white)
-                                    .frame(height: 55)
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color("sari"))
-                                    .mask(RoundedRectangle(cornerRadius: 10))
-                            }
+                        .padding()
+                }
+                .padding(.bottom)
+                
+                VStack {
+                    if viewModel.isChecking{
+                        ProgressView("Kontrol Ediliyor")
+                    }else{
+                        Button {
+                            viewModel.checkVerificationStatus(authViewModel: authViewModel)
+                        } label: {
+                            Text("Hesabımı Doğruladım")
+                                .font(.headline)
+                                .foregroundStyle(.white)
+                                .frame(height: 55)
+                                .frame(maxWidth: .infinity)
+                                .background(Color("logoBlue"))
+                                .mask(RoundedRectangle(cornerRadius: 10))
                         }
-                        
-                        if !(viewModel.message.isEmpty) {
-                            Text(viewModel.message)
-                                .foregroundColor(.red)
-                                .multilineTextAlignment(.center)
-                                .padding()
-                        }
-                        
-                        Spacer()
                     }
+                    
+                    if !(viewModel.message.isEmpty) {
+                        Text(viewModel.message)
+                            .foregroundColor(.red)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                    }
+                    
+                    Spacer()
                 }
-                .padding(30)
+                .padding()
+                
+                
+                VStack {
+                    Text("Kayıt Ol'a tıkladıktan sonra ")
+                                + Text("Terms of Service")
+                                    .foregroundColor(Color("logoBlue"))
+                                + Text(" ve")
+                                + Text("Privacy Policy")
+                                    .foregroundColor(Color("logoBlue"))
+                                + Text(" kabul etmiş olursunuz")
+                }
                 .multilineTextAlignment(.center)
-                .onTapGesture {
-                    focusedField = false
-                }
+                .font(.footnote)
+                .padding()
                 
                 Spacer()
-                
-                FooterView()
-                
-                
+                Spacer()
+                    
+                    
             }
-            .ignoresSafeArea()
-            .onTapGesture {
-                focusedField = false
-            }
+            
         }
         .navigationDestination(isPresented: $viewModel.navigateToProfile) {
             AcademicianTabView()

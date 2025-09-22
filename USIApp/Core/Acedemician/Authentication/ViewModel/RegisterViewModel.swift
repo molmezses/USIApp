@@ -21,7 +21,7 @@ class RegisterViewModel: ObservableObject{
             return false
         }
         
-        guard email.hasSuffix("@ahievran.edu.tr")  else {
+        guard email.hasSuffix("@gmail.com")  else {
             self.errorMessage = "Sadece @ahievran.edu.tr uzantılı e-posta adresleri ile kayıt olabilirsiniz."
             return false
         }
@@ -40,10 +40,17 @@ class RegisterViewModel: ObservableObject{
             case .success(_):
                 print("doğrulama gönderildi")
                 self.navigateToVerificationView = true
+                self.clearFields()
             case .failure(let error):
                 self.errorMessage = error.localizedDescription
             }
         }
+    }
+    
+     func clearFields(){
+        self.email = ""
+        self.password = ""
+        self.confirmPassword = ""
     }
     
     

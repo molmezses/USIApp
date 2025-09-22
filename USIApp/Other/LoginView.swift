@@ -12,58 +12,81 @@ struct LoginView: View {
     var body: some View {
         NavigationStack{
             VStack {
-                
-                HeaderView()
-                
                 Spacer()
-                
-                // Butonlar
-                VStack(spacing: 20) {
-                    
-                    Image("ttologo")
+                VStack {
+                    Image("usiLogo")
                         .resizable()
-                        .frame(width: 330, height: 150)
-                        .padding(.bottom, 20)
+                        .scaledToFit()
+                        .frame(width: 160, height: 160)
                     
-                    NavigationLink {
-                        IndustryLoginView()
-                            .navigationBarBackButtonHidden()
-                    } label: {
-                        Text("Sanayi Girişi")
-                            .font(.headline)
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color("sari"))
-                            .cornerRadius(15)
-                            .shadow(radius: 5)
-                    }
-                    
+                    Text("USIApp")
+                        .font(.title)
+                        .bold()
+                }
+                .padding(.bottom ,40)
+                VStack {
+                    Text("USIApp'e Hoşgeldiniz")
+                        .font(.headline)
+                    Text("Lütfen devam etmek için hesabınızı seçiniz.")
+                        .font(.subheadline)
+                        
+                }
+                .padding(.bottom, 20)
+                
+                VStack(spacing: 24){
                     NavigationLink {
                         AcedemicianLoginView()
                             .navigationBarBackButtonHidden()
                     } label: {
-                        Text("Akademisyen Girişi")
-                            .font(.headline)
-                            .foregroundStyle(.white)
+                        Text("Akademisyen")
                             .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color("sari"))
-                            .cornerRadius(15)
-                            .shadow(radius: 5)
+                            .foregroundColor(.black)
+                            .padding(16)
+                            .background(Color("grayButtonColor"))
+                            .cornerRadius(10)
                     }
-                    
+                    .padding(.horizontal)
+                    NavigationLink {
+                        
+                    } label: {
+                        Text("Öğrenci")
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(.black)
+                            .padding(16)
+                            .background(Color("grayButtonColor"))
+                            .cornerRadius(10)
+                    }
+                    .padding(.horizontal)
+                    NavigationLink {
+                        IndustryLoginView()
+                            .navigationBarBackButtonHidden()
+                    } label: {
+                        Text("Sanayi")
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(.black)
+                            .padding(16)
+                            .background(Color("grayButtonColor"))
+                            .cornerRadius(10)
+                    }
+                    .padding(.horizontal)
+
                 }
-                .padding(.horizontal, 32)
                 
+                VStack {
+                    Text("Tüm proje fikirleriniz ve hesap bilgileriniz ")
+                                + Text("USIApp")
+                                    .foregroundColor(Color("logoBlue"))
+                                + Text(" tarafından korunmaktadır")
+                }
+                .multilineTextAlignment(.center)
+                .font(.footnote)
+                .padding()
                 
                 Spacer()
-                
-                FooterView()
-                
-                
+                Spacer()
+                    
+                    
             }
-            .ignoresSafeArea()
         }
     }
 }

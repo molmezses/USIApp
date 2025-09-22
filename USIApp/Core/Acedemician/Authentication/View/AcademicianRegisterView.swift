@@ -13,55 +13,71 @@ struct AcademicianRegisterView: View {
     @Environment(\.dismiss) var dismiss
     @State private var showAlert = false
     @FocusState private var focusedField: Bool
-    @StateObject var viewModel = RegisterViewModel()
+    @EnvironmentObject var viewModel : RegisterViewModel
     @EnvironmentObject var authViewModel : AuthViewModel
     
     var body: some View {
         NavigationStack {
-            VStack {
-                
-                HeaderView()
-                
-                Spacer()
-                
-                VStack(spacing: 30) {
+            ScrollView {
+                VStack {
+                    HStack {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "chevron.left")
+                                .imageScale(.large)
+                                .foregroundStyle(.black)
+                        }
+
+                        Spacer()
+                    }
+                    .padding(.top)
+                    .padding(.leading)
                     Spacer()
+                    VStack {
+                        Image("usiLogo")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 140, height: 140)
+                        
+                        Text("Akademisyen")
+                            .font(.title2)
+                            .bold()
+                    }
+                    .padding(.bottom ,20)
+                    VStack {
+                        Text("Kayıt Ol")
+                            .font(.headline)
+                        Text("Şifrenizi oluşturunuz")
+                            .font(.subheadline)
+                            
+                    }
+                    .padding(.bottom, 20)
                     
-                    Text("Akademisyen Kayıt Ol")
-                        .font(.title)
-                    
-                    TextField("Üniversite Mailiniz :", text: $viewModel.email)
-                        .autocorrectionDisabled()
-                        .frame(height: 55)
-                        .padding(.horizontal)
-                        .background(Color(.tertiarySystemGroupedBackground))
-                        .mask(RoundedRectangle(cornerRadius: 10))
-                        .multilineTextAlignment(.leading)
-                        .keyboardType(.emailAddress)
-                        .focused($focusedField)
-                        .autocorrectionDisabled()
-                        .textInputAutocapitalization(.never)
-                    
-                    SecureFieldWithButton(title: "Şifrenizi giriniz:", text: $viewModel.password)
-                        .frame(height: 55)
-                        .padding(.horizontal)
-                        .background(Color(.tertiarySystemGroupedBackground))
-                        .mask(RoundedRectangle(cornerRadius: 10))
-                        .multilineTextAlignment(.leading)
-                        .focused($focusedField)
-                        .autocorrectionDisabled()
-                        .textInputAutocapitalization(.never)
-                    
-                    SecureFieldWithButton(title: "Şifrenizi tekrar giriniz:", text: $viewModel.confirmPassword)
-                        .frame(height: 55)
-                        .autocorrectionDisabled()
-                        .padding(.horizontal)
-                        .background(Color(.tertiarySystemGroupedBackground))
-                        .mask(RoundedRectangle(cornerRadius: 10))
-                        .multilineTextAlignment(.leading)
-                        .focused($focusedField)
-                        .autocorrectionDisabled()
-                        .textInputAutocapitalization(.never)
+                    VStack(spacing: 12){
+                        SecureFieldWithButton(title: "Şifre", text: $viewModel.password)
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color(.systemGray3), lineWidth: 1)
+                            )
+                            .padding(.horizontal)
+                            .focused($focusedField)
+                            .textInputAutocapitalization(.never)
+                            .autocorrectionDisabled()
+                        
+                        SecureFieldWithButton(title: "Şifre Tekrar", text: $viewModel.confirmPassword)
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color(.systemGray3), lineWidth: 1)
+                            )
+                            .padding(.horizontal)
+                            .focused($focusedField)
+                            .autocorrectionDisabled()
+                            .textInputAutocapitalization(.never)
+                    }
+                    .padding(.bottom)
                     
                     VStack {
                         Button {
@@ -69,39 +85,80 @@ struct AcademicianRegisterView: View {
                         } label: {
                             Text("Kayıt Ol")
                                 .font(.headline)
-                                .foregroundStyle(.white)
-                                .frame(height: 55)
                                 .frame(maxWidth: .infinity)
-                                .background(Color("sari"))
-                                .mask(RoundedRectangle(cornerRadius: 10))
+                                .foregroundColor(.white)
+                                .padding(16)
+                                .background(Color("logoBlue"))
+                                .cornerRadius(10)
                         }
-                        
-                        Text("Geri dön")
-                            .font(.headline)
-                            .foregroundStyle(Color("sari"))
-                            .frame(height: 55)
-                            .frame(maxWidth: .infinity)
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Color("sari"), lineWidth: 2)
-                            )
-                            .onTapGesture {
-                                dismiss()
-                            }
-                        Spacer()
+                        .padding(.horizontal)
                     }
-                }
-                .padding(30)
-                .multilineTextAlignment(.center)
-                .onTapGesture {
-                    focusedField = false
+                    
+                    VStack(spacing: 12){
+                        
+                        HStack {
+                            Rectangle()
+                                .frame(height: 2)
+                                .foregroundStyle(.gray)
+                            
+                            Text("Yada")
+                                .foregroundStyle(.gray)
+                            
+                            Rectangle()
+                                .frame(height: 2)
+                                .foregroundStyle(.gray)
+                        }
+                        .padding()
+                        
+                        NavigationLink {
+                            
+                        } label: {
+                            Text("Bir hesabım var ")
+                                .frame(maxWidth: .infinity)
+                                .foregroundColor(.black)
+                                .padding(16)
+                                .background(Color("grayButtonColor"))
+                                .cornerRadius(10)
+                        }
+                        .padding(.horizontal)
+                        Button {
+                            
+                        } label: {
+                            Text("Şifremi Unuttum")
+                                .frame(maxWidth: .infinity)
+                                .foregroundColor(.black)
+                                .padding(16)
+                                .background(Color("grayButtonColor"))
+                                .cornerRadius(10)
+                        }
+                        .padding(.horizontal)
+                        
+
+                    }
+                    
+                    
+                    
+                    VStack {
+                        Text("Devama tıkladıktan sonra ")
+                                    + Text("Terms of Service")
+                                        .foregroundColor(Color("logoBlue"))
+                                    + Text(" ve")
+                                    + Text("Privacy Policy")
+                                        .foregroundColor(Color("logoBlue"))
+                                    + Text(" kabul etmiş olursunuz")
+                    }
+                    .multilineTextAlignment(.center)
+                    .font(.footnote)
+                    .padding()
+                    
+                    Spacer()
+                    Spacer()
+                        
+                        
                 }
                 
-                Spacer()
                 
-                FooterView()
             }
-            .ignoresSafeArea()
             .onTapGesture {
                 focusedField = false
             }

@@ -33,7 +33,7 @@ struct USIAppApp: App {
     
     var body: some Scene {
         WindowGroup {
-            OnBoardingView()
+            LoginView()
                 .environmentObject(authViewModel)
                 .environmentObject(industryAuthViewModel)
                 .environmentObject(requestViewModel)

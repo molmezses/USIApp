@@ -635,7 +635,6 @@ class FirestoreService{
                         
                         let document: [String: Any] = [
                             "requesterName" : info.adSoyad,
-                            "requesterCategories" : info.uzmanlikAlani,
                             "requesterEmail" : info.email,
                             "requesterID" : id,
                             "requestCategory" : requestCategory,

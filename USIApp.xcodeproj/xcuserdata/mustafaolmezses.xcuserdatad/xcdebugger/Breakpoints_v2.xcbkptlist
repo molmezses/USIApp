@@ -7,38 +7,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "DF387F6B-A960-4BB6-B4E2-1AB379F43FE4"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "USIApp/Core/Acedemician/Service/FirestoreService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "410"
-            endingLineNumber = "410"
-            landmarkName = "addPreEducation(education:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "78C7C00E-D6FD-4ABD-BF85-818BFD98235D"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "USIApp/Core/Acedemician/Service/FirestoreService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "544"
-            endingLineNumber = "544"
-            landmarkName = "fetchAcademicianPendingRequests(completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "24E62B2B-70BC-47F0-81A8-E49A44EC26B6"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -130,6 +98,122 @@
             endingLineNumber = "26"
             landmarkName = "validateEmailPassword()"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "13412F4C-FE16-4CDA-A172-68193C484699"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "USIApp/Core/Acedemician/Request/ViewModel/AcademicianRequestDetailViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "11"
+            endingLineNumber = "11"
+            landmarkName = "AcademicianRequestDetailViewModel"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  uuid = "13412F4C-FE16-4CDA-A172-68193C484699 - 55dd1fcf8b969e72"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "property wrapper backing initializer of USIApp.AcademicianRequestDetailViewModel.academicianResponse : Swift.String"
+                  moduleName = "USIApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mustafaolmezses/Desktop/Projects/USIApp/USIApp/Core/Acedemician/Request/ViewModel/AcademicianRequestDetailViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "13412F4C-FE16-4CDA-A172-68193C484699 - febac82af25c8165"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "USIApp.AcademicianRequestDetailViewModel.academicianResponse.getter : Swift.String"
+                  moduleName = "USIApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mustafaolmezses/Desktop/Projects/USIApp/USIApp/Core/Acedemician/Request/ViewModel/AcademicianRequestDetailViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "13412F4C-FE16-4CDA-A172-68193C484699 - cfc4777b57bf159"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "USIApp.AcademicianRequestDetailViewModel.academicianResponse.setter : Swift.String"
+                  moduleName = "USIApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mustafaolmezses/Desktop/Projects/USIApp/USIApp/Core/Acedemician/Request/ViewModel/AcademicianRequestDetailViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "13412F4C-FE16-4CDA-A172-68193C484699 - e11124dea447dd68"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "USIApp.AcademicianRequestDetailViewModel.academicianResponse.modify : Swift.String"
+                  moduleName = "USIApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mustafaolmezses/Desktop/Projects/USIApp/USIApp/Core/Acedemician/Request/ViewModel/AcademicianRequestDetailViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "13412F4C-FE16-4CDA-A172-68193C484699 - a502078b7c49cd70"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "USIApp.AcademicianRequestDetailViewModel.$academicianResponse.getter : Combine.Published&lt;Swift.String&gt;.Publisher"
+                  moduleName = "USIApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mustafaolmezses/Desktop/Projects/USIApp/USIApp/Core/Acedemician/Request/ViewModel/AcademicianRequestDetailViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "13412F4C-FE16-4CDA-A172-68193C484699 - 44656d124e429e08"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "USIApp.AcademicianRequestDetailViewModel.$academicianResponse.setter : Combine.Published&lt;Swift.String&gt;.Publisher"
+                  moduleName = "USIApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mustafaolmezses/Desktop/Projects/USIApp/%3Cstdin%3E"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "13412F4C-FE16-4CDA-A172-68193C484699 - e2c30eeccbccf71f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "USIApp.AcademicianRequestDetailViewModel.$academicianResponse.modify : Combine.Published&lt;Swift.String&gt;.Publisher"
+                  moduleName = "USIApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mustafaolmezses/Desktop/Projects/USIApp/%3Cstdin%3E"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
