@@ -5,8 +5,12 @@
 //  Created by Mustafa Ölmezses on 23.07.2025.
 //
 
-
-
+//
+//  AcademicianRequestDetailView.swift
+//  USIApp
+//
+//  Created by Mustafa Ölmezses on 23.07.2025.
+//
 
 import SwiftUI
 
@@ -15,12 +19,16 @@ struct AcademicianRequestDetailView: View {
     @Environment(\.dismiss) var dismiss
     @State private var isApproved = false
     @State private var isRejected = false
-    @StateObject var viewModel = AcademicianRequestDetailViewModel()
+    @StateObject var viewModel: AcademicianRequestDetailViewModel
     var request: RequestModel
     
+    init(request: RequestModel) {
+        self.request = request
+        _viewModel = StateObject(wrappedValue: AcademicianRequestDetailViewModel(requestId: request.id))
+    }
     
     var body: some View {
-        VStack{
+        VStack {
             // Üst Başlık
             HStack {
                 Button {
@@ -214,18 +222,28 @@ struct AcademicianRequestDetailView: View {
                                 .bold()
                             
                             // Kategoriler
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 8) {
-                                    ForEach(request.selectedCategories, id: \.self) { category in
-                                        Text(category)
-                                            .font(.caption)
-                                            .padding(.horizontal, 10)
-                                            .padding(.vertical, 6)
-                                            .background(Color("usi").opacity(0.1))
-                                            .foregroundColor(.blue)
-                                            .cornerRadius(8)
+                            if request.requesterType == "industry" {
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack(spacing: 8) {
+                                        ForEach(request.selectedCategories, id: \.self) { category in
+                                            Text(category)
+                                                .font(.caption)
+                                                .padding(.horizontal, 10)
+                                                .padding(.vertical, 6)
+                                                .background(Color("usi").opacity(0.1))
+                                                .foregroundColor(.blue)
+                                                .cornerRadius(8)
+                                        }
                                     }
                                 }
+                            }else{
+                                Text("\(request.requestCategory ?? "hatali")")
+                                    .font(.caption)
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 6)
+                                    .background(Color("usi").opacity(0.1))
+                                    .foregroundColor(.blue)
+                                    .cornerRadius(8)
                             }
                         }
                     }
@@ -322,7 +340,7 @@ struct AcademicianRequestDetailView: View {
                             .padding()
                             .animation(.easeInOut, value: isApproved || isRejected)
                             .onAppear {
-                                viewModel.getAcademicianResponse(requestId: request.id)
+//                                viewModel.getAcademicianResponse(requestId: request.id)
                             }
                             .onChange(of: viewModel.academicianResponse) { newValue in
                                 if newValue == "Kabul ettiniz" {
@@ -340,16 +358,15 @@ struct AcademicianRequestDetailView: View {
                 }
                 .padding()
             }
-            .refreshable{
+            .refreshable {
                 viewModel.getAcademicianResponse(requestId: request.id)
             }
             .background(Color(.systemGroupedBackground))
         }
-        .onAppear{
+        .onAppear {
             viewModel.getAcademicianResponse(requestId: request.id)
         }
         .navigationBarHidden(true)
     }
 }
-
 

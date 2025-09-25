@@ -24,19 +24,50 @@ struct ProfileView: View {
         NavigationStack{
             VStack(spacing: 0) {
                 HStack {
+                    
+                        Image(systemName: "chevron.left")
+                            .imageScale(.large)
+                            .foregroundStyle(.black)
+                            .opacity(0)
+                            .padding(.leading, 12)
+
+                    Image(systemName: "chevron.left")
+                        .imageScale(.large)
+                        .foregroundStyle(.black)
+                        .opacity(0)
+                    
+                    
                     Spacer()
                     Text("Hesabım")
                         .font(.headline)
                         .fontWeight(.semibold)
-                        .padding()
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.black)
                     Spacer()
+                    Button {
+                        
+                    } label: {
+                        Image(systemName: "bell.fill")
+                            .imageScale(.large)
+                            .foregroundStyle(.black)
+                    }
+                    .padding(.trailing, 12)
+                    NavigationLink {
+                        SettingsView()
+                            .navigationBarBackButtonHidden()
+                    } label: {
+                        Image(systemName: "gear")
+                            .imageScale(.large)
+                            .foregroundStyle(.black)
+                    }
+
+                        
                 }
-                .background(Color("usi"))
+                .padding()
+                .background(.white)
+                .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2) 
+
                 
                 ZStack {
-                    Color(.systemGroupedBackground).ignoresSafeArea()
-                    
                     ScrollView {
                         VStack(alignment: .leading, spacing: 0) {
                             HStack {
@@ -103,7 +134,7 @@ struct ProfileView: View {
                                         HStack {
                                             Image(systemName: "key.icloud.fill")
                                                 .resizable()
-                                                .foregroundStyle(Color("usi"))
+                                                .foregroundStyle(.black)
                                                 .frame(width: 28, height: 28)
                                             Text("Yönetim paneline geç")
                                             Spacer()
@@ -128,7 +159,7 @@ struct ProfileView: View {
                                     HStack {
                                         Image(systemName: "person.circle.fill")
                                             .resizable()
-                                            .foregroundStyle(Color("usi"))
+                                            .foregroundStyle(.black)
                                             .frame(width: 28, height: 28)
                                         Text("Kişisel Bilgiler")
                                         Spacer()
@@ -150,7 +181,7 @@ struct ProfileView: View {
                                     HStack {
                                         Image(systemName: "phone.circle.fill")
                                             .resizable()
-                                            .foregroundStyle(Color("usi"))
+                                            .foregroundStyle(.black)
                                             .frame(width: 28, height: 28)
                                         Text("İletişim Bilgileri")
                                             .foregroundStyle(.black)
@@ -173,7 +204,7 @@ struct ProfileView: View {
                                     HStack {
                                         Image(systemName: "clock.badge.fill")
                                             .resizable()
-                                            .foregroundStyle(Color("usi"))
+                                            .foregroundStyle(.black)
                                             .frame(width: 28, height: 28)
                                         Text("Akademik Geçmişi")
                                         Spacer()
@@ -187,7 +218,7 @@ struct ProfileView: View {
                                 
                             }
                             .padding()
-                            .background(.white)
+                            .background(Color("backgroundBlue"))
                             .mask(RoundedRectangle(cornerRadius: 10))
                             .padding(.bottom)
                             
@@ -195,7 +226,7 @@ struct ProfileView: View {
                                 HStack {
                                     Image(systemName: "checkmark.circle.fill")
                                         .resizable()
-                                        .foregroundStyle(.indigo)
+                                        .foregroundStyle(.black)
                                         .frame(width: 28, height: 28)
                                     Text("Ortak Proje Geliştirme Talebi")
                                     Spacer()
@@ -208,7 +239,7 @@ struct ProfileView: View {
                                 
                             }
                             .padding()
-                            .background(.white)
+                            .background(Color("backgroundBlue"))
                             .mask(RoundedRectangle(cornerRadius: 10))
                             .padding(.bottom)
                             
@@ -221,7 +252,7 @@ struct ProfileView: View {
                                     HStack {
                                         Image(systemName: "building.2.fill")
                                             .resizable()
-                                            .foregroundStyle(Color("sari"))
+                                            .foregroundStyle(.black)
                                             .frame(width: 28, height: 28)
                                         Text("Firma Bilgisi")
                                         Spacer()
@@ -243,7 +274,7 @@ struct ProfileView: View {
                                     HStack {
                                         Image(systemName: "desktopcomputer")
                                             .resizable()
-                                            .foregroundStyle(Color("sari"))
+                                            .foregroundStyle(.black)
                                             .frame(width: 28, height: 28)
                                         Text("Firma Çalışma Alanı")
                                         Spacer()
@@ -257,7 +288,7 @@ struct ProfileView: View {
                                 
                             }
                             .padding()
-                            .background(.white)
+                            .background(Color("backgroundBlue"))
                             .mask(RoundedRectangle(cornerRadius: 10))
                             .padding(.bottom)
                             
@@ -269,7 +300,7 @@ struct ProfileView: View {
                                     HStack {
                                         Image(systemName: "graduationcap.fill")
                                             .resizable()
-                                            .foregroundStyle(Color("yesil"))
+                                            .foregroundStyle(.black)
                                             .frame(width: 28, height: 28)
                                         Text("Uzmanlık Alanları")
                                         Spacer()
@@ -289,7 +320,7 @@ struct ProfileView: View {
                                     HStack {
                                         Image(systemName: "document.circle.fill")
                                             .resizable()
-                                            .foregroundStyle(Color("yesil"))
+                                            .foregroundStyle(.black)
                                             .frame(width: 28, height: 28)
                                         Text("Verebileceği danışmanlık Konuları")
                                         Spacer()
@@ -310,7 +341,7 @@ struct ProfileView: View {
                                     HStack {
                                         Image(systemName: "clock.badge.fill")
                                             .resizable()
-                                            .foregroundStyle(Color("yesil"))
+                                            .foregroundStyle(.black)
                                             .frame(width: 28, height: 28)
                                         Text("Daha Önceki Danışmanlıklar")
                                         Spacer()
@@ -330,7 +361,7 @@ struct ProfileView: View {
                                     HStack {
                                         Image(systemName: "books.vertical.fill")
                                             .resizable()
-                                            .foregroundStyle(Color("yesil"))
+                                            .foregroundStyle(.black)
                                             .frame(width: 28, height: 28)
                                         Text("Verebileceği Eğitimler")
                                         Spacer()
@@ -351,7 +382,7 @@ struct ProfileView: View {
                                     HStack {
                                         Image(systemName: "person.crop.rectangle.stack.fill")
                                             .resizable()
-                                            .foregroundStyle(Color("yesil"))
+                                            .foregroundStyle(.black)
                                             .frame(width: 28, height: 28)
                                         Text("Daha Önce Verdiği Eğitimler")
                                         Spacer()
@@ -363,7 +394,7 @@ struct ProfileView: View {
                                 }
                             }
                             .padding()
-                            .background(.white)
+                            .background(Color("backgroundBlue"))
                             .mask(RoundedRectangle(cornerRadius: 10))
                             .padding(.bottom)
                             

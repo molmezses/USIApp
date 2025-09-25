@@ -1,0 +1,233 @@
+//
+//  SettingsView.swift
+//  USIApp
+//
+//  Created by Mustafa Ölmezses on 25.09.2025.
+//
+
+import SwiftUI
+
+struct SettingsView: View {
+    
+    @Environment(\.dismiss) var dismiss
+    
+    var body: some View {
+        VStack {
+            HStack {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .imageScale(.large)
+                        .foregroundStyle(.black)
+                    
+                }
+                
+                Spacer()
+                Text("Ayarlar")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.black)
+                Spacer()
+                
+            }
+            .padding()
+            .background(.white)
+            .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
+            
+            ScrollView {
+                VStack {
+                    VStack{
+                        Text("Hesap Ayarları")
+                            .font(.footnote)
+                            .frame(maxWidth: .infinity , alignment: .leading)
+                            .padding(.leading)
+                        VStack{
+                            NavigationLink {
+                                PersonalInformationView()
+                            } label: {
+                                HStack {
+                                    Image(systemName: "eye.square.fill")
+                                        .resizable()
+                                        .foregroundStyle(.black)
+                                        .frame(width: 28, height: 28)
+                                    Text("Profil Ön izlemesini gör")
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                    
+                                }
+                                .padding(2)
+                                .foregroundStyle(.black)
+                            }
+                            
+                            
+                            Divider()
+                                .padding(.vertical , 4)
+                            
+                            NavigationLink(destination: {
+                                ContactInfoView()
+                                    .navigationBarBackButtonHidden()
+                            }, label: {
+                                HStack {
+                                    Image(systemName: "person.badge.key.fill")
+                                        .resizable()
+                                        .foregroundStyle(.black)
+                                        .frame(width: 28, height: 28)
+                                    Text("Şifremi Unuttum")
+                                        .foregroundStyle(.black)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                    
+                                }
+                                .foregroundStyle(.black)
+                                .padding(2)
+                            })
+                        }
+                        .padding()
+                        .background(Color("backgroundBlue"))
+                        .mask(RoundedRectangle(cornerRadius: 10))
+                        .padding(.bottom)
+                    }
+                    VStack{
+                        Text("Uygulama Ayarları")
+                            .font(.footnote)
+                            .frame(maxWidth: .infinity , alignment: .leading)
+                            .padding(.leading)
+                        VStack{
+                            
+                            HStack {
+                            Image(systemName: "textformat")
+                                .foregroundStyle(.black)
+                            
+                            
+                                Text("Language")
+                                Spacer()
+                                Menu {
+                                    Button("Türkçe"){}
+                                } label: {
+                                    HStack {
+                                        Text("Türkçe")
+                                            .foregroundColor(.primary)
+                                        Image(systemName: "chevron.down")
+                                            .foregroundColor(.gray)
+                                    }
+                                    .padding(.horizontal)
+                                    .padding(.vertical, 6)
+                                    .background(Color(.systemGray6))
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                }
+                            }
+                            
+                            HStack {
+                            Image(systemName: "moon.circle")
+                                .foregroundStyle(.black)
+                            
+                            
+                                Text("Uygulama teması")
+                                Spacer()
+                                Menu {
+                                    Button("Aydınlık"){}
+                                } label: {
+                                    HStack {
+                                        Text("Aydınlık")
+                                            .foregroundColor(.primary)
+                                        Image(systemName: "chevron.down")
+                                            .foregroundColor(.gray)
+                                    }
+                                    .padding(.horizontal)
+                                    .padding(.vertical, 6)
+                                    .background(Color(.systemGray6))
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                }
+                            }
+                            
+                            
+                            Divider()
+                                .padding(.vertical , 4)
+                            
+                            NavigationLink(destination: {
+                                ContactInfoView()
+                                    .navigationBarBackButtonHidden()
+                            }, label: {
+                                HStack {
+                                    Image(systemName: "person.badge.key.fill")
+                                        .resizable()
+                                        .foregroundStyle(.black)
+                                        .frame(width: 28, height: 28)
+                                    Text("Şifremi Unuttum")
+                                        .foregroundStyle(.black)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                    
+                                }
+                                .foregroundStyle(.black)
+                                .padding(2)
+                            })
+                        }
+                        .padding()
+                        .background(Color("backgroundBlue"))
+                        .mask(RoundedRectangle(cornerRadius: 10))
+                        .padding(.bottom)
+                    }
+                    
+                    VStack{
+                        Text("Görüş & Öneri")
+                            .font(.footnote)
+                            .frame(maxWidth: .infinity , alignment: .leading)
+                            .padding(.leading)
+                        VStack{
+                            NavigationLink {
+                                PersonalInformationView()
+                            } label: {
+                                HStack {
+                                    Image(systemName: "questionmark.circle.fill")
+                                        .resizable()
+                                        .foregroundStyle(.black)
+                                        .frame(width: 28, height: 28)
+                                    Text("Destek ile iletişime geç")
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                    
+                                }
+                                .padding(2)
+                                .foregroundStyle(.black)
+                            }
+                            
+                            
+                            Divider()
+                                .padding(.vertical , 4)
+                            
+                            NavigationLink(destination: {
+                                ContactInfoView()
+                                    .navigationBarBackButtonHidden()
+                            }, label: {
+                                HStack {
+                                    Image(systemName: "bubble.fill")
+                                        .resizable()
+                                        .foregroundStyle(.black)
+                                        .frame(width: 28, height: 28)
+                                    Text("Görüş & öneri gönder")
+                                        .foregroundStyle(.black)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                    
+                                }
+                                .foregroundStyle(.black)
+                                .padding(2)
+                            })
+                        }
+                        .padding()
+                        .background(Color("backgroundBlue"))
+                        .mask(RoundedRectangle(cornerRadius: 10))
+                        .padding(.bottom)
+                    }
+                }
+                .padding(.horizontal)
+            }
+        }
+    }
+}
+
+#Preview {
+    SettingsView()
+}
