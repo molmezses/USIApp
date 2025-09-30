@@ -18,19 +18,31 @@ struct AcademicianView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 HStack {
+                    Button { dismiss() } label: {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundColor(.black)
+                            .padding(.leading)
+                    }
                     Spacer()
                     Text("Önizleme")
                         .font(.headline)
                         .fontWeight(.semibold)
                         .padding()
-                        .foregroundStyle(.white)
+                        .foregroundColor(.black)
 
                     Spacer()
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundColor(.white)
+                        .opacity(0)
+                        .padding(.trailing)
                 }
-                .background(Color("usi"))
+                .background(.white)
+                .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
+                
                 
                 ZStack {
-                    Color(.systemGroupedBackground).ignoresSafeArea()
                     
                     VStack(spacing: 20){
                         ScrollView {
@@ -73,7 +85,7 @@ struct AcademicianView: View {
                                 Spacer()
                             }
                             .padding()
-                            .background(.white)
+                            .background(Color("backgroundBlue"))
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             .padding(.top)
                             
@@ -82,7 +94,7 @@ struct AcademicianView: View {
                                     Text("Akademik Geçmişi")
                                         .font(.headline)
                                         .underline()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                     Spacer()
                                 }
                                 
@@ -91,21 +103,21 @@ struct AcademicianView: View {
                                     .foregroundStyle(viewModel.akademikGecmis.isEmpty ? Color.gray : .black)
                             }
                             .padding()
-                            .background(.white)
+                            .background(Color("backgroundBlue"))
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             
                             VStack {
                                 HStack {
                                     Image(systemName: "checkmark.circle.fill")
                                         .resizable()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                         .frame(width: 28, height: 28)
                                     Text("Ortak Proje Geliştirme Talebi")
                                     Spacer()
                                     
                                     Toggle("", isOn: $viewModel.isOn)
-                                        .tint(Color("usi"))
-                                        .foregroundStyle(Color("usi"))
+                                        .tint(.black)
+                                        .foregroundStyle(.black)
                                         .disabled(true)
                                     
                                     
@@ -114,7 +126,7 @@ struct AcademicianView: View {
                                 .padding(2)
                             }
                             .padding()
-                            .background(.white)
+                            .background(Color("backgroundBlue"))
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             
                             VStack(alignment: .leading){
@@ -122,15 +134,15 @@ struct AcademicianView: View {
                                     Text("İletişim Bilgileri")
                                         .font(.headline)
                                         .underline()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                     Spacer()
                                 }
                                 
                                 HStack {
                                     Image(systemName: "phone.fill")
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                         .padding(6)
-                                        .background(Color("usi").opacity(0.2))
+                                        .background(.black).opacity(0.2)
                                         .clipShape(Circle())
                                     Text(viewModel.personelTel == "" ? "Veri bulunamadı" : viewModel.personelTel )
                                         .foregroundStyle(viewModel.personelTel == "" ? .gray : .black)
@@ -138,9 +150,9 @@ struct AcademicianView: View {
                                 }
                                 HStack {
                                     Image(systemName: "phone.fill")
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                         .padding(6)
-                                        .background(Color("usi").opacity(0.2))
+                                        .background(.black).opacity(0.2)
                                         .clipShape(Circle())
                                     Text(viewModel.kurumsalTel == "" ? "Veri bulunamadı" : viewModel.kurumsalTel )
                                         .foregroundStyle(viewModel.kurumsalTel == "" ? .gray : .black)
@@ -148,33 +160,33 @@ struct AcademicianView: View {
                                 HStack {
                                     Image(systemName: "mail.fill")
                                         .imageScale(.small)
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                         .padding(8)
-                                        .background(Color("usi").opacity(0.2))
+                                        .background(.black).opacity(0.2)
                                         .clipShape(Circle())
                                     Text(verbatim: viewModel.email)
                                 }
                                 HStack {
                                     Image(systemName: "mappin.circle.fill")
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                         .padding(6)
-                                        .background(Color("usi").opacity(0.2))
+                                        .background(.black).opacity(0.2)
                                         .clipShape(Circle())
                                     Text(viewModel.konum.count < 4 ? "Veri bulunamadı" : viewModel.konum )
                                         .foregroundStyle(viewModel.konum.count < 4 ? .gray : .black)
                                 }
                                 HStack {
                                     Image(systemName: "network")
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                         .padding(6)
-                                        .background(Color("usi").opacity(0.2))
+                                        .background(.black).opacity(0.2)
                                         .clipShape(Circle())
                                     Text(viewModel.webSite == "" ? "Veri bulunamadı" : viewModel.webSite )
                                         .foregroundStyle(viewModel.webSite == "" ? .gray : .black)
                                 }
                             }
                             .padding()
-                            .background(.white)
+                            .background(Color("backgroundBlue"))
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             
                             VStack(alignment: .leading){
@@ -182,7 +194,7 @@ struct AcademicianView: View {
                                     Text("Firma Bilgisi Ve Çalışma Alanı")
                                         .font(.headline)
                                         .underline()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                     Spacer()
                                 }
                                 
@@ -198,7 +210,7 @@ struct AcademicianView: View {
                                         HStack {
                                             Circle()
                                                 .frame(width: 6, height: 6)
-                                                .foregroundStyle(Color("usi"))
+                                                .foregroundStyle(.black)
                                                 .padding(.leading)
                                             VStack(alignment: .leading){
                                                 Text(viewModel.firmList[index].firmaAdi)
@@ -212,7 +224,7 @@ struct AcademicianView: View {
                                 }
                             }
                             .padding()
-                            .background(.white)
+                            .background(Color("backgroundBlue"))
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             
                             VStack(alignment: .leading){
@@ -220,7 +232,7 @@ struct AcademicianView: View {
                                     Text("Uzmanlık alanları")
                                         .font(.headline)
                                         .underline()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                     Spacer()
                                 }
                                 
@@ -229,7 +241,7 @@ struct AcademicianView: View {
                                         HStack {
                                             Circle()
                                                 .frame(width: 6, height: 6)
-                                                .foregroundStyle(Color("usi"))
+                                                .foregroundStyle(.black)
                                                 .padding(.leading)
                                             Text(item)
                                         }
@@ -240,7 +252,7 @@ struct AcademicianView: View {
                                 }
                             }
                             .padding()
-                            .background(.white)
+                            .background(Color("backgroundBlue"))
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             
                             VStack(alignment: .leading){
@@ -248,7 +260,7 @@ struct AcademicianView: View {
                                     Text("Verebileceği danışmanlık konuları")
                                         .font(.headline)
                                         .underline()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                     Spacer()
                                 }
                                 
@@ -256,7 +268,7 @@ struct AcademicianView: View {
                                     HStack {
                                         Circle()
                                             .frame(width: 6, height: 6)
-                                            .foregroundStyle(Color("usi"))
+                                            .foregroundStyle(.black)
                                             .padding(.leading)
                                         Text(item)
                                     }
@@ -265,7 +277,7 @@ struct AcademicianView: View {
                                 }
                             }
                             .padding()
-                            .background(.white)
+                            .background(Color("backgroundBlue"))
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             
                             VStack(alignment: .leading){
@@ -273,7 +285,7 @@ struct AcademicianView: View {
                                     Text("Daha Önceki Danışmanlıklar")
                                         .font(.headline)
                                         .underline()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                     Spacer()
                                 }
                                 
@@ -281,14 +293,14 @@ struct AcademicianView: View {
                                     HStack {
                                         Circle()
                                             .frame(width: 6, height: 6)
-                                            .foregroundStyle(Color("usi"))
+                                            .foregroundStyle(.black)
                                             .padding(.leading)
                                         Text(item)
                                     }
                                 }
                             }
                             .padding()
-                            .background(.white)
+                            .background(Color("backgroundBlue"))
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             
                             VStack(alignment: .leading){
@@ -296,7 +308,7 @@ struct AcademicianView: View {
                                     Text("Verebileceği Eğitimler")
                                         .font(.headline)
                                         .underline()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                     Spacer()
                                 }
                                 
@@ -304,7 +316,7 @@ struct AcademicianView: View {
                                     HStack {
                                         Circle()
                                             .frame(width: 6, height: 6)
-                                            .foregroundStyle(Color("usi"))
+                                            .foregroundStyle(.black)
                                             .padding(.leading)
                                         Text(item)
                                     }
@@ -312,7 +324,7 @@ struct AcademicianView: View {
   
                             }
                             .padding()
-                            .background(.white)
+                            .background(Color("backgroundBlue"))
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             
                             VStack(alignment: .leading){
@@ -320,7 +332,7 @@ struct AcademicianView: View {
                                     Text("Daha Önce Verdiği Eğitimler")
                                         .font(.headline)
                                         .underline()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                     Spacer()
                                 }
                                 
@@ -328,14 +340,14 @@ struct AcademicianView: View {
                                     HStack {
                                         Circle()
                                             .frame(width: 6, height: 6)
-                                            .foregroundStyle(Color("usi"))
+                                            .foregroundStyle(.black)
                                             .padding(.leading)
                                         Text(item)
                                     }
                                 }
                             }
                             .padding()
-                            .background(.white)
+                            .background(Color("backgroundBlue"))
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             
                             

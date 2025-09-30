@@ -54,6 +54,7 @@ struct ProfileView: View {
                     NavigationLink {
                         SettingsView()
                             .navigationBarBackButtonHidden()
+                            .environmentObject(authViewModel)
                     } label: {
                         Image(systemName: "gear")
                             .imageScale(.large)
@@ -397,33 +398,6 @@ struct ProfileView: View {
                             .background(Color("backgroundBlue"))
                             .mask(RoundedRectangle(cornerRadius: 10))
                             .padding(.bottom)
-                            
-                            //MARK: SİGN BUTTON
-                            
-                            VStack {
-                                
-                                HStack {
-                                    Spacer()
-                                    Button {
-                                        authViewModel.logOut()
-                                    } label: {
-                                        Text("Çıkış yap")
-                                            .foregroundStyle(.white)
-                                            .font(.headline)
-                                    }
-                                    Spacer()
-                                }
-                                
-                                
-                            }
-                            .padding()
-                            .background(.red)
-                            .mask(RoundedRectangle(cornerRadius: 10))
-                            .padding(.bottom)
-                            
-                            
-                            
-                            
                         }
                         .padding(.horizontal)
                     }

@@ -15,25 +15,6 @@ struct PendingRequestAcademicianInfoView: View {
     var body: some View {
         VStack(spacing: 0) {
             
-            // Başlık
-            HStack {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.white)
-                }
-                Spacer()
-                Text("Bekleyen Talepler")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                Spacer()
-                Image(systemName: "chevron.left")
-                    .opacity(0)
-            }
-            .padding()
-            .background(Color("usi"))
             
             ScrollView {
                 VStack(spacing: 20) {
@@ -47,16 +28,18 @@ struct PendingRequestAcademicianInfoView: View {
                         } label: {
                             PendingRequestAcademicianCard(firmName: request.requesterName, requestTitle: request.title, requestDescription: request.description ,  date: request.date ,requesterImage: request.requesterImage ?? "" , requesterType : request.requesterType, request : request)
                         }
+                        Rectangle()
+                            .frame(maxWidth: .infinity, maxHeight: 1)
+                            .foregroundStyle(Color("backgroundBlue"))
                     }
 
                 }
-                .padding(.top)
+                .padding(.top , 6)
             }
             .refreshable {
                 viewModel.fetchMatchingOldRequestDocumentIDs()
                 viewModel.fetchAcademicianPendingRequests()
             }
-            .background(Color(.systemGroupedBackground))
         }
         .onAppear {
             viewModel.fetchMatchingOldRequestDocumentIDs()

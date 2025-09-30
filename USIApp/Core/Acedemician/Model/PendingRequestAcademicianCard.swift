@@ -17,6 +17,7 @@ struct PendingRequestAcademicianCard: View {
     var request: RequestModel
 
     var body: some View {
+        
         VStack(alignment: .leading, spacing: 12) {
 
             HStack(alignment: .top, spacing: 12) {
@@ -51,7 +52,7 @@ struct PendingRequestAcademicianCard: View {
                         .padding(2)
                         .background(
                             RoundedRectangle(cornerRadius: 4)
-                                .foregroundStyle(request.requesterType == "industry" ? Color("sari").opacity(0.8) : request.requesterType == "academician" ? Color("usi").opacity(0.8) : .green.opacity(0.8))
+                                .foregroundStyle(Color("logoBlue").opacity(0.6))
                         )
 
                 }
@@ -61,12 +62,17 @@ struct PendingRequestAcademicianCard: View {
                 Image(systemName: "chevron.right")
                     .foregroundColor(.gray)
             }
+            Text(requestTitle)
+                .font(.headline)
+                .lineLimit(2)
+                .multilineTextAlignment(.leading)
+                .foregroundColor(.black)
+            
             Text(requestDescription)
                 .lineLimit(4)
                 .multilineTextAlignment(.leading)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
-                .padding(.top, 4)
 
             // Tarih
             Text("Tarih: \(date)")
@@ -80,29 +86,26 @@ struct PendingRequestAcademicianCard: View {
                         ForEach(request.selectedCategories, id: \.self) { category in
                             Text(category)
                                 .font(.caption)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 6)
-                                .background(Color("usi").opacity(0.1))
-                                .foregroundColor(.blue)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Color("categoryBlue"))
+                                .foregroundColor(.black)
                                 .cornerRadius(8)
                         }
-                    } else if requesterType == "academician" {
+                    } else{
 
                         Text(request.requestCategory ?? "Kategori bulunamadı")
                             .font(.caption)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 6)
-                            .background(Color("usi").opacity(0.1))
-                            .foregroundColor(.blue)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Color("categoryBlue"))
+                            .foregroundColor(.black)
                             .cornerRadius(8)
 
                     }
                 }
             }
         }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(10)
         .padding(.horizontal)
     }
 }

@@ -19,18 +19,19 @@ struct RequestInfoIndustryView: View {
                 Button { dismiss() } label: {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                 }
                 Spacer()
                 Text("Talep detayı")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
                 Spacer()
                 Image(systemName: "chevron.left")
                     .opacity(0)
             }
             .padding()
-            .background(Color("usi"))
+            .background(.white)
+            .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
             
             ScrollView {
                 VStack(spacing: 16) {
@@ -135,14 +136,13 @@ struct RequestInfoIndustryView: View {
                                 }
                             }
                         }
+                        
+                        Divider()
+                            .padding(.vertical , 2)
                     }
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(10)
-                    .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
                     
                     
-                    VStack(alignment: .leading, spacing: 16) {
+                    VStack(alignment: .leading, spacing: 24) {
                         
                         
                         VStack(alignment: .leading, spacing: 4) {
@@ -171,39 +171,50 @@ struct RequestInfoIndustryView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Oluşturulma Tarihi")
                                 .font(.subheadline.bold())
-                            Text(request.date)
-                                .foregroundColor(.gray)
+                            HStack(spacing:6){
+                                Image(systemName: "calendar")
+                                    .imageScale(.medium)
+                                    .foregroundStyle(Color("logoBlue"))
+                                Text(request.date)
+                                    .foregroundColor(.gray)
+                                Spacer()
+                            }
                         }
                         
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Kategoriler")
                                 .font(.subheadline.bold())
 
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 8) {
-                                    ForEach(request.selectedCategories, id: \.self) { category in
-                                        Text(category)
-                                            .padding(.horizontal, 12)
-                                            .padding(.vertical, 6)
-                                            .background(Color.blue.opacity(0.1))
-                                            .foregroundColor(.blue)
-                                            .clipShape(Capsule())
+                            if request.requesterType == "industry"{
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack(spacing: 8) {
+                                        ForEach(request.selectedCategories, id: \.self) { category in
+                                            Text(category)
+                                                .font(.footnote)
+                                                .padding(.horizontal, 8)
+                                                .padding(.vertical, 4)
+                                                .background(Color.blue.opacity(0.1))
+                                                .foregroundColor(.blue)
+                                                .clipShape(Capsule())
+                                        }
                                     }
                                 }
+                            }else{
+                                Text(request.requestCategory ?? "Kategori bulunamadı")
+                                    .font(.footnote)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(Color.blue.opacity(0.1))
+                                    .foregroundColor(.blue)
+                                    .clipShape(Capsule())
                             }
                         }
 
                         
                     }
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(10)
-                    .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
-                    
                 }
                 .padding()
             }
-            .background(Color(.systemGroupedBackground))
         }
         
     }

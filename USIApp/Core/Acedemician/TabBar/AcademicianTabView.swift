@@ -20,36 +20,18 @@ struct AcademicianTabView: View {
                 RequestAcademicianView()
                     .tabItem {
                         Image(systemName: "plus")
-                        Text("Oluşturulan Talepler")
-                    }
-                    .tag(3)
-                
-                PendingRequestAcademicianInfoView()
-                    .tabItem {
-                        Image(systemName: "inset.filled.square.dashed")
-                        Text("Gelen Talepler")
                     }
                     .tag(2)
                 
-                AcademicianView()
-                    .tabItem {
-                        Image(systemName: "house")
-                        Text("Önizleme")
-                    }
-                    .tag(0)
-                    .environmentObject(authViewModel)
-                
-
-                
+      
                 ProfileView()
                     .tabItem {
                         Image(systemName: "person")
-                        Text("Profilim")
                     }
                     .tag(1)
                     .environmentObject(authViewModel)
             }
-            .tint(Color("usi"))
+            .tint(.black)
         }else{
             LoginView()
                 .navigationBarBackButtonHidden()

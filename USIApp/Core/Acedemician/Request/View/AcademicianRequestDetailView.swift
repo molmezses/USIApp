@@ -36,14 +36,14 @@ struct AcademicianRequestDetailView: View {
                 } label: {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                 }
                 
                 Spacer()
                 
                 Text("Talep Detayları")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
                 
                 Spacer()
                 
@@ -51,7 +51,7 @@ struct AcademicianRequestDetailView: View {
                     .opacity(0)
             }
             .padding()
-            .background(Color("usi"))
+            .background(.white)
             
             ScrollView {
                 VStack(spacing: 20) {
@@ -163,7 +163,7 @@ struct AcademicianRequestDetailView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                             Spacer()
-                            Text(request.requesterAddress)
+                            Text(request.requesterType == "industry" ? request.requesterAddress : "Adres bulunamadı")
                                 .font(.subheadline)
                                 .bold()
                                 .multilineTextAlignment(.trailing)

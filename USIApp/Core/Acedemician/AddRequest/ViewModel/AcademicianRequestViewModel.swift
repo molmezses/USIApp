@@ -21,11 +21,12 @@ enum AcademicianRequestCategoryEnum {
 
 class AcademicianRequestViewModel: ObservableObject{
     
-    @Published var requests: [String] = []
+    @Published var requests: [RequestModel] = []
     
     @Published var requestCategory: AcademicianRequestCategoryEnum = .arastirmaAlanlari
     @Published var requestTitle: String = ""
     @Published var requestMessage: String = ""
+    
     
     
     func changeRequestCategory(_ category: AcademicianRequestCategoryEnum){
@@ -83,5 +84,31 @@ class AcademicianRequestViewModel: ObservableObject{
             }
         }
     }
+    
+    
+    func loadRequests(){
+        FirestoreService.shared.fetchAcademicianRequests { result in
+            switch result {
+            case .success(let requests):
+                
+                self.requests = requests
+                print("Başarılı : Document getirildi successfully!")
+            case .failure(let failure):
+                print("Hataaaaa: \(failure.localizedDescription)")
+            }
+        }
+    }
+    
+//    func deleteRequest(documentID: String){
+//        FirestoreService.shared.deleteRequest(documentID: documentID) { result in
+//            switch result {
+//            case .success(_):
+//                self.loadRequests()
+//                print("Başarılı : Document deleted successfully!")
+//            case .failure(let failure):
+//                print("Hata: \(failure.localizedDescription)")
+//            }
+//        }
+//    }
     
 }
