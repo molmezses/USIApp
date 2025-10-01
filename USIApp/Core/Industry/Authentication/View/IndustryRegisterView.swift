@@ -22,54 +22,81 @@ struct IndustryRegisterView: View {
     var body: some View {
         VStack {
             NavigationStack {
-                
-                VStack {
-                    
-                    HeaderView()
-                    
-                    Spacer()
-                    
-                    VStack(spacing: 24){
+                ScrollView {
+                    VStack {
+                        HStack {
+                            Button {
+                                dismiss()
+                            } label: {
+                                Image(systemName: "chevron.left")
+                                    .imageScale(.large)
+                                    .foregroundStyle(.black)
+                            }
+
+                            Spacer()
+                        }
+                        .padding(.top)
+                        .padding(.leading)
                         Spacer()
+                        VStack {
+                            Image("usiLogo")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 140, height: 140)
+                            
+                            Text("Sanayi")
+                                .font(.title2)
+                                .bold()
+                        }
+                        .padding(.bottom ,20)
+                        VStack {
+                            Text("Kayıt Ol")
+                                .font(.headline)
+                            Text("Hesap bilgilerinizi oluşturunuz")
+                                .font(.subheadline)
+                                
+                        }
+                        .padding(.bottom, 20)
                         
-                        Text("Sanayi Kayıt ol")
-                            .font(.title)
-                        
-                        
-                        TextField("Mailinizi giriniz :", text: $viewModel.email)
-                            .frame(height: 55)
-                            .padding(.horizontal)
-                            .background(Color(.tertiarySystemGroupedBackground))
-                            .mask(RoundedRectangle(cornerRadius: 10))
-                            .keyboardType(.emailAddress)
-                            .multilineTextAlignment(.leading)
-                            .focused($focusedField)
-                            .autocapitalization(.none)
-                            .textInputAutocapitalization(.never)
-                            .disableAutocorrection(true)
-                        
-                        SecureFieldWithButton(title: "Şifrenizi giriniz", text: $viewModel.password)
-                            .frame(height: 55)
-                            .padding(.horizontal)
-                            .background(Color(.tertiarySystemGroupedBackground))
-                            .mask(RoundedRectangle(cornerRadius: 10))
-                            .multilineTextAlignment(.leading)
-                            .focused($focusedField)
-                            .autocapitalization(.none)
-                            .textInputAutocapitalization(.never)
-                            .disableAutocorrection(true)
-                        
-                        SecureFieldWithButton(title: "Şifrenizi tekrar giriniz", text: $viewModel.passwordConfirmation)
-                            .frame(height: 55)
-                            .padding(.horizontal)
-                            .background(Color(.tertiarySystemGroupedBackground))
-                            .mask(RoundedRectangle(cornerRadius: 10))
-                            .multilineTextAlignment(.leading)
-                            .focused($focusedField)
-                            .autocapitalization(.none)
-                            .textInputAutocapitalization(.never)
-                            .disableAutocorrection(true)
-                        
+                        VStack(spacing: 12){
+                            
+                            
+                            TextField("Email", text: $viewModel.email)
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color(.systemGray3), lineWidth: 1)
+                                )
+                                .padding(.horizontal)
+                                .focused($focusedField)
+                                .textInputAutocapitalization(.never)
+                                .autocorrectionDisabled()
+                            
+                           
+                            
+                            SecureFieldWithButton(title: "Şifre", text: $viewModel.password)
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color(.systemGray3), lineWidth: 1)
+                                )
+                                .padding(.horizontal)
+                                .focused($focusedField)
+                                .textInputAutocapitalization(.never)
+                                .autocorrectionDisabled()
+                            
+                            SecureFieldWithButton(title: "Şifre Tekrar", text: $viewModel.passwordConfirmation)
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color(.systemGray3), lineWidth: 1)
+                                )
+                                .padding(.horizontal)
+                                .focused($focusedField)
+                                .autocorrectionDisabled()
+                                .textInputAutocapitalization(.never)
+                        }
+                        .padding(.bottom)
                         
                         VStack {
                             Button {
@@ -77,76 +104,89 @@ struct IndustryRegisterView: View {
                             } label: {
                                 Text("Kayıt Ol")
                                     .font(.headline)
-                                    .foregroundStyle(.white)
-                                    .frame(height: 55)
                                     .frame(maxWidth: .infinity)
-                                    .background(Color("sari"))
-                                    .mask(RoundedRectangle(cornerRadius: 10))
+                                    .foregroundColor(.white)
+                                    .padding(16)
+                                    .background(Color("logoBlue"))
+                                    .cornerRadius(10)
                             }
-                            
-                            Text("Geri dön")
-                                .font(.headline)
-                                .foregroundStyle(Color("sari"))
-                                .frame(height: 55)
-                                .frame(maxWidth: .infinity)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(Color("sari"), lineWidth: 2)
-                                )
-                                .onTapGesture {
-                                    dismiss()
-                                }
-                            
-//                            HStack {
-//                                RoundedRectangle(cornerRadius: 1)
-//                                    .frame(height: 2)
-//                                    .foregroundStyle(.gray)
-//                                Text("veya")
-//                                    .font(.footnote)
-//                                    .foregroundStyle(.gray)
-//                                RoundedRectangle(cornerRadius: 1)
-//                                    .frame(height: 2)
-//                                    .foregroundStyle(.gray)
-//                            }
-//                            .padding(.vertical , 20)
-//                            .padding(.top , 6)
-//                            
-//                            Button {
-//                                viewModel.signGoogle(authViewModel: authViewModel)
-//                            } label: {
-//                                HStack{
-//                                    Image("googleLogo")
-//                                        .resizable()
-//                                        .frame(width:50 , height: 50)
-//                                    Text("Countinue with Google Account")
-//                                        .font(.headline)
-//                                        .foregroundStyle(.blue)
-//                                }
-//                                .padding(.vertical , 8)
-//                            }
-
-                            
-                            Spacer()
+                            .padding(.horizontal)
                         }
-                    }
-                    .padding(.horizontal ,30)
-                    .multilineTextAlignment(.center)
-                    .onTapGesture {
-                        focusedField = false
+                        
+                        VStack(spacing: 12){
+                            
+                            HStack {
+                                Rectangle()
+                                    .frame(height: 2)
+                                    .foregroundStyle(.gray)
+                                
+                                Text("Yada")
+                                    .foregroundStyle(.gray)
+                                
+                                Rectangle()
+                                    .frame(height: 2)
+                                    .foregroundStyle(.gray)
+                            }
+                            .padding()
+                            
+                            NavigationLink {
+                                
+                            } label: {
+                                Text("Bir hesabım var ")
+                                    .frame(maxWidth: .infinity)
+                                    .foregroundColor(.black)
+                                    .padding(16)
+                                    .background(Color("grayButtonColor"))
+                                    .cornerRadius(10)
+                            }
+                            .padding(.horizontal)
+                            Button {
+                                
+                            } label: {
+                                Text("Şifremi Unuttum")
+                                    .frame(maxWidth: .infinity)
+                                    .foregroundColor(.black)
+                                    .padding(16)
+                                    .background(Color("grayButtonColor"))
+                                    .cornerRadius(10)
+                            }
+                            .padding(.horizontal)
+                            
+
+                        }
+                        
+                        
+                        
+                        VStack {
+                            Text("Devama tıkladıktan sonra ")
+                                        + Text("Terms of Service")
+                                            .foregroundColor(Color("logoBlue"))
+                                        + Text(" ve")
+                                        + Text("Privacy Policy")
+                                            .foregroundColor(Color("logoBlue"))
+                                        + Text(" kabul etmiş olursunuz")
+                        }
+                        .multilineTextAlignment(.center)
+                        .font(.footnote)
+                        .padding()
+                        
+                        Spacer()
+                        Spacer()
+                            
+                            
                     }
                     
-                    Spacer()
-                    
-                    FooterView()
                     
                 }
+                .onTapGesture {
+                    focusedField = false
+                }
                 .navigationDestination(isPresented: $viewModel.navigateToIndustryTabView) {
-                    IndustryTabView(selectedTab: $selectedTab)
+                    IndustryTabView(selectedTab: 1)
                         .environmentObject(authViewModel)
                         .environmentObject(requestViewModel)
                         .navigationBarBackButtonHidden()
                 }
-                .ignoresSafeArea()
             }
         }
     }

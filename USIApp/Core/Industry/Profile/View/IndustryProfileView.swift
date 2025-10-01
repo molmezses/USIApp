@@ -19,14 +19,48 @@ struct IndustryProfileView: View {
         NavigationStack {
             VStack {
                 HStack {
+                    
+                        Image(systemName: "chevron.left")
+                            .imageScale(.large)
+                            .foregroundStyle(.black)
+                            .opacity(0)
+                            .padding(.leading, 12)
+
+                    Image(systemName: "chevron.left")
+                        .imageScale(.large)
+                        .foregroundStyle(.black)
+                        .opacity(0)
+                    
+                    
                     Spacer()
-                    Text("Sanayi Profili")
+                    Text("Hesabım")
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.black)
                     Spacer()
+                    Button {
+                        
+                    } label: {
+                        Image(systemName: "bell.fill")
+                            .imageScale(.large)
+                            .foregroundStyle(.black)
+                    }
+                    .padding(.trailing, 12)
+                    NavigationLink {
+                        IndustrySettingsView()
+                            .navigationBarBackButtonHidden()
+                            .environmentObject(authViewModel)
+                    } label: {
+                        Image(systemName: "gear")
+                            .imageScale(.large)
+                            .foregroundStyle(.black)
+                    }
+
+                        
                 }
                 .padding()
-                .background(Color("usi"))
+                .background(.white)
+                .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
 
                 ScrollView {
                     VStack(spacing: 16) {
@@ -86,9 +120,11 @@ struct IndustryProfileView: View {
                             }
 
 
-                            Text("Petlas A.Ş.")
+                            Text(viewModel.firmName != "" ? viewModel.firmName  : "Firma adı bulunamadı")
                                 .font(.title3).bold()
-                            Text("Otomotiv Lastik Üretimi")
+                            
+                            
+                            Text(viewModel.firmExpertArea != "" ? viewModel.firmExpertArea  : "Çalışma alanı  bulunamadı")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                         }
@@ -98,44 +134,41 @@ struct IndustryProfileView: View {
                             NavigationLink(
                                 destination: FirmInformationView().navigationBarBackButtonHidden()
                             ) {
-                                menuRow(icon: "building.2", text: "Firma Bilgileri", color: .orange)
+                                menuRow(icon: "building.2.fill", text: "Firma Bilgileri", color: .black)
                             }
                             NavigationLink(
                                 destination: FirmContactInfoView().navigationBarBackButtonHidden()
                             ) {
-                                menuRow(icon: "phone", text: "İletişim Bilgileri", color: .blue)
+                                menuRow(icon: "phone.fill", text: "İletişim Bilgileri", color: .black)
                             }
                             NavigationLink(
                                 destination: FirmAdressView().navigationBarBackButtonHidden()
                             ) {
-                                menuRow(icon: "map", text: "Adres Bilgileri", color: .green)
+                                menuRow(icon: "map.fill", text: "Adres Bilgileri", color: .black)
                             }
                             NavigationLink(
                                 destination: FirmEmployeeView().navigationBarBackButtonHidden()
                             ) {
-                                menuRow(icon: "person", text: "Çalışan Bilgisi", color: .purple)
+                                menuRow(icon: "person.fill", text: "Çalışan Bilgisi", color: .black)
                             }
                         }
                         .padding(.horizontal)
 
-                        Button(action: {
-                            authViewModel.logOut()
-                        }) {
-                            Text("Çıkış Yap")
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .foregroundColor(.white)
-                                .background(Color.red)
-                                .cornerRadius(8)
-                        }
-                        .padding(.horizontal)
-                        .padding(.top, 20)
+//                        Button(action: {
+//                            authViewModel.logOut()
+//                        }) {
+//                            Text("Çıkış Yap")
+//                                .frame(maxWidth: .infinity)
+//                                .padding()
+//                                .foregroundColor(.white)
+//                                .background(Color.red)
+//                                .cornerRadius(8)
+//                        }
+//                        .padding(.horizontal)
+//                        .padding(.top, 20)
                     }
                 }
             }
-            .background(
-                Color(.systemGroupedBackground).ignoresSafeArea(.all, edges: .top)
-            )
         }
     }
 
@@ -151,7 +184,7 @@ struct IndustryProfileView: View {
                 .foregroundColor(.gray)
         }
         .padding()
-        .background(Color.white)
+        .background(Color("backgroundBlue"))
         .cornerRadius(10)
         .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
     }

@@ -23,11 +23,12 @@ struct RequestIndustryView: View {
                 Spacer()
                 Text("Taleplerim")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
                 Spacer()
             }
             .padding()
-            .background(Color("usi"))
+            .background(.white)
+            .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
             
             ScrollView {
                 VStack(spacing: 16) {
@@ -46,6 +47,9 @@ struct RequestIndustryView: View {
                             } label: {
                                 requestCard(for: request)
                             }
+                            Rectangle()
+                                .frame(maxWidth: .infinity, maxHeight: 1)
+                                .foregroundStyle(Color("backgroundBlue"))
                             
                         }
                     }
@@ -55,7 +59,6 @@ struct RequestIndustryView: View {
             .refreshable {
                 viewModel.loadRequests()
             }
-            .background(Color(.systemGroupedBackground))
             
             Button(action: {
                 showNewRequestSheet = true
@@ -68,7 +71,7 @@ struct RequestIndustryView: View {
                 .foregroundColor(.white)
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(Color("usi"))
+                .background(Color("logoBlue"))
                 .cornerRadius(12)
                 .padding()
             }
@@ -86,14 +89,14 @@ struct RequestIndustryView: View {
     }
     
     func requestCard(for request: RequestModel) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            
-            HStack(alignment: .center) {
+        VStack(alignment: .leading, spacing: 8) {
+
+            HStack(alignment: .top, spacing: 8) {
                 Text(request.title)
-                    .font(.body)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.primary)
+                    .font(.headline)
+                    .lineLimit(2)
                     .multilineTextAlignment(.leading)
+                    .foregroundColor(.black)
 
                 Spacer()
 
@@ -102,26 +105,31 @@ struct RequestIndustryView: View {
                 }) {
                     Image(systemName: "trash")
                         .foregroundColor(.red)
-                        .padding(8)
+                        .padding(6)
                         .background(Color.red.opacity(0.1))
                         .clipShape(Circle())
                 }
                 .buttonStyle(PlainButtonStyle())
             }
-            
+
             // Açıklama
             Text(request.description)
+                .lineLimit(4)
+                .multilineTextAlignment(.leading)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
-                .lineLimit(3)
-                .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading) // Ekstra hizalama garantisi
-            
+
             // Tarih
-            Text("📅 \(request.date)")
-                .font(.caption)
-                .foregroundColor(.gray)
-            
+            HStack(spacing: 6) {
+                Image(systemName: "calendar")
+                    .foregroundStyle(Color("logoBlue"))
+                    .imageScale(.medium)
+                Text("Tarih: \(request.date)")
+                    .font(.caption2)
+                    .foregroundColor(.gray)
+                Spacer()
+            }
+
             // Kategori Etiketleri
             if !request.selectedCategories.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -129,22 +137,19 @@ struct RequestIndustryView: View {
                         ForEach(request.selectedCategories, id: \.self) { category in
                             Text(category)
                                 .font(.caption)
-                                .padding(.vertical, 4)
-                                .padding(.horizontal, 10)
-                                .background(Color.blue.opacity(0.1))
+                                .padding(.vertical, 2)
+                                .padding(.horizontal, 6)
+                                .background(Color("categoryBlue"))
                                 .foregroundColor(.blue)
                                 .clipShape(Capsule())
                         }
                     }
                 }
             }
-            
         }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(10)
-        .shadow(color: Color.black.opacity(0.07), radius: 6, x: 0, y: 3)
         .padding(.horizontal)
+
+
     }
 
 

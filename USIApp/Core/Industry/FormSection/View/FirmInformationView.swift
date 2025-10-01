@@ -25,7 +25,7 @@ struct FirmInformationView: View {
                     Image(systemName: "chevron.left")
                         .imageScale(.large)
                         .padding(.leading)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.black)
                 }
                 
                 Spacer()
@@ -33,15 +33,17 @@ struct FirmInformationView: View {
                     .font(.headline)
                     .fontWeight(.semibold)
                     .padding()
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.black)
                 
                 Spacer()
                 Image(systemName: "chevron.left")
                     .imageScale(.large)
                     .padding(.leading)
                     .foregroundStyle(Color("usi"))
+                    .opacity(0)
             }
-            .background(Color("usi"))
+            .background(.white)
+            .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
             
             
             ScrollView {
@@ -96,7 +98,7 @@ struct FirmInformationView: View {
                             .frame(maxWidth: .infinity)
                             .padding()
                             .foregroundColor(.white)
-                            .background(Color.green)
+                            .background(Color("logoBlue"))
                             .cornerRadius(8)
                             .padding(.horizontal)
                     }

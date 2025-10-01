@@ -20,6 +20,8 @@ class IndustryLoginViewModel: ObservableObject {
     @Published var errorMessage = ""
     @Published var isLoading: Bool = false
     @Published var isAlreadyRegister : Bool = false
+    @Published var showAlert: Bool = false
+
     
     
     func login(authViewModel : IndustryAuthViewModel){
@@ -30,36 +32,45 @@ class IndustryLoginViewModel: ObservableObject {
                 switch result {
                 case .success(let session):
                     authViewModel.industryUserSession = session
-                case .failure(let failure):
-                    self.errorMessage = failure.localizedDescription
+                    self.email = ""
+                    self.password = ""
+                case .failure(let error):
+                    if let nsError = error as NSError? {
+                        self.errorMessage = self.translateFirebaseError(nsError)
+                    }
+                    self.showAlert = true
                 }
             }
         }
     }
     
-    func signGoogle(authViewModel: IndustryAuthViewModel) {
-        IndustryAuthService.shared.signInWithGoogle { result in
-            switch result {
-            case .success(let session):
-                
-                IndustryFirestoreService.shared.fetchIndustryProfileSignGoogle(id: session.id) { result in
-                    switch result {
-                    case .success(_):
-                        authViewModel.industryUserSession = session
-                    case .failure(let failure):
-                        authViewModel.industryUserSession = nil
-                        print("Daha çnce kayırr olmamıs \(failure.localizedDescription)")
-                    }
-                }
-                
-                authViewModel.industryUserSession = session
-            case .failure(let error):
-                self.errorMessage = error.localizedDescription
-                print("Hata :\(self.errorMessage)")
-                
-            }
+    func translateFirebaseError(_ error: NSError) -> String {
+        
+        guard let errorCode = AuthErrorCode(rawValue: error.code) else {
+            return "Bilinmeyen bir hata oluştu."
+        }
+
+        
+        switch errorCode {
+        case .invalidEmail:
+            return "Geçersiz e-posta adresi."
+        case .wrongPassword:
+            return "Şifre yanlış."
+        case .userNotFound:
+            return "Kullanıcı bulunamadı."
+        case .emailAlreadyInUse:
+            return "Bu e-posta adresi zaten kullanımda."
+        case .weakPassword:
+            return "Şifre çok zayıf. Lütfen daha güçlü bir şifre seçin."
+        case .networkError:
+            return "İnternet bağlantınızı kontrol edin."
+        case .userDisabled:
+            return "Bu hesap devre dışı bırakılmış."
+        default:
+            return error.localizedDescription
         }
     }
+
     
     
     

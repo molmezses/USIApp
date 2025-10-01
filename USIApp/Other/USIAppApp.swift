@@ -31,6 +31,22 @@ struct USIAppApp: App {
     @StateObject var industryAuthViewModel = IndustryAuthViewModel()
     @StateObject var requestViewModel = RequestIndustryViewModel()
     
+    init() {
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = UIColor.systemBackground
+        
+        // Gölge eklemek
+        appearance.shadowColor = UIColor.black.withAlphaComponent(0.15) // gölge rengi
+        appearance.shadowImage = UIImage() // default çizgiyi sıfırlıyoruz
+        
+        UITabBar.appearance().standardAppearance = appearance
+        if #available(iOS 15.0, *) {
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
+    }
+
+    
     var body: some Scene {
         WindowGroup {
             LoginView()

@@ -121,7 +121,7 @@ struct AddRequestMessageView: View {
             .background(Color(.systemGroupedBackground))
         }
         .navigationDestination(isPresented: $navigateRequestView) {
-            IndustryTabView(selectedTab: $selectedTab)
+            IndustryTabView(selectedTab: 0)
                 .environmentObject(authViewModel)
                 .environmentObject(viewModel)
                 .navigationBarBackButtonHidden()

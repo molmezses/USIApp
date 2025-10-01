@@ -16,6 +16,9 @@ class IndustryProfileViewModel: ObservableObject {
     @Published var isUploading = false
     @Published var uploadProgress: Double = 0.0
     @Published var requesterImageURL: String? = nil
+    @Published var firmName : String = ""
+    @Published var firmExpertArea : String = ""
+    
     private let storage = Storage.storage()
     private let firestore = Firestore.firestore()
 
@@ -77,6 +80,8 @@ class IndustryProfileViewModel: ObservableObject {
             case .success(let info):
                 DispatchQueue.main.async {
                     self?.requesterImageURL = info.requesterImage
+                    self?.firmName = info.firmaAdi
+                    self?.firmExpertArea = info.calismaAlani
                 }
             case .failure(let error):
                 print("HATA loadIndustryProfileData: \(error.localizedDescription)")

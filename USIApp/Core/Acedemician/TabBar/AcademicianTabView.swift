@@ -31,7 +31,7 @@ struct AcademicianTabView: View {
                     .tag(1)
                     .environmentObject(authViewModel)
             }
-            .tint(.black)
+            .tint(Color("logoBlue"))
         }else{
             LoginView()
                 .navigationBarBackButtonHidden()

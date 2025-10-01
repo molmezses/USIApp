@@ -9,7 +9,7 @@ import SwiftUI
 
 struct IndustryTabView: View {
     
-    @Binding var selectedTab: Int
+    @State  var selectedTab: Int
     @EnvironmentObject var authViewModel : IndustryAuthViewModel
     @EnvironmentObject var requestViewModel : RequestIndustryViewModel
 
@@ -39,6 +39,7 @@ struct IndustryTabView: View {
                         
                     }
                     .tabViewStyle(.automatic)
+                    .tint(Color("logoBlue"))
 
                 }else{
                     LoginView()
