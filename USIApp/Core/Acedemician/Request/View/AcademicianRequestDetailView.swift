@@ -52,6 +52,8 @@ struct AcademicianRequestDetailView: View {
             }
             .padding()
             .background(.white)
+            .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
+
             
             ScrollView {
                 VStack(spacing: 20) {

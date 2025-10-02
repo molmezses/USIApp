@@ -29,7 +29,7 @@ struct PersonalInformationView: View {
                         Image(systemName: "chevron.left")
                             .imageScale(.large)
                             .padding(.leading)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(.black)
                     }
 
                         
@@ -38,17 +38,19 @@ struct PersonalInformationView: View {
                         .font(.headline)
                         .fontWeight(.semibold)
                         .padding()
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.black)
                     Spacer()
                     Image(systemName: "chevron.left")
                         .imageScale(.large)
                         .padding(.leading)
-                        .foregroundStyle(Color("usi"))
+                    .opacity(0)
                 }
-                .background(Color("usi"))
+                .background(.white)
+                .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
+
                 
                 ZStack {
-                    Color(.systemGroupedBackground).ignoresSafeArea()
+                    Color(.tertiarySystemGroupedBackground).ignoresSafeArea()
                     
                     VStack(spacing: 20){
                         Spacer()
@@ -120,7 +122,7 @@ struct PersonalInformationView: View {
                                 .font(.headline)
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 55)
-                                .background(Color("usi"))
+                                .background(Color("logoBlue"))
                                 .mask(RoundedRectangle(cornerRadius: 10))
                                 .padding(.horizontal)
                                 .foregroundStyle(.white)

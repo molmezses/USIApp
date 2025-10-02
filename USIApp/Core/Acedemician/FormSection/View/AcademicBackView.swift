@@ -12,7 +12,7 @@ struct AcademicBackView: View {
     @Environment(\.dismiss) var dismiss
     @FocusState var focusedField: Bool
     @StateObject var viewModel = AcademicBackViewModel()
-
+    
     
     var body: some View {
         NavigationStack{
@@ -26,13 +26,14 @@ struct AcademicBackView: View {
                         Image(systemName: "chevron.left")
                             .imageScale(.large)
                             .padding(.leading)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(.black)
                         
                     }
-
-                        
+                    
+                    
                     Spacer()
                     Text("Akademik Geçmiş")
+                        .foregroundStyle(.black)
                         .font(.headline)
                         .fontWeight(.semibold)
                         .padding()
@@ -40,10 +41,10 @@ struct AcademicBackView: View {
                     Image(systemName: "chevron.left")
                         .imageScale(.large)
                         .padding(.leading)
-                        .foregroundStyle(Color("usi"))
+                        .opacity(0)
                 }
-                .background(Color("usi"))
-                .foregroundStyle(.white)
+                .background(.white)
+                .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
                 .onTapGesture {
                     focusedField = false
                 }
@@ -52,7 +53,7 @@ struct AcademicBackView: View {
                     Color(.systemGroupedBackground).ignoresSafeArea()
                     
                     VStack(spacing: 20){
-                            Spacer()
+                        Spacer()
                         HStack {
                             VStack {
                                 Text("Akedemik geçmişinizi giriniz.")
@@ -80,10 +81,10 @@ struct AcademicBackView: View {
                             )
                             .padding(.horizontal)
                             .focused($focusedField)
-
-
                         
-
+                        
+                        
+                        
                         
                         // Kaydet Butonu
                         Button {
@@ -94,7 +95,7 @@ struct AcademicBackView: View {
                                 .font(.headline)
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 55)
-                                .background(Color("usi"))
+                                .background(Color("logoBlue"))
                                 .mask(RoundedRectangle(cornerRadius: 10))
                                 .padding(.horizontal)
                                 .foregroundStyle(.white)

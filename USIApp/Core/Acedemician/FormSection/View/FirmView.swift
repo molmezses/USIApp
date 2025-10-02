@@ -26,14 +26,14 @@ struct FirmView: View {
                     } label: {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 18, weight: .semibold))
-                            .foregroundColor(.white)
+                            .foregroundColor(.black)
                     }
 
                     Spacer()
 
                     Text("Firma Bilgileri")
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
 
                     Spacer()
 
@@ -41,7 +41,9 @@ struct FirmView: View {
                         .opacity(0)
                 }
                 .padding()
-                .background(Color("usi"))
+                .background(.white)
+                .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
+
 
                 ScrollView {
                     VStack(spacing: 20) {
@@ -108,7 +110,7 @@ struct FirmView: View {
                                 Text("Kaydet")
                                     .frame(maxWidth: .infinity)
                                     .frame(height: 50)
-                                    .background(Color("usi"))
+                                    .background(Color("logoBlue"))
                                     .foregroundColor(.white)
                                     .cornerRadius(10)
                                     .padding(.horizontal)

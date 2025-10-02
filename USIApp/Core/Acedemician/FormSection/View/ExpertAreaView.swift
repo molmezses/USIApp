@@ -23,14 +23,14 @@ struct ExpertAreaView: View {
                     } label: {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 18, weight: .semibold))
-                            .foregroundColor(.white)
+                            .foregroundColor(.black)
                     }
                     
                     Spacer()
                     
                     Text("Uzmanlık Alanları")
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                     
                     Spacer()
                     
@@ -39,7 +39,9 @@ struct ExpertAreaView: View {
                         .opacity(0)
                 }
                 .padding()
-                .background(Color("usi"))
+                .background(.white)
+                .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
+
                 
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
@@ -70,7 +72,7 @@ struct ExpertAreaView: View {
                             Text("Ekle")
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 50)
-                                .background(Color("usi"))
+                                .background(Color("logoBlue"))
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                                 .padding(.horizontal)
