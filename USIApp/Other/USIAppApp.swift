@@ -30,6 +30,7 @@ struct USIAppApp: App {
     @StateObject var authViewModel = AuthViewModel()
     @StateObject var industryAuthViewModel = IndustryAuthViewModel()
     @StateObject var requestViewModel = RequestIndustryViewModel()
+    @StateObject var studentAuthViewModel = StudentAuthViewModel()
     
     init() {
         let appearance = UITabBarAppearance()
@@ -53,6 +54,7 @@ struct USIAppApp: App {
                 .environmentObject(authViewModel)
                 .environmentObject(industryAuthViewModel)
                 .environmentObject(requestViewModel)
+                .environmentObject(studentAuthViewModel)
         }
     }
 }

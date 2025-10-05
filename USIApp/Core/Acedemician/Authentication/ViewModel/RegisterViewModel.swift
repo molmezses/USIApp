@@ -21,7 +21,7 @@ class RegisterViewModel: ObservableObject{
             return false
         }
         
-        guard email.hasSuffix("@gmail.com")  else {
+        guard email.hasSuffix("@ahievran.edu.tr")  else {
             self.errorMessage = "Sadece @ahievran.edu.tr uzantılı e-posta adresleri ile kayıt olabilirsiniz."
             return false
         }
