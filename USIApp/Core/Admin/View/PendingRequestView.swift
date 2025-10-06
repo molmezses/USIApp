@@ -151,7 +151,7 @@ struct PendingRequestView: View {
                                 .foregroundColor(.blue)
                                 .cornerRadius(8)
                         }
-                    } else if request.requesterType == "academician" {
+                    } else  {
 
                         Text(request.requestCategory ?? "Kategori bulunamadı")
                             .font(.caption)

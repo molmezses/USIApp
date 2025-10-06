@@ -134,7 +134,7 @@ struct RequestInfoAdminView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
 
                             }
-                        } else if request.requesterType == "academician" {
+                        } else {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("Talep Kategorisi")
                                     .font(.subheadline.bold())
