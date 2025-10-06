@@ -1,17 +1,18 @@
 //
-//  AddAcademicianRequestCategoryView.swift
+//  AddStudentRequestCategoryView.swift
 //  USIApp
 //
-//  Created by Mustafa Ölmezses on 2.09.2025.
+//  Created by Mustafa Ölmezses on 6.10.2025.
 //
 
 import SwiftUI
 
-struct AddAcademicianRequestCategoryView: View {
+struct AddStudentRequestCategoryView: View {
     
     
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var academicianRequestViewModel : AcademicianRequestViewModel
+    @EnvironmentObject var viewModel : StudentRequestViewModel
+    @EnvironmentObject var authViewModel : StudentAuthViewModel
 
     
     var body: some View {
@@ -21,17 +22,18 @@ struct AddAcademicianRequestCategoryView: View {
                 Button { dismiss() } label: {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                 }
                 Spacer()
                 Text("Talebinizin Kategorisini seçiniz")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
                 Spacer()
                 Image(systemName: "chevron.left").opacity(0)
             }
             .padding()
-            
+            .background(.white)
+            .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     
@@ -42,7 +44,7 @@ struct AddAcademicianRequestCategoryView: View {
                                 .frame(maxWidth: .infinity , alignment: .leading)
                             Spacer()
                             
-                            if academicianRequestViewModel.requestCategory == .arastirmaAlanlari {
+                            if viewModel.requestCategory == .arastirmaAlanlari {
                                 Circle()
                                     .frame(width: 20 , height: 20)
                                     .foregroundStyle(.green)
@@ -60,7 +62,7 @@ struct AddAcademicianRequestCategoryView: View {
                             RoundedRectangle(cornerRadius: 12)
                         }
                         .onTapGesture {
-                            academicianRequestViewModel.changeRequestCategory(.arastirmaAlanlari)
+                            viewModel.changeRequestCategory(.arastirmaAlanlari)
                         }
                         
                         HStack {
@@ -68,7 +70,7 @@ struct AddAcademicianRequestCategoryView: View {
                                 .frame(maxWidth: .infinity , alignment: .leading)
                             Spacer()
                             
-                            if academicianRequestViewModel.requestCategory == .uzmanlikAlanlari {
+                            if viewModel.requestCategory == .uzmanlikAlanlari {
                                 Circle()
                                     .frame(width: 20 , height: 20)
                                     .foregroundStyle(.green)
@@ -86,7 +88,7 @@ struct AddAcademicianRequestCategoryView: View {
                             RoundedRectangle(cornerRadius: 12)
                         }
                         .onTapGesture {
-                            academicianRequestViewModel.changeRequestCategory(.uzmanlikAlanlari)
+                            viewModel.changeRequestCategory(.uzmanlikAlanlari)
                         }
                         
                         HStack {
@@ -94,7 +96,7 @@ struct AddAcademicianRequestCategoryView: View {
                                 .frame(maxWidth: .infinity , alignment: .leading)
                             Spacer()
                             
-                            if academicianRequestViewModel.requestCategory == .projeFikirleri {
+                            if viewModel.requestCategory == .projeFikirleri {
                                 Circle()
                                     .frame(width: 20 , height: 20)
                                     .foregroundStyle(.green)
@@ -112,7 +114,7 @@ struct AddAcademicianRequestCategoryView: View {
                             RoundedRectangle(cornerRadius: 12)
                         }
                         .onTapGesture {
-                            academicianRequestViewModel.changeRequestCategory(.projeFikirleri)
+                            viewModel.changeRequestCategory(.projeFikirleri)
                         }
                         
                         
@@ -121,7 +123,7 @@ struct AddAcademicianRequestCategoryView: View {
                                 .frame(maxWidth: .infinity , alignment: .leading)
                             Spacer()
                             
-                            if academicianRequestViewModel.requestCategory == .isBirligiOrtakCalisma {
+                            if viewModel.requestCategory == .isBirligiOrtakCalisma {
                                 Circle()
                                     .frame(width: 20 , height: 20)
                                     .foregroundStyle(.green)
@@ -138,7 +140,7 @@ struct AddAcademicianRequestCategoryView: View {
                             RoundedRectangle(cornerRadius: 12)
                         }
                         .onTapGesture {
-                            academicianRequestViewModel.changeRequestCategory(.isBirligiOrtakCalisma)
+                            viewModel.changeRequestCategory(.isBirligiOrtakCalisma)
                         }
                         
                         
@@ -147,7 +149,7 @@ struct AddAcademicianRequestCategoryView: View {
                                 .frame(maxWidth: .infinity , alignment: .leading)
                             Spacer()
                             
-                            if academicianRequestViewModel.requestCategory == .yayinMakaleDestegi {
+                            if viewModel.requestCategory == .yayinMakaleDestegi {
                                 Circle()
                                     .frame(width: 20 , height: 20)
                                     .foregroundStyle(.green)
@@ -164,7 +166,7 @@ struct AddAcademicianRequestCategoryView: View {
                             RoundedRectangle(cornerRadius: 12)
                         }
                         .onTapGesture {
-                            academicianRequestViewModel.changeRequestCategory(.yayinMakaleDestegi)
+                            viewModel.changeRequestCategory(.yayinMakaleDestegi)
                         }
                         
                         HStack {
@@ -172,7 +174,7 @@ struct AddAcademicianRequestCategoryView: View {
                                 .frame(maxWidth: .infinity , alignment: .leading)
                             Spacer()
                             
-                            if academicianRequestViewModel.requestCategory == .ogrenciAsistanTalepleri {
+                            if viewModel.requestCategory == .ogrenciAsistanTalepleri {
                                 Circle()
                                     .frame(width: 20 , height: 20)
                                     .foregroundStyle(.green)
@@ -189,7 +191,7 @@ struct AddAcademicianRequestCategoryView: View {
                             RoundedRectangle(cornerRadius: 12)
                         }
                         .onTapGesture {
-                            academicianRequestViewModel.changeRequestCategory(.ogrenciAsistanTalepleri)
+                            viewModel.changeRequestCategory(.ogrenciAsistanTalepleri)
                         }
                         
                         HStack {
@@ -197,7 +199,7 @@ struct AddAcademicianRequestCategoryView: View {
                                 .frame(maxWidth: .infinity , alignment: .leading)
                             Spacer()
                             
-                            if academicianRequestViewModel.requestCategory == .teknikAltyapiIhtiyaclari {
+                            if viewModel.requestCategory == .teknikAltyapiIhtiyaclari {
                                 Circle()
                                     .frame(width: 20 , height: 20)
                                     .foregroundStyle(.green)
@@ -214,7 +216,7 @@ struct AddAcademicianRequestCategoryView: View {
                             RoundedRectangle(cornerRadius: 12)
                         }
                         .onTapGesture {
-                            academicianRequestViewModel.changeRequestCategory(.teknikAltyapiIhtiyaclari)
+                            viewModel.changeRequestCategory(.teknikAltyapiIhtiyaclari)
                         }
                     }
                     .padding(.horizontal)
@@ -226,8 +228,9 @@ struct AddAcademicianRequestCategoryView: View {
                     Spacer()
                     
                     NavigationLink {
-                        AddAcademicianRequestView()
-                            .environmentObject(academicianRequestViewModel)
+                        AddStudentRequestView()
+                            .environmentObject(viewModel)
+                            .environmentObject(authViewModel)
                             .navigationBarBackButtonHidden()
                     } label: {
                         Text("İleri")
@@ -235,7 +238,7 @@ struct AddAcademicianRequestCategoryView: View {
                             .foregroundColor(.white)
                             .padding()
                             .frame(maxWidth: .infinity)
-                            .background(Color("usi"))
+                            .background(Color("logoBlue"))
                             .cornerRadius(12)
                             .padding()
                     }
@@ -249,6 +252,5 @@ struct AddAcademicianRequestCategoryView: View {
 }
 
 #Preview {
-    AddAcademicianRequestCategoryView()
-        .environmentObject(AcademicianRequestViewModel())
+    AddStudentRequestCategoryView()
 }

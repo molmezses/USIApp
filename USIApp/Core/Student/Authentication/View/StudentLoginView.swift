@@ -174,10 +174,9 @@ struct StudentLoginView: View {
                         }
             }else{
                 
-                StudentProfileView()
-                
-//                AcademicianTabView()
-//                    .environmentObject(authViewModel)
+                StudentTabView()
+                    .environmentObject(authViewModel)
+                    .navigationBarBackButtonHidden()
             }
         }
     }

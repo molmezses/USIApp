@@ -16,6 +16,7 @@ class StudentRegisterViewModel: ObservableObject{
     @Published var confirmPassword : String = ""
     @Published var errorMessage: String? = ""
     @Published var isLoading: Bool = false
+    @Published var navigateToStudentTabView: Bool = false
     
     let db = Firestore.firestore().collection("Students")
 
@@ -24,6 +25,10 @@ class StudentRegisterViewModel: ObservableObject{
         if !(confirmPassword == password){
             self.errorMessage = "Şifreler birbirleri ile uyuşmuyor"
             return false
+        }
+        
+        if !email.hasSuffix("@ogr.ahievran.edu.tr"){
+            self.errorMessage = "Lütfen @ogr.ahievran.edu.tr uzantılı bir mail ile kayıt olunuz."
         }
         
         print("email doğru yazım tamamlandı")
@@ -44,7 +49,7 @@ class StudentRegisterViewModel: ObservableObject{
                 case .success(let session):
                     authViewModel.userSession = session
                     self.db.document(authViewModel.userSession?.id ?? "id bulunamadı").setData(
-                        ["email":authViewModel.userSession?.email ?? "email bulunamadı"]
+                        ["studentEmail":authViewModel.userSession?.email ?? "email bulunamadı"]
                     )
                     
                     let domain = self.email.components(separatedBy: "@").last ?? "unknown"
@@ -57,8 +62,9 @@ class StudentRegisterViewModel: ObservableObject{
                     Firestore.firestore().collection("UserDomains").document(session.id).setData(data)
                     
                     
-//                    self.navigateToIndustryTabView = true
+                    self.navigateToStudentTabView = true
                     print("session başarılı")
+                    self.clearFields()
                     
                 case .failure(let failure):
                     self.errorMessage = failure.localizedDescription
@@ -67,6 +73,7 @@ class StudentRegisterViewModel: ObservableObject{
                 
             }
         }
+        
     }
     
      func clearFields(){

@@ -13,8 +13,6 @@ enum FirmInformationEnum {
 }
 
 
-
-
 class FirmInformationViewModel: ObservableObject {
     
     @Published  var firmName = ""

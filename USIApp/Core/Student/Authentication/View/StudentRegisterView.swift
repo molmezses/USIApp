@@ -162,6 +162,11 @@ struct StudentRegisterView: View {
             .onTapGesture {
                 focusedField = false
             }
+            .navigationDestination(isPresented: $viewModel.navigateToStudentTabView) {
+                StudentTabView()
+                    .environmentObject(authViewModel)
+                    .navigationBarBackButtonHidden()
+            }
             
         }
     }
