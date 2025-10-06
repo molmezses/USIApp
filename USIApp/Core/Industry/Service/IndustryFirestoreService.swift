@@ -250,6 +250,8 @@ class IndustryFirestoreService {
                 let requesterAddress = data["requesterAddress"] as? String ?? ""
                 let requesterImage = data["requesterImage"] as? String ?? ""
                 let requesterType = data["requesterType"] as? String ?? ""
+                let createdDate = data["createdDate"] as? String ?? ""
+
 
                 
                 
@@ -268,7 +270,8 @@ class IndustryFirestoreService {
                     requesterPhone: requesterPhone,
                     adminMessage : adminMessage,
                     requesterImage: requesterImage,
-                    requesterType: requesterType
+                    requesterType: requesterType,
+                    createdDate: createdDate
 
                 )
             }
@@ -318,6 +321,8 @@ class IndustryFirestoreService {
                 let requesterImage = data["requesterImage"] as? String ?? ""
                 let requesterType = data["requesterType"] as? String ?? ""
                 let requestCategory = data["requestCategory"] as? String ?? ""
+                let createdDate = data["createdDate"] as? String ?? ""
+
                 
 
 
@@ -344,6 +349,7 @@ class IndustryFirestoreService {
                     requesterImage: requesterImage,
                     requesterType: requesterType,
                     requestCategory: requestCategory,
+                    createdDate: createdDate,
 
                     
                 )
@@ -396,6 +402,7 @@ class IndustryFirestoreService {
                 let requesterImage = data["requesterImage"] as? String ?? ""
                 let requesterType = data["requesterType"] as? String ?? ""
                 let requestCategory = data["requestCategory"] as? String ?? ""
+                let createdDate = data["createdDate"] as? String ?? ""
 
 
 
@@ -424,6 +431,7 @@ class IndustryFirestoreService {
                     requesterImage: requesterImage,
                     requesterType: requesterType,
                     requestCategory: requestCategory,
+                    createdDate: createdDate,
 
                     
                 )

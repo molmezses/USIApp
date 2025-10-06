@@ -86,18 +86,30 @@ class AcademicianRequestViewModel: ObservableObject{
     }
     
     
-    func loadRequests(){
+    func loadRequests() {
         FirestoreService.shared.fetchAcademicianRequests { result in
             switch result {
             case .success(let requests):
-                
-                self.requests = requests
-                print("Başarılı : Document getirildi successfully!")
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "dd.MM.yyyy"
+
+                self.requests = requests.sorted(by: { (req1, req2) in
+                    guard let date1 = dateFormatter.date(from: req1.createdDate),
+                          let date2 = dateFormatter.date(from: req2.createdDate) else {
+                        return false
+                    }
+                    return date1 > date2
+                })
+
+                print("Başarılı: Talepler tarih sırasına göre sıralandı!")
+
             case .failure(let failure):
-                print("Hataaaaa: \(failure.localizedDescription)")
+                print("Hata: \(failure.localizedDescription)")
             }
         }
     }
+    
+
     
 //    func deleteRequest(documentID: String){
 //        FirestoreService.shared.deleteRequest(documentID: documentID) { result in

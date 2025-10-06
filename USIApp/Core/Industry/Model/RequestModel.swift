@@ -26,5 +26,6 @@ struct RequestModel:Identifiable , Codable{
     var requesterImage: String?
     var requesterType: String
     var requestCategory : String?
+    var createdDate: String
     
 }

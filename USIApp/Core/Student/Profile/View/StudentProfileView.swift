@@ -48,9 +48,9 @@ struct StudentProfileView: View {
                     }
                     .padding(.trailing, 12)
                     NavigationLink {
-//                        StudentSettingsView()
-//                            .navigationBarBackButtonHidden()
-//                            .environmentObject(authViewModel)
+                        StudentSettingsView()
+                            .navigationBarBackButtonHidden()
+                            .environmentObject(authViewModel)
                     } label: {
                         Image(systemName: "gear")
                             .imageScale(.large)

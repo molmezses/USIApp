@@ -171,6 +171,8 @@ class StudentFirestoreService {
                 let requesterImage = data["requesterImage"] as? String ?? ""
                 let requesterType = data["requesterType"] as? String ?? ""
                 let requestCategory = data["requestCategory"] as? String ?? ""
+                let createdDate = data["createdDate"] as? String ?? ""
+
 
 
                 
@@ -192,13 +194,20 @@ class StudentFirestoreService {
                     requesterImage: requesterImage,
                     requesterType: requesterType,
                     requestCategory: requestCategory,
+                    createdDate: createdDate,
 
                 )
             }
             
+            
+            
             completion(.success(requests))
         }
     }
+    
+    
+ 
+
     
 
 }

@@ -521,6 +521,8 @@ class FirestoreService{
                         let requesterImage = data["requesterImage"] as? String ?? ""
                         let requesterType = data["requesterType"] as? String ?? ""
                         let requestCategory = data["requestCategory"] as? String ?? "Kategori bulunamadı"
+                        let createdDate = data["createdDate"] as? String ?? ""
+
 
                         let request = RequestModel(
                             id: id,
@@ -539,6 +541,7 @@ class FirestoreService{
                             requesterImage: requesterImage,
                             requesterType: requesterType,
                             requestCategory:requestCategory,
+                            createdDate: createdDate,
                         )
 
                         fetchedRequests.append(request)
@@ -714,6 +717,8 @@ class FirestoreService{
                         let requesterImage = data["requesterImage"] as? String ?? ""
                         let requesterType = data["requesterType"] as? String ?? ""
                         let requestCategory = data["requestCategory"] as? String ?? ""
+                        let createdDate = data["createdDate"] as? String ?? ""
+
 
                         
                         
@@ -734,6 +739,7 @@ class FirestoreService{
                             requesterImage: requesterImage,
                             requesterType: requesterType,
                             requestCategory: requestCategory,
+                            createdDate: createdDate,
 
                         )
                     }
