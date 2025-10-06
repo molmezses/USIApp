@@ -38,7 +38,7 @@ struct AdminView: View {
                                 HStack {
                                     Image(systemName: "clock.fill")
                                         .resizable()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(Color("logoBlue"))
                                         .frame(width: 28, height: 28)
                                     Text("Bekleyen Talepler")
                                     Spacer()
@@ -65,7 +65,7 @@ struct AdminView: View {
                                 HStack {
                                     Image(systemName: "calendar.badge.clock")
                                         .resizable()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(Color("logoBlue"))
                                         .frame(width: 28, height: 28)
                                     Text("Eski talepler")
                                     Spacer()
@@ -84,7 +84,7 @@ struct AdminView: View {
                                 HStack {
                                     Image(systemName: "person.circle.fill")
                                         .resizable()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(Color("logoBlue"))
                                         .frame(width: 28, height: 28)
                                     Text("Admin kullanıcısı ekle")
                                     Spacer()
@@ -125,18 +125,17 @@ struct AdminView: View {
             } label: {
                 Image(systemName: "chevron.left")
                     .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
             }
             Spacer()
             Text("Yönetici Paneli")
                 .font(.headline)
-                .foregroundColor(.white)
+                .foregroundColor(.black)
             Spacer()
             Image(systemName: "chevron.left")
                 .opacity(0)
         }
         .padding()
-        .background(Color("usi"))
     }
     
     // MARK: - Kullanıcı İstatistikleri

@@ -23,18 +23,17 @@ struct OldRequestView: View {
                 } label: {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                 }
                 Spacer()
                 Text("Eski Talepler")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
                 Spacer()
                 Image(systemName: "chevron.left")
                     .opacity(0)
             }
             .padding()
-            .background(Color("usi"))
             
             ScrollView {
                 VStack(spacing: 20) {

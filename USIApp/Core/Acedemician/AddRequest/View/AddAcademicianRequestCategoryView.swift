@@ -21,12 +21,12 @@ struct AddAcademicianRequestCategoryView: View {
                 Button { dismiss() } label: {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                 }
                 Spacer()
                 Text("Talebinizin Kategorisini seçiniz")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
                 Spacer()
                 Image(systemName: "chevron.left").opacity(0)
             }
@@ -235,7 +235,7 @@ struct AddAcademicianRequestCategoryView: View {
                             .foregroundColor(.white)
                             .padding()
                             .frame(maxWidth: .infinity)
-                            .background(Color("usi"))
+                            .background(Color("logoBlue"))
                             .cornerRadius(12)
                             .padding()
                     }
