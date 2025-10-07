@@ -31,31 +31,29 @@ struct AddRequestCategoryView: View {
                 Button { dismiss() } label: {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                 }
                 Spacer()
                 Text("Talebinizin Kategorisini seçiniz")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
                 Spacer()
                 Image(systemName: "chevron.left").opacity(0)
             }
             .padding()
-            .background(Color("usi"))
+            .background(.white)
+            .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     
                     VStack(spacing: 12) {
-                        Text("Talebinizin Kategorisini Seçiniz")
-                            .font(.title2)
-                            .foregroundStyle(.black)
-                            .multilineTextAlignment(.center)
-                            .fontWeight(.semibold)
+                        
                         
                         Text("Birden fazla kategori seçebilirsiniz. Listede yoksa elle ekleyebilirsiniz.")
                             .foregroundStyle(.gray)
                             .multilineTextAlignment(.center)
+                            .padding(.top)
                         
                         Text("Projeler gizlilik sözleşmesi ile korunur.")
                             .font(.footnote)
@@ -88,7 +86,7 @@ struct AddRequestCategoryView: View {
                                                         .foregroundColor(viewModel.selectedCategories.contains(category) ? .white : .black)
                                                         .padding(.vertical, 6)
                                                         .padding(.horizontal, 10)
-                                                        .background(viewModel.selectedCategories.contains(category) ? Color("usi") : Color(.systemGray5))
+                                                        .background(viewModel.selectedCategories.contains(category) ? Color("logoBlue") : Color(.systemGray5))
                                                         .cornerRadius(15)
                                                 }
                                             }
@@ -121,7 +119,7 @@ struct AddRequestCategoryView: View {
                                 viewModel.customCategoryInput = ""
                             }) {
                                 Image(systemName: "plus.circle.fill")
-                                    .foregroundColor(Color("usi"))
+                                    .foregroundColor(Color("logoBlue"))
                                     .font(.title2)
                             }
                         }
@@ -181,7 +179,7 @@ struct AddRequestCategoryView: View {
                             .foregroundColor(.white)
                             .padding()
                             .frame(maxWidth: .infinity)
-                            .background(Color("usi"))
+                            .background(Color("logoBlue"))
                             .cornerRadius(12)
                             .padding()
                     }

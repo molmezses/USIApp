@@ -11,6 +11,8 @@ struct StudentSettingsView: View {
     
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var authViewModel : StudentAuthViewModel
+    @StateObject var feedbackViewmodel = FeedbackViewModel()
+
     
     var body: some View {
         if authViewModel.userSession == nil{
@@ -49,29 +51,10 @@ struct StudentSettingsView: View {
                                 .padding(.leading)
                                 .padding(.top)
                             VStack{
-//                                NavigationLink {
-//                                    
-//                                } label: {
-//                                    HStack {
-//                                        Image(systemName: "eye.square.fill")
-//                                            .resizable()
-//                                            .foregroundStyle(.black)
-//                                            .frame(width: 28, height: 28)
-//                                        Text("Profil Ön izlemesini gör")
-//                                        Spacer()
-//                                        Image(systemName: "chevron.right")
-//                                        
-//                                    }
-//                                    .padding(2)
-//                                    .foregroundStyle(.black)
-//                                }
-//                                
-//                                
-//                                Divider()
-//                                    .padding(.vertical , 4)
                                 
                                 NavigationLink(destination: {
-
+                                    ForgotPasswordView()
+                                        .navigationBarBackButtonHidden()
                                 }, label: {
                                     HStack {
                                         Image(systemName: "person.badge.key.fill")
@@ -183,8 +166,8 @@ struct StudentSettingsView: View {
                                 .frame(maxWidth: .infinity , alignment: .leading)
                                 .padding(.leading)
                             VStack{
-                                NavigationLink {
-
+                                Button {
+                                    feedbackViewmodel.sendSupportMail()
                                 } label: {
                                     HStack {
                                         Image(systemName: "questionmark.circle.fill")
@@ -205,7 +188,8 @@ struct StudentSettingsView: View {
                                     .padding(.vertical , 4)
                                 
                                 NavigationLink(destination: {
-                                    
+                                    SendSuggestionView()
+                                        .navigationBarBackButtonHidden()
                                 }, label: {
                                     HStack {
                                         Image(systemName: "bubble.fill")

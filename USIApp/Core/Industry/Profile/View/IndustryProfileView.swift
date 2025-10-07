@@ -109,15 +109,28 @@ struct IndustryProfileView: View {
                             )
                             .onChange(of: selectedItem) { newItem in
                                 Task {
-                                    if let data = try? await newItem?.loadTransferable(type: Data.self),
-                                       let uiImage = UIImage(data: data) {
+                                    do {
+                                        guard let item = newItem else { return }
+                                        guard let data = try await item.loadTransferable(type: Data.self),
+                                              let uiImage = UIImage(data: data) else { return }
+                                        
                                         viewModel.selectedImage = uiImage
-
-                                        let firmId = AuthService.shared.getCurrentUser()?.id ?? ""
-                                        await viewModel.uploadImageAndSaveLink(firmId: firmId)
+                                        
+                                        // Kullanıcı ID'si kontrolü
+                                        guard let firmId = AuthService.shared.getCurrentUser()?.id, !firmId.isEmpty else {
+                                            print(" Kullanıcı ID'si bulunamadı")
+                                            return
+                                        }
+                                        
+                                        // Hata yakalama
+                                         await viewModel.uploadImageAndSaveLink(firmId: firmId)
+                                        
+                                    } catch {
+                                        print(" Görsel yükleme hatası:", error.localizedDescription)
                                     }
                                 }
                             }
+
 
 
                             Text(viewModel.firmName != "" ? viewModel.firmName  : "Firma adı bulunamadı")
@@ -167,6 +180,9 @@ struct IndustryProfileView: View {
 //                        .padding(.horizontal)
 //                        .padding(.top, 20)
                     }
+                }
+                .refreshable {
+                    viewModel.loadIndustryProfileData()
                 }
             }
         }

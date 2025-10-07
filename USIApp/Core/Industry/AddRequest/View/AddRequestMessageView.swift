@@ -22,19 +22,19 @@ struct AddRequestMessageView: View {
                 Button { dismiss() } label: {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                 }
                 Spacer()
                 Text("Talebinizin Detayı")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
                 Spacer()
                 Image(systemName: "chevron.left")
                     .opacity(0) // simetri için boş
             }
             .padding()
-            .background(Color("usi"))
-            
+            .background(.white)
+            .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     
@@ -110,7 +110,7 @@ struct AddRequestMessageView: View {
                             .foregroundColor(.white)
                             .padding()
                             .frame(maxWidth: .infinity)
-                            .background(Color("usi"))
+                            .background(Color("logoBlue"))
                             .cornerRadius(12)
                             .padding(.horizontal)
                     }

@@ -10,6 +10,7 @@ import SwiftUI
 
 struct LoginView: View {
     @StateObject var viewModel = FirstLoginViewModel()
+    @EnvironmentObject var studentAuthViewModel : StudentAuthViewModel
     
     var body: some View {
         NavigationStack {
@@ -24,6 +25,7 @@ struct LoginView: View {
                         .navigationBarBackButtonHidden()
                 } else {
                     IndustryLoginView()
+                        .environmentObject(studentAuthViewModel)
                         .navigationBarBackButtonHidden()
                 }
             }
