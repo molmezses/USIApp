@@ -19,6 +19,10 @@ class RequestIndustryViewModel: ObservableObject {
     
     @Published var requestMessage: String = ""
     
+    @Published var showAlert : Bool = false
+    
+    @Published var alertMessage : String = ""
+    
     let categories: [String] = [
         "Yapay Zeka",
         "Makine Öğrenmesi",
@@ -134,6 +138,8 @@ class RequestIndustryViewModel: ObservableObject {
                 print("Başarılı : Document deleted successfully!")
             case .failure(let failure):
                 print("Hata: \(failure.localizedDescription)")
+                self.alertMessage =  "Talep silinirken bir hata meydana geldi lütfen tekrar deneyiniz"
+                self.showAlert = true
             }
         }
     }

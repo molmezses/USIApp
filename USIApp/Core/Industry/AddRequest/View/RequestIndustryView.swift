@@ -100,16 +100,7 @@ struct RequestIndustryView: View {
 
                 Spacer()
 
-                Button(action: {
-                    viewModel.deleteRequest(documentID: request.id)
-                }) {
-                    Image(systemName: "trash")
-                        .foregroundColor(.red)
-                        .padding(6)
-                        .background(Color.red.opacity(0.1))
-                        .clipShape(Circle())
-                }
-                .buttonStyle(PlainButtonStyle())
+                
             }
 
             // Açıklama

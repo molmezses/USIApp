@@ -757,6 +757,18 @@ class FirestoreService{
 
     
 
+    func deleteRequest(documentID:String , completion: @escaping (Result<Void ,Error>) -> Void){
+        let docRef = Firestore.firestore().collection("Requests").document(documentID)
+        
+        docRef.delete { error in
+                if let error = error {
+                    completion(.failure(error))
+                } else {
+                    completion(.success(()))
+                    print("Belge silindi")
+                }
+            }
+    }
 
 
 

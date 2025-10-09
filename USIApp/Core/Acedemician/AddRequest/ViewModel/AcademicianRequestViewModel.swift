@@ -26,6 +26,7 @@ class AcademicianRequestViewModel: ObservableObject{
     @Published var requestCategory: AcademicianRequestCategoryEnum = .arastirmaAlanlari
     @Published var requestTitle: String = ""
     @Published var requestMessage: String = ""
+    @Published var isOpenRequest: Bool = false
     
     
     
@@ -44,6 +45,7 @@ class AcademicianRequestViewModel: ObservableObject{
         self.requests.removeAll()
         self.requestTitle = ""
         self.requestMessage = ""
+        self.isOpenRequest = false
     }
     
     func requestCategoryToString() -> String{
@@ -111,16 +113,16 @@ class AcademicianRequestViewModel: ObservableObject{
     
 
     
-//    func deleteRequest(documentID: String){
-//        FirestoreService.shared.deleteRequest(documentID: documentID) { result in
-//            switch result {
-//            case .success(_):
-//                self.loadRequests()
-//                print("Başarılı : Document deleted successfully!")
-//            case .failure(let failure):
-//                print("Hata: \(failure.localizedDescription)")
-//            }
-//        }
-//    }
+    func deleteRequest(documentID: String){
+        FirestoreService.shared.deleteRequest(documentID: documentID) { result in
+            switch result {
+            case .success(_):
+                self.loadRequests()
+                print("Başarılı : Document deleted successfully!")
+            case .failure(let failure):
+                print("Hata: \(failure.localizedDescription)")
+            }
+        }
+    }
     
 }

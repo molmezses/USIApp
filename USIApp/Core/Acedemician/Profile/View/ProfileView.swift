@@ -41,7 +41,7 @@ struct ProfileView: View {
                     Text("Hesabım")
                         .font(.headline)
                         .fontWeight(.semibold)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.black)
                     Spacer()
                     Button {
                         
@@ -64,8 +64,8 @@ struct ProfileView: View {
                         
                 }
                 .padding()
-                .background(Color("logoBlue"))
-                .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
+                .background(.white)
+                .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2) 
 
                 
                 ZStack {

@@ -12,6 +12,7 @@ struct RequestInfoIndustryView: View {
     
     @Environment(\.dismiss) var dismiss
     @State var viewModel = RequestInfoIndustryViewModel()
+    @StateObject var deleteRequestViewModel = RequestIndustryViewModel()
     
     var body: some View {
         VStack(spacing: 0) {
@@ -47,7 +48,7 @@ struct RequestInfoIndustryView: View {
                                 Label("Gönderildi – Cevap Bekleniyor", systemImage: "clock")
                                     .foregroundColor(.orange)
                                     .frame(maxWidth: .infinity , alignment:.leading)
-
+                                
                             }
                         case .approved:
                             VStack(alignment: .leading, spacing: 10) {
@@ -184,7 +185,7 @@ struct RequestInfoIndustryView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Kategoriler")
                                 .font(.subheadline.bold())
-
+                            
                             if request.requesterType == "industry"{
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     HStack(spacing: 8) {
@@ -209,13 +210,47 @@ struct RequestInfoIndustryView: View {
                                     .clipShape(Capsule())
                             }
                         }
-
+                        
                         
                     }
+                    
+                    
+                    
                 }
                 .padding()
+                
             }
+            
+            Spacer()
+            Button {
+                deleteRequestViewModel.showAlert = true
+            } label: {
+                HStack {
+                    Spacer()
+                    Image(systemName: "trash.fill")
+                        .imageScale(.medium)
+                    
+                        .foregroundStyle(.red)
+                    Text("Talebi sil")
+                        .font(.headline)
+                        .foregroundStyle(.red)
+                    Spacer()
+                }
+            }
+            .padding(.bottom)
         }
+        .alert("Emin misiniz?", isPresented: $deleteRequestViewModel.showAlert) {
+            Button("Evet") {
+                deleteRequestViewModel.deleteRequest(documentID: request.id)
+                dismiss()
+            }
+            Button("Hayır", role: .cancel) {
+                
+            }
+        } message: {
+            Text("Talebinizi silmek  istediğinizden emin misiniz?")
+        }
+        
         
     }
 }
@@ -250,6 +285,6 @@ struct WrapHStack<Item: Hashable, Content: View>: View {
 
 
 #Preview {
-
+    
 }
 
