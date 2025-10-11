@@ -20,6 +20,14 @@ struct IndustryTabView: View {
                     
                     TabView(selection: $selectedTab) {
                         
+                        OpenRequestsView()
+                            .environmentObject(authViewModel)
+                            .tabItem {
+                                Image(systemName: "menucard.fill")
+                                Text("Açık Talapler")
+                            }
+                            .tag(2)
+                        
                         RequestIndustryView()
                             .environmentObject(authViewModel)
                             .environmentObject(requestViewModel)
@@ -36,6 +44,7 @@ struct IndustryTabView: View {
                                 Text("Profil")
                             }
                             .tag(1)
+                        
                         
                     }
                     .tabViewStyle(.automatic)

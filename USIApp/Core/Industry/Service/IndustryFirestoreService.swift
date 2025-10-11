@@ -251,6 +251,8 @@ class IndustryFirestoreService {
                 let requesterImage = data["requesterImage"] as? String ?? ""
                 let requesterType = data["requesterType"] as? String ?? ""
                 let createdDate = data["createdDate"] as? String ?? ""
+                let requestType = data["requestType"] as? Bool ?? false
+
 
 
                 
@@ -271,7 +273,8 @@ class IndustryFirestoreService {
                     adminMessage : adminMessage,
                     requesterImage: requesterImage,
                     requesterType: requesterType,
-                    createdDate: createdDate
+                    createdDate: createdDate,
+                    requestType: requestType,
 
                 )
             }
@@ -322,6 +325,8 @@ class IndustryFirestoreService {
                 let requesterType = data["requesterType"] as? String ?? ""
                 let requestCategory = data["requestCategory"] as? String ?? ""
                 let createdDate = data["createdDate"] as? String ?? ""
+                let requestType = data["requestType"] as? Bool ?? false
+
 
                 
 
@@ -350,6 +355,7 @@ class IndustryFirestoreService {
                     requesterType: requesterType,
                     requestCategory: requestCategory,
                     createdDate: createdDate,
+                    requestType: requestType,
 
                     
                 )
@@ -403,6 +409,8 @@ class IndustryFirestoreService {
                 let requesterType = data["requesterType"] as? String ?? ""
                 let requestCategory = data["requestCategory"] as? String ?? ""
                 let createdDate = data["createdDate"] as? String ?? ""
+                let requestType = data["requestType"] as? Bool ?? false
+
 
 
 
@@ -432,6 +440,7 @@ class IndustryFirestoreService {
                     requesterType: requesterType,
                     requestCategory: requestCategory,
                     createdDate: createdDate,
+                    requestType: requestType,
 
                     
                 )

@@ -118,6 +118,20 @@ struct RequestIndustryView: View {
                 Text("Tarih: \(request.date)")
                     .font(.caption2)
                     .foregroundColor(.gray)
+                    .padding(.trailing)
+                                
+                if request.requestType{
+                    Image(systemName: "eyeglasses")
+                        .foregroundStyle(Color("logoBlue"))
+                        .imageScale(.medium)
+                    
+                    Text("Açık Talep")
+                        .font(.caption)
+                        .foregroundColor(.black)
+                }
+                
+                
+                
                 Spacer()
             }
 

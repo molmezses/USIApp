@@ -27,5 +27,6 @@ struct RequestModel:Identifiable , Codable{
     var requesterType: String
     var requestCategory : String?
     var createdDate: String
+    var requestType : Bool
     
 }

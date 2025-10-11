@@ -172,6 +172,8 @@ class StudentFirestoreService {
                 let requesterType = data["requesterType"] as? String ?? ""
                 let requestCategory = data["requestCategory"] as? String ?? ""
                 let createdDate = data["createdDate"] as? String ?? ""
+                let requestType = data["requestType"] as? Bool ?? false
+
 
 
 
@@ -195,6 +197,7 @@ class StudentFirestoreService {
                     requesterType: requesterType,
                     requestCategory: requestCategory,
                     createdDate: createdDate,
+                    requestType: requestType,
 
                 )
             }
