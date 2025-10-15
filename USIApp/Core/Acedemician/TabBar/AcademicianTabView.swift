@@ -17,6 +17,14 @@ struct AcademicianTabView: View {
         if authViewModel.userSession != nil {
             TabView(selection: $selectedTab) {
                 
+                OpenRequestsView()
+                    .environmentObject(authViewModel)
+                    .tabItem {
+                        Image(systemName: "menucard.fill")
+                        Text("Açık Talapler")
+                    }
+                    .tag(3)
+                
                 RequestAcademicianView()
                     .tabItem {
                         Image(systemName: "plus")

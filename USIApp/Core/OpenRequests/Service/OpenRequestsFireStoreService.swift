@@ -56,6 +56,7 @@ class OpenRequestsFireStoreService {
                 let requesterType = data["requesterType"] as? String ?? ""
                 let createdDate = data["createdDate"] as? String ?? ""
                 let requestType = data["requestType"] as? Bool == false
+                let requestCategory = data["requestCategory"] as? String ?? "hatali"
 
 
                 
@@ -76,6 +77,7 @@ class OpenRequestsFireStoreService {
                     adminMessage : adminMessage,
                     requesterImage: requesterImage,
                     requesterType: requesterType,
+                    requestCategory: requestCategory,
                     createdDate: createdDate,
                     requestType: requestType,
 
@@ -100,6 +102,41 @@ class OpenRequestsFireStoreService {
         }
         
     }
+    
+
+    func addApplyUser(requestId: String, userId: String, value: String) {
+        let db = Firestore.firestore()
+        let ref = db.collection("Requests").document(requestId)
+        
+        ref.getDocument { document, error in
+            if let error = error {
+                print(" Belge alınamadı: \(error.localizedDescription)")
+                return
+            }
+            
+            var updatedApplyUsers: [String: Any] = [:]
+            
+            if let data = document?.data(),
+               let existing = data["applyUsers"] as? [String: Any] {
+                updatedApplyUsers = existing
+            }
+            
+            updatedApplyUsers[userId] = value
+            
+            ref.updateData(["applyUsers": updatedApplyUsers]) { error in
+                if let error = error {
+                    print(" Güncelleme hatası: \(error.localizedDescription)")
+                } else {
+                    print("applyUsers güncellendi, \(userId): \(value)")
+                }
+            }
+        }
+    }
+
+    
+
+
+
     
     
 }

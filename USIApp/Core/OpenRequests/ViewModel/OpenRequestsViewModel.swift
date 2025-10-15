@@ -6,6 +6,9 @@
 //
 
 import Foundation
+import FirebaseAuth
+import FirebaseFirestore
+import Firebase
 
 class OpenRequestsViewModel: ObservableObject {
     
@@ -15,9 +18,17 @@ class OpenRequestsViewModel: ObservableObject {
     
     @Published var alertMessage : String = ""
     
+    @Published var applyMessage : String = ""
+    
+    
     
     init() {
         loadRequests()
+    }
+    
+    func clearFields(){
+        self.alertMessage = ""
+        self.applyMessage = ""
     }
     
 
@@ -45,6 +56,46 @@ class OpenRequestsViewModel: ObservableObject {
         }
     }
     
+    
+    func isAcademicianEmail(email: String) -> Bool {
+        guard let domain = email.split(separator: "@").last else { return false }
+        return domain.lowercased() == "ahievran.edu.tr"
+    }
+    
+    func apply(request : RequestModel){
+        
+        if !(applyMessage == ""){
+            if isAcademicianEmail(email: Auth.auth().currentUser?.email ?? ""){
+                FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
+                    switch result {
+                    case .success(let userId):
+                        
+                        OpenRequestsFireStoreService.shared.addApplyUser(requestId: request.id, userId: userId, value: self.applyMessage)
+                        self.alertMessage = "Başvurunuz başarıyla gönderildi. Talep sahibi tarafından değerlendirilmeye alınacaktır."
+                        self.showAlert = true
+                        
+        
+
+                        
+                    case .failure(_):
+                        print("Academician ıd çekilemedi")
+                    }
+                }
+            }else {
+                OpenRequestsFireStoreService.shared.addApplyUser(requestId: request.id, userId: Auth.auth().currentUser?.uid ?? "hata", value: self.applyMessage)
+                
+                self.alertMessage = "Başvurunuz başarıyla gönderildi. Talep sahibi tarafından değerlendirilmeye alınacaktır."
+                self.showAlert = true
+            }
+        }else{
+            self.alertMessage = "Lütfen başvuru mesajınızı boş geçmeyiniz."
+            self.showAlert = true
+        }
+        
+        
+        
+        
+    }
     
     
 }

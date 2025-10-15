@@ -50,8 +50,9 @@ struct OpenRequestsView: View {
                         .frame(width: 10, height: 10)
                         .foregroundStyle(.red)
                 }
-                Button {
-                    
+                NavigationLink {
+                    AddRequestCategoryView()
+                        .navigationBarBackButtonHidden()
                 } label: {
                     Image(systemName: "plus.app")
                         .imageScale(.large)
@@ -74,7 +75,7 @@ struct OpenRequestsView: View {
                     } else {
                         ForEach(viewModel.requests) { request in
                             NavigationLink {
-                                RequestInfoIndustryView(request: request)
+                                OpenRequestsDetailView(request: request)
                                     .navigationBarBackButtonHidden()
                                 
                             } label: {
