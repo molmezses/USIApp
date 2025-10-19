@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AcademicianTabView: View {
     
-    @State private var selectedTab = 1
+    @State  var selectedTab: Int
     @EnvironmentObject var authViewModel : AuthViewModel
     
     var body: some View {
@@ -26,8 +26,11 @@ struct AcademicianTabView: View {
                     .tag(3)
                 
                 RequestAcademicianView()
+                    .environmentObject(authViewModel)
                     .tabItem {
                         Image(systemName: "plus")
+                        Text("Talaplerim")
+
                     }
                     .tag(2)
                 
@@ -35,6 +38,7 @@ struct AcademicianTabView: View {
                 ProfileView()
                     .tabItem {
                         Image(systemName: "person")
+                        Text("Hesabım")
                     }
                     .tag(1)
                     .environmentObject(authViewModel)
@@ -48,11 +52,6 @@ struct AcademicianTabView: View {
     }
 }
 
-#Preview {
-    AcademicianTabView()
-        .environmentObject(AuthViewModel())
-    
-}
 
 
 

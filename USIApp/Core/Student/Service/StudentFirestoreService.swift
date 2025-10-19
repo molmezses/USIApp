@@ -65,7 +65,7 @@ class StudentFirestoreService {
         }
     }
     
-    func saveRequest(requestTitle: String , requestMessage: String, requestCategory: String ,completion: @escaping (Error?) -> Void){
+    func saveRequest(requestTitle: String , requestMessage: String, requestCategory: String , requestType: Bool ,completion: @escaping (Error?) -> Void){
         
         
         self.fetchStudentProfileData { result in
@@ -84,7 +84,8 @@ class StudentFirestoreService {
                     "requesterAddress" : "",
                     "requesterImage" : info.studentImage,
                     "requesterType" : "student",
-                    "requesterPhone" : info.studentPhone
+                    "requesterPhone" : info.studentPhone,
+                    "requestType" :requestType
                 ]
                 
                 Firestore.firestore()

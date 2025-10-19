@@ -10,6 +10,7 @@ import SwiftUI
 struct RequestAcademicianView: View {
     
     @StateObject var academicianRequestViewModel = AcademicianRequestViewModel()
+    @EnvironmentObject var authViewModel : AuthViewModel
     
     enum RequestPageFormat {
         case olusturulan
@@ -110,6 +111,7 @@ struct RequestAcademicianView: View {
                     }
                     NavigationLink {
                         AddAcademicianRequestCategoryView()
+                            .environmentObject(authViewModel)
                             .environmentObject(academicianRequestViewModel)
                             .navigationBarBackButtonHidden()
                     } label: {

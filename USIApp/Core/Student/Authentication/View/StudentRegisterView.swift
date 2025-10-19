@@ -163,7 +163,7 @@ struct StudentRegisterView: View {
                 focusedField = false
             }
             .navigationDestination(isPresented: $viewModel.navigateToStudentTabView) {
-                StudentTabView()
+                StudentTabView(selectedTab: 0)
                     .environmentObject(authViewModel)
                     .navigationBarBackButtonHidden()
             }

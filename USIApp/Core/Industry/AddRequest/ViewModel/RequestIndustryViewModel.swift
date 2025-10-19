@@ -23,6 +23,8 @@ class RequestIndustryViewModel: ObservableObject {
     
     @Published var alertMessage : String = ""
     
+    @Published var isOpenRequest: Bool = false
+    
     let categories: [String] = [
         "Yapay Zeka",
         "Makine Öğrenmesi",
@@ -93,17 +95,18 @@ class RequestIndustryViewModel: ObservableObject {
         self.customCategoryInput = ""
         self.requestTitle = ""
         self.requestMessage = ""
+        self.isOpenRequest = false
     }
     
     func saveRequestData(){
-        IndustryFirestoreService.shared.saveRequest(selectedCategories: selectedCategories, requestTitle: requestTitle, requestMessage: requestMessage) { error in
+        IndustryFirestoreService.shared.saveRequest(selectedCategories: selectedCategories, requestTitle: requestTitle, requestMessage: requestMessage, requestType: isOpenRequest) { error in
             if let error = error {
                 print("Hataaaaaa: \(error.localizedDescription)")
             } else {
                 print("Başarılı : Document added successfully!")
             }
         }
-        
+        self.clearFields()
         self.loadRequests()
     }
     

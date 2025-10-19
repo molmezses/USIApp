@@ -628,7 +628,7 @@ class FirestoreService{
         return formatter.string(from: date)
     }
     
-    func saveRequest(requestTitle: String , requestMessage: String, requestCategory: String ,completion: @escaping (Error?) -> Void){
+    func saveRequest(requestTitle: String , requestMessage: String, requestCategory: String , requestType: Bool , completion: @escaping (Error?) -> Void){
         
         
         FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
@@ -651,7 +651,8 @@ class FirestoreService{
                             "requesterAddress" : "",
                             "requesterImage" : info.photo,
                             "requesterType" : "academician",
-                            "requesterPhone" : info.personelTel != "" ? info.personelTel : info.kurumsalTel == "" ? "Bulunamadı" : info.kurumsalTel
+                            "requesterPhone" : info.personelTel != "" ? info.personelTel : info.kurumsalTel == "" ? "Bulunamadı" : info.kurumsalTel,
+                            "requestType" : requestType
                         ]
                         
                         Firestore.firestore()

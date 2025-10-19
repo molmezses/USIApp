@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 class RequestInfoIndustryViewModel: ObservableObject {
     
     @Published var adminMessage: String = ""
@@ -40,6 +41,9 @@ class RequestInfoIndustryViewModel: ObservableObject {
         }
         
     }
+    
+
+
     
     
 }

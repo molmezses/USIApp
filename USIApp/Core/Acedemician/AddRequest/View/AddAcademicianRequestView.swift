@@ -11,6 +11,8 @@ struct AddAcademicianRequestView: View {
     
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var academicianRequestViewModel : AcademicianRequestViewModel
+    @EnvironmentObject var authViewModel : AuthViewModel
+    @State var navigateRequestView: Bool = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -123,6 +125,7 @@ struct AddAcademicianRequestView: View {
                     
                     Button(action: {
                         academicianRequestViewModel.saveRequestData()
+                        self.navigateRequestView = true
                     }) {
                         Text("Kaydet")
                             .fontWeight(.semibold)
@@ -138,6 +141,11 @@ struct AddAcademicianRequestView: View {
                 .padding(.top)
             }
             .background(Color(.systemGroupedBackground))
+        }
+        .navigationDestination(isPresented: $navigateRequestView) {
+            AcademicianTabView(selectedTab: 2)
+                .environmentObject(authViewModel)
+                .navigationBarBackButtonHidden()
         }
         
     }

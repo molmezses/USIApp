@@ -110,7 +110,7 @@ struct AdminView: View {
                 viewModel.getAllStats()
             }
             .navigationDestination(isPresented: $goToProfile) {
-                AcademicianTabView()
+                AcademicianTabView(selectedTab: 1)
                     .navigationBarBackButtonHidden()
                     .environmentObject(authViewModel)
             }

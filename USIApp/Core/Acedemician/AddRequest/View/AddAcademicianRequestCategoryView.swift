@@ -12,6 +12,8 @@ struct AddAcademicianRequestCategoryView: View {
     
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var academicianRequestViewModel : AcademicianRequestViewModel
+    @EnvironmentObject var authViewModel : AuthViewModel
+    
 
     
     var body: some View {
@@ -227,6 +229,7 @@ struct AddAcademicianRequestCategoryView: View {
                     
                     NavigationLink {
                         AddAcademicianRequestView()
+                            .environmentObject(authViewModel)
                             .environmentObject(academicianRequestViewModel)
                             .navigationBarBackButtonHidden()
                     } label: {

@@ -76,7 +76,7 @@ class AcademicianRequestViewModel: ObservableObject{
         
         
         
-        FirestoreService.shared.saveRequest(requestTitle: requestTitle, requestMessage: requestMessage, requestCategory: requestCategoryToString()) { error in
+        FirestoreService.shared.saveRequest(requestTitle: requestTitle, requestMessage: requestMessage, requestCategory: requestCategoryToString(), requestType: isOpenRequest) { error in
             if let error = error {
                 print("Hataa academicianRequestViewModel saveRequestData: \(error.localizedDescription)")
                 self.clearFields()

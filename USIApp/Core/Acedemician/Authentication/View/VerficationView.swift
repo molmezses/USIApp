@@ -109,7 +109,7 @@ struct VerficationView: View {
             
         }
         .navigationDestination(isPresented: $viewModel.navigateToProfile) {
-            AcademicianTabView()
+            AcademicianTabView(selectedTab: 1)
                 .environmentObject(authViewModel)
                 .navigationBarBackButtonHidden()
         }

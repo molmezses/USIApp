@@ -132,7 +132,7 @@ class IndustryFirestoreService {
     }
 
     
-    func saveRequest(selectedCategories: [String] , requestTitle: String , requestMessage: String, completion: @escaping (Error?) -> Void){
+    func saveRequest(selectedCategories: [String] , requestTitle: String , requestMessage: String, requestType: Bool ,  completion: @escaping (Error?) -> Void){
         
         let requsterID = IndustryAuthService.shared.getCurrentUser()?.id ?? "id yok"
         
@@ -154,7 +154,8 @@ class IndustryFirestoreService {
                     "requesterAddress" : info.adres,
                     "requesterImage" : info.requesterImage,
                     "requesterType" : "industry",
-                    "requesterPhone": info.tel
+                    "requesterPhone": info.tel,
+                    "requestType" : requestType,
                 ]
                 
                 Firestore.firestore()

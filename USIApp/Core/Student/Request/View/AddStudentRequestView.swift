@@ -98,6 +98,31 @@ struct AddStudentRequestView: View {
                         }
                     }
                     
+                    VStack {
+                        HStack {
+                            Text("Açık Talep")
+                                .font(.headline)
+                            
+                            Spacer()
+                            
+                            Toggle("", isOn: $viewModel.isOpenRequest)
+                                .labelsHidden()
+                        }
+                        .padding()
+                        .background(Color(.systemGroupedBackground))
+                        .cornerRadius(12)
+                        .padding(.horizontal)
+                        .onChange(of: viewModel.isOpenRequest) { newValue in
+                            print("Switch durumu: \(newValue)")
+                        }
+                        Text("Açık Talepleriniz diğer kullanıcılar tarafından anasayfada görüntülenecek olup başvuruya açık olacaktır kapalı talep göndermeniz halinde değerlendirme kurulu tarafından onayladındıktan sonra size uygun kullanıcılar atanacaktır.")
+                            .foregroundStyle(.gray.opacity(0.4))
+                            .font(.footnote)
+                            .multilineTextAlignment(.center)
+                            .frame(maxWidth: .infinity , alignment: .leading)
+                            .padding(.leading)
+                    }
+                    
                     Button(action: {
                         viewModel.saveRequestData()
                     }) {
@@ -117,9 +142,10 @@ struct AddStudentRequestView: View {
             .background(Color(.systemGroupedBackground))
         }
         .navigationDestination(isPresented: $viewModel.navigateToRequestView) {
-            StudentRequestView()
+            StudentTabView(selectedTab: 1)
                 .environmentObject(authViewModel)
                 .navigationBarBackButtonHidden()
+                
         }
         
     }

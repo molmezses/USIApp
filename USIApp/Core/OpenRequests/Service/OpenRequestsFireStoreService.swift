@@ -132,9 +132,28 @@ class OpenRequestsFireStoreService {
             }
         }
     }
-
     
-
+    func fetchApplyUsers(from collection: String, documentId: String, completion: @escaping ([String: String]) -> Void) {
+           let docRef = Firestore.firestore().collection(collection).document(documentId)
+           
+           docRef.getDocument { document, error in
+               if let error = error {
+                   print("Firestore hatası: \(error.localizedDescription)")
+                   completion([:]) 
+                   return
+               }
+               
+               guard let data = document?.data(),
+                     let applyUsers = data["applyUsers"] as? [String: String] else {
+                   print("applyUsers alanı bulunamadı veya format hatalı.")
+                   completion([:])
+                   return
+               }
+               
+               completion(applyUsers)
+           }
+       }
+    
 
 
     

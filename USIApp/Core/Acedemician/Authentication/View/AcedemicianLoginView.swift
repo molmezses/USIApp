@@ -166,7 +166,7 @@ struct AcedemicianLoginView: View {
                     focusedField = false
                 }
                 .navigationDestination(isPresented: $navigate) {
-                    AcademicianTabView()
+                    AcademicianTabView(selectedTab: 1)
                         .navigationBarBackButtonHidden()
                 }
                 .alert("Hata", isPresented: $viewModel.showAlert) {
@@ -175,7 +175,7 @@ struct AcedemicianLoginView: View {
                             Text("Kullanıcı adı veya parola hatalı. Lütfen tekrar deneyiniz.")
                         }
             }else{
-                AcademicianTabView()
+                AcademicianTabView(selectedTab: 1)
                     .environmentObject(authViewModel)
             }
         }

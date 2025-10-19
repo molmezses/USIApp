@@ -115,24 +115,28 @@ struct RequestInfoIndustryView: View {
                                 Divider()
                                     .padding(.vertical , 2)
                                 
-                                HStack(alignment: .top, spacing: 12) {
-                                    Image("ünilogo")
-                                        .resizable()
-                                        .frame(width: 40, height: 40)
-                                        .foregroundColor(.blue)
-                                    
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text("Üniversite Sanayi İşbirliği")
-                                            .font(.subheadline.bold())
-                                        Text("Talep Değerlendirme Kurulu ")
-                                            .font(.subheadline)
-                                        Text("Mail: tto@ahievran.edu.tr")
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
-                                        Text("Tel: 0850-441-02-44")
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
+                                VStack {
+                                    HStack(alignment: .top, spacing: 12) {
+                                        Image("ünilogo")
+                                            .resizable()
+                                            .frame(width: 40, height: 40)
+                                            .foregroundColor(.blue)
+                                        
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text("Üniversite Sanayi İşbirliği")
+                                                .font(.subheadline.bold())
+                                            Text("Talep Değerlendirme Kurulu ")
+                                                .font(.subheadline)
+                                            Text("Mail: tto@ahievran.edu.tr")
+                                                .font(.caption)
+                                                .foregroundColor(.secondary)
+                                            Text("Tel: 0850-441-02-44")
+                                                .font(.caption)
+                                                .foregroundColor(.secondary)
+                                        }
+                                        
                                     }
+                                    
                                     
                                 }
                             }
@@ -212,10 +216,21 @@ struct RequestInfoIndustryView: View {
                         }
                         
                         
+                        if request.requestType{
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Başvuran kullanıcılar")
+                                    .font(.subheadline.bold())
+                                    .padding(.bottom)
+                                ApplyUsersCardView(requestId: request.id)
+                            }
+                            
+                        }
+                        
+                        
+                        
+                        
                     }
-                    
-                    
-                    
+ 
                 }
                 .padding()
                 

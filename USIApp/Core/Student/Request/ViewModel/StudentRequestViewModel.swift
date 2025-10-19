@@ -15,7 +15,7 @@ class StudentRequestViewModel: ObservableObject{
     @Published var requestTitle: String = ""
     @Published var requestMessage: String = ""
     @Published var navigateToRequestView: Bool = false
-    
+    @Published var isOpenRequest: Bool = false
     
     
     func changeRequestCategory(_ category: AcademicianRequestCategoryEnum){
@@ -33,7 +33,6 @@ class StudentRequestViewModel: ObservableObject{
         self.requests.removeAll()
         self.requestTitle = ""
         self.requestMessage = ""
-        self.navigateToRequestView = false
     }
     
     func requestCategoryToString() -> String{
@@ -64,12 +63,13 @@ class StudentRequestViewModel: ObservableObject{
         
         
         
-        StudentFirestoreService.shared.saveRequest(requestTitle: requestTitle, requestMessage: requestMessage, requestCategory: requestCategoryToString()) { error in
+        StudentFirestoreService.shared.saveRequest(requestTitle: requestTitle, requestMessage: requestMessage, requestCategory: requestCategoryToString(), requestType: isOpenRequest) { error in
             if let error = error {
                 print("Hataa academicianRequestViewModel saveRequestData: \(error.localizedDescription)")
                 self.clearFields()
             } else {
-                print("Başarılı : Document added successfully!")
+                print("Başarılı : Document added successfully! ındustry ")
+                self.navigateToRequestView = true
                 self.clearFields()
             }
         }

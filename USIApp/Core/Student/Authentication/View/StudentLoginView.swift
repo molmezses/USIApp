@@ -164,7 +164,7 @@ struct StudentLoginView: View {
                     focusedField = false
                 }
                 .navigationDestination(isPresented: $navigate) {
-                    AcademicianTabView()
+                    AcademicianTabView(selectedTab: 1)
                         .navigationBarBackButtonHidden()
                 }
                 .alert("Hata", isPresented: $viewModel.showAlert) {
@@ -174,7 +174,7 @@ struct StudentLoginView: View {
                         }
             }else{
                 
-                StudentTabView()
+                StudentTabView(selectedTab: 0)
                     .environmentObject(authViewModel)
                     .navigationBarBackButtonHidden()
             }
