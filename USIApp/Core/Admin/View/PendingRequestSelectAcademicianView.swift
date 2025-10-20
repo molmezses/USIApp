@@ -33,14 +33,14 @@ struct PendingRequestSelectAcademicianView: View {
                 } label: {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                 }
 
                 Spacer()
 
                 Text("Akademisyen Ata")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
 
                 Spacer()
 
@@ -48,7 +48,8 @@ struct PendingRequestSelectAcademicianView: View {
                     .opacity(0)
             }
             .padding()
-            .background(Color("usi"))
+            .background(.white)
+            .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
 
             // Arama Çubuğu
             SearchBar(text: $viewModel.searchText)
@@ -68,7 +69,7 @@ struct PendingRequestSelectAcademicianView: View {
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.green)
+                        .background(Color("logoBlue"))
                         .foregroundColor(.white)
                         .cornerRadius(10)
                         .padding(.horizontal)
@@ -212,7 +213,7 @@ struct AcademicianRow: View {
                 Button(action: onSelect) {
                     Image(systemName: isSelected ? "checkmark.circle.fill" : "plus.circle.fill")
                         .font(.system(size: 24))
-                        .foregroundColor(isSelected ? .green : Color("usi"))
+                        .foregroundColor(isSelected ? .green : Color("logoBlue"))
                 }
             }
             .padding()

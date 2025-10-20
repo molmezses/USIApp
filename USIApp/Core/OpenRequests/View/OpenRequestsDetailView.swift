@@ -193,10 +193,15 @@ struct OpenRequestsDetailView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                             Spacer()
-                            Text("0")
+                            Text("\(viewModel.appyCount)")
                                 .font(.subheadline)
                                 .bold()
                                 .foregroundColor(Color("logoBlue"))
+                        }
+                        .onAppear {
+                            viewModel.fetchApplyUserCount(for: request.id) { count in
+                                viewModel.appyCount = count
+                            }
                         }
                         
                         Divider()

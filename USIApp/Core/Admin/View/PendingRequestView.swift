@@ -55,6 +55,9 @@ struct PendingRequestView: View {
                             } label: {
                                 requestCard(for: request)
                             }
+                            
+                            Divider()
+                                .foregroundStyle(.gray)
                         }
 
                     }
@@ -64,7 +67,6 @@ struct PendingRequestView: View {
             .refreshable {
                 viewModel.loadRequests()
             }
-            .background(Color(.systemGroupedBackground))
         }
         .navigationDestination(isPresented: $navigateToAdminView, destination: {
             AdminView()
@@ -77,16 +79,15 @@ struct PendingRequestView: View {
     
     func requestCard(for request: RequestModel) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            
-            HStack(alignment: .top, spacing: 12) {
-                
-                if let urlString = request.requesterImage,
-                          let url = URL(string: urlString) {
+
+            HStack{
+                // Profil resmi
+                if let url = URL(string: request.requesterImage ?? "") {
                     AsyncImage(url: url) { image in
                         image.resizable()
-                             .scaledToFill()
-                             .frame(width: 50, height: 50)
-                             .clipShape(Circle())
+                            .scaledToFill()
+                            .frame(width: 50, height: 50)
+                            .clipShape(Circle())
                     } placeholder: {
                         ProgressView()
                             .frame(width: 50, height: 50)
@@ -98,27 +99,23 @@ struct PendingRequestView: View {
                         .frame(width: 50, height: 50)
                         .clipShape(Circle())
                 }
-                
 
-                
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 6) {
                     Text(request.requesterName)
                         .font(.headline)
                         .bold()
                         .foregroundStyle(.black)
-                    
+
                     Text(request.requesterType == "industry" ? "Sanayi" : request.requesterType == "academician" ? "Akademisyen" : "Öğrenci")
                         .font(.footnote)
-                        .foregroundColor(.white)
+                        .foregroundColor(.gray)
                         .padding(2)
-                        .background(
-                            RoundedRectangle(cornerRadius: 4)
-                                .foregroundStyle(request.requesterType == "industry" ? Color("sari").opacity(0.8) : request.requesterType == "academician" ? Color("usi").opacity(0.8) : .green.opacity(0.8))
-                        )
+
+
                 }
-                
+
                 Spacer()
-                
+
                 Image(systemName: "chevron.right")
                     .foregroundColor(.gray)
             }
@@ -126,48 +123,48 @@ struct PendingRequestView: View {
             
             Text(request.description)
                 .lineLimit(4)
+                .multilineTextAlignment(.leading)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
-                .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading)
+
+            // Tarih
+            HStack(spacing: 6){
+                Image(systemName: "calendar")
+                    .foregroundStyle(Color("logoBlue"))
+                    .imageScale(.medium)
+                Text("Tarih: \(request.date)")
+                    .font(.caption2)
+                    .foregroundColor(.gray)
+                    .padding(.trailing)
+                if request.requestType{
+                    Image(systemName: "eyeglasses")
+                        .foregroundStyle(Color("logoBlue"))
+                        .imageScale(.medium)
+                    
+                    Text("Açık Talep")
+                        .font(.caption)
+                        .foregroundColor(.black)
+                }
+            }
             
-           
-            Text("Tarih: \(request.date)")
-                .font(.caption2)
-                .foregroundColor(.gray)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
+
             // Kategoriler
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
-                    if request.requesterType == "industry" {
-                        ForEach(request.selectedCategories, id: \.self) { category in
-                            Text(category)
-                                .font(.caption)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 6)
-                                .background(Color("usi").opacity(0.1))
-                                .foregroundColor(.blue)
-                                .cornerRadius(8)
-                        }
-                    } else  {
-
-                        Text(request.requestCategory ?? "Kategori bulunamadı")
-                            .font(.caption)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 6)
-                            .background(Color("usi").opacity(0.1))
-                            .foregroundColor(.blue)
-                            .cornerRadius(8)
-
-                    }
+                    Text(request.requestCategory ?? "Kategori bulunamadı")
+                        .font(.caption)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(Color("categoryBlue"))
+                        .foregroundColor(.black)
+                        .cornerRadius(6)
                 }
             }
+            
+            
         }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(10)
         .padding(.horizontal)
+        
     }
 
 }

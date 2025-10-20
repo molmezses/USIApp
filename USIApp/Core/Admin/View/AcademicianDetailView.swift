@@ -23,14 +23,14 @@ struct AcademicianDetailView: View {
                     } label: {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 18, weight: .semibold))
-                            .foregroundColor(.white)
+                            .foregroundColor(.black)
                     }
 
                     Spacer()
 
                     Text(academician.adSoyad)
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
 
                     Spacer()
 
@@ -38,7 +38,8 @@ struct AcademicianDetailView: View {
                         .opacity(0)
                 }
                 .padding()
-                .background(Color("usi"))
+                .background(.white)
+                .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
                 
                 ZStack {
                     Color(.systemGroupedBackground).ignoresSafeArea()
@@ -94,7 +95,7 @@ struct AcademicianDetailView: View {
                                     Text("Akademik Geçmişi")
                                         .font(.headline)
                                         .underline()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                     Spacer()
                                 }
                                 
@@ -110,14 +111,14 @@ struct AcademicianDetailView: View {
                                 HStack {
                                     Image(systemName: "checkmark.circle.fill")
                                         .resizable()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                         .frame(width: 28, height: 28)
                                     Text("Ortak Proje Geliştirme Talebi")
                                     Spacer()
                                     
                                     Toggle("", isOn: $isoN)
-                                        .tint(Color("usi"))
-                                        .foregroundStyle(Color("usi"))
+                                        .tint(Color("logoBlue"))
+                                        .foregroundStyle(.black)
                                         .disabled(true)
                                     
                                     
@@ -134,15 +135,15 @@ struct AcademicianDetailView: View {
                                     Text("İletişim Bilgileri")
                                         .font(.headline)
                                         .underline()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                     Spacer()
                                 }
                                 
                                 HStack {
                                     Image(systemName: "phone.fill")
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                         .padding(6)
-                                        .background(Color("usi").opacity(0.2))
+                                        .background(.black)
                                         .clipShape(Circle())
                                     Text(academician.personelTel == "" ? "Veri bulunamadı" : academician.personelTel )
                                         .foregroundStyle(academician.personelTel == "" ? .gray : .black)
@@ -150,9 +151,9 @@ struct AcademicianDetailView: View {
                                 }
                                 HStack {
                                     Image(systemName: "phone.fill")
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                         .padding(6)
-                                        .background(Color("usi").opacity(0.2))
+                                        .background(Color(.black).opacity(0.2))
                                         .clipShape(Circle())
                                     Text(academician.kurumsalTel == "" ? "Veri bulunamadı" : academician.kurumsalTel )
                                         .foregroundStyle(academician.kurumsalTel == "" ? .gray : .black)
@@ -160,26 +161,27 @@ struct AcademicianDetailView: View {
                                 HStack {
                                     Image(systemName: "mail.fill")
                                         .imageScale(.small)
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                         .padding(8)
-                                        .background(Color("usi").opacity(0.2))
+                                        .background(Color(.black).opacity(0.2))
                                         .clipShape(Circle())
                                     Text(verbatim: academician.email)
                                 }
                                 HStack {
                                     Image(systemName: "mappin.circle.fill")
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                         .padding(6)
-                                        .background(Color("usi").opacity(0.2))
+                                        .background(Color(.black).opacity(0.2))
                                         .clipShape(Circle())
                                     Text(academician.il.count < 2 ? "Veri bulunamadı" : academician.il )
                                         .foregroundStyle(academician.il.count < 2 ? .gray : .black)
                                 }
                                 HStack {
                                     Image(systemName: "network")
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
+
                                         .padding(6)
-                                        .background(Color("usi").opacity(0.2))
+                                        .background(Color(.black).opacity(0.2))
                                         .clipShape(Circle())
                                     Text(academician.webSite == "" ? "Veri bulunamadı" : academician.webSite )
                                         .foregroundStyle(academician.webSite == "" ? .gray : .black)
@@ -194,7 +196,8 @@ struct AcademicianDetailView: View {
                                     Text("Firma Bilgisi Ve Çalışma Alanı")
                                         .font(.headline)
                                         .underline()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
+
                                     Spacer()
                                 }
                                 
@@ -210,7 +213,7 @@ struct AcademicianDetailView: View {
                                         HStack {
                                             Circle()
                                                 .frame(width: 6, height: 6)
-                                                .foregroundStyle(Color("usi"))
+                                                .foregroundStyle(.black)
                                                 .padding(.leading)
                                             VStack(alignment: .leading){
                                                 Text(academician.firmalar[index].firmaAdi)
@@ -232,7 +235,7 @@ struct AcademicianDetailView: View {
                                     Text("Uzmanlık alanları")
                                         .font(.headline)
                                         .underline()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                     Spacer()
                                 }
                                 
@@ -241,7 +244,7 @@ struct AcademicianDetailView: View {
                                         HStack {
                                             Circle()
                                                 .frame(width: 6, height: 6)
-                                                .foregroundStyle(Color("usi"))
+                                                .foregroundStyle(.black)
                                                 .padding(.leading)
                                             Text(item)
                                         }
@@ -260,7 +263,7 @@ struct AcademicianDetailView: View {
                                     Text("Verebileceği danışmanlık konuları")
                                         .font(.headline)
                                         .underline()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                     Spacer()
                                 }
                                 
@@ -268,7 +271,7 @@ struct AcademicianDetailView: View {
                                     HStack {
                                         Circle()
                                             .frame(width: 6, height: 6)
-                                            .foregroundStyle(Color("usi"))
+                                            .foregroundStyle(.black)
                                             .padding(.leading)
                                         Text(item)
                                     }
@@ -285,7 +288,7 @@ struct AcademicianDetailView: View {
                                     Text("Daha Önceki Danışmanlıklar")
                                         .font(.headline)
                                         .underline()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                     Spacer()
                                 }
                                 
@@ -293,7 +296,7 @@ struct AcademicianDetailView: View {
                                     HStack {
                                         Circle()
                                             .frame(width: 6, height: 6)
-                                            .foregroundStyle(Color("usi"))
+                                            .foregroundStyle(.black)
                                             .padding(.leading)
                                         Text(item)
                                     }
@@ -308,7 +311,7 @@ struct AcademicianDetailView: View {
                                     Text("Verebileceği Eğitimler")
                                         .font(.headline)
                                         .underline()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                     Spacer()
                                 }
                                 
@@ -316,7 +319,7 @@ struct AcademicianDetailView: View {
                                     HStack {
                                         Circle()
                                             .frame(width: 6, height: 6)
-                                            .foregroundStyle(Color("usi"))
+                                            .foregroundStyle(.black)
                                             .padding(.leading)
                                         Text(item)
                                     }
@@ -332,7 +335,7 @@ struct AcademicianDetailView: View {
                                     Text("Daha Önce Verdiği Eğitimler")
                                         .font(.headline)
                                         .underline()
-                                        .foregroundStyle(Color("usi"))
+                                        .foregroundStyle(.black)
                                     Spacer()
                                 }
                                 
@@ -340,7 +343,7 @@ struct AcademicianDetailView: View {
                                     HStack {
                                         Circle()
                                             .frame(width: 6, height: 6)
-                                            .foregroundStyle(Color("usi"))
+                                            .foregroundStyle(.black)
                                             .padding(.leading)
                                         Text(item)
                                     }

@@ -20,6 +20,8 @@ class OpenRequestsViewModel: ObservableObject {
     
     @Published var applyMessage : String = ""
     
+    @Published var appyCount: Int = 0
+    
     
     
     init() {
@@ -31,7 +33,27 @@ class OpenRequestsViewModel: ObservableObject {
         self.applyMessage = ""
     }
     
-
+    func fetchApplyUserCount(for requestID: String, completion: @escaping (Int) -> Void) {
+        let db = Firestore.firestore()
+        let requestRef = db.collection("Requests").document(requestID)
+        
+        requestRef.getDocument { document, error in
+            if let error = error {
+                print("Apply user sayısı alınamadı: \(error.localizedDescription)")
+                completion(0)
+                return
+            }
+            
+            guard let data = document?.data(),
+                  let applyUsers = data["applyUsers"] as? [String: Any] else {
+                print("applyUsers alanı bulunamadı veya boş.")
+                completion(0)
+                return
+            }
+            
+            completion(applyUsers.count)
+        }
+    }
     
     func loadRequests() {
         OpenRequestsFireStoreService.shared.fetchOpenRequests { result in

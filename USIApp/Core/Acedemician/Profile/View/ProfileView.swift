@@ -49,6 +49,7 @@ struct ProfileView: View {
                         Image(systemName: "bell.fill")
                             .imageScale(.large)
                             .foregroundStyle(.black)
+                            .opacity(0)
                     }
                     .padding(.trailing, 12)
                     NavigationLink {

@@ -26,6 +26,7 @@ struct OpenRequestsView: View {
                     Image(systemName: "person.fill")
                         .imageScale(.large)
                         .foregroundStyle(.black)
+                        .opacity(0)
                 }
 
                 Image(systemName: "bell.fill")
@@ -44,11 +45,13 @@ struct OpenRequestsView: View {
                     Image(systemName: "bell.fill")
                         .imageScale(.large)
                         .foregroundStyle(.black)
+                        .opacity(0)
                 }
                 .overlay(alignment: .topTrailing) {
                     Circle()
                         .frame(width: 10, height: 10)
                         .foregroundStyle(.red)
+                        .opacity(0)
                 }
                 NavigationLink {
                     AddRequestCategoryView()
@@ -79,7 +82,7 @@ struct OpenRequestsView: View {
                                     .navigationBarBackButtonHidden()
                                 
                             } label: {
-                                requestCard(for: request)
+                                OpenRequestCard(request: request)
                             }
                             Rectangle()
                                 .frame(maxWidth: .infinity, maxHeight: 1)
@@ -105,83 +108,8 @@ struct OpenRequestsView: View {
         
     }
     
-    func requestCard(for request: RequestModel) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
 
-            HStack(alignment: .top, spacing: 8) {
-                
-                if let urlString = request.requesterImage,
-                          let url = URL(string: urlString) {
-                    AsyncImage(url: url) { image in
-                        image.resizable()
-                             .scaledToFill()
-                             .frame(width: 50, height: 50)
-                             .clipShape(Circle())
-                    } placeholder: {
-                        ProgressView()
-                            .frame(width: 50, height: 50)
-                    }
-                } else {
-                    Image("DefaultProfilePhoto")
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 50, height: 50)
-                        .clipShape(Circle())
-                }
-                
-                VStack {
-                    HStack {
-                        Text(request.requesterName)
-                            .font(.headline)
-                            .multilineTextAlignment(.leading)
-                            .foregroundColor(.black)
-                        Spacer()
-                        Image(systemName: "ellipsis")
-                            .imageScale(.medium)
-                        
-                    }
-                    HStack {
-                        Text(request.requesterType == "academician" ? "Akademisyen" : request.requesterType == "student" ? "Öğrenci" : "Sanayi")
-                            .font(.subheadline)
-                            .multilineTextAlignment(.leading)
-                            .foregroundColor(.black)
-                        Spacer()
-                    }
-                    
-                }
-                .padding(.leading , 2)
-
-                Spacer()
-
-                
-            }
-
-            // Açıklama
-            Text(request.description)
-                .lineLimit(4)
-                .multilineTextAlignment(.leading)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-
-            // Tarih
-            HStack(spacing: 6) {
-                (Text("Tarih: ").foregroundColor(Color("logoBlue"))
-                 + Text(request.date).foregroundColor(.black))
-                    .font(.caption2)
-                    .padding(.trailing)
-
-                Image(systemName: "arrow.up.document")
-                    .imageScale(.small)
-                Text("32 Başvuru")
-                    .font(.caption2)
-                    .foregroundColor(.black)
-            }
-            .padding(.vertical , 4)
-        }
-        .padding(.horizontal)
-
-
-    }
+    
 
 
     

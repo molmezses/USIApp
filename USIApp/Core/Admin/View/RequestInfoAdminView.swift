@@ -8,6 +8,8 @@ struct RequestInfoAdminView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject var viewModel = RequestInfoAdminViewModel()
     @FocusState var focusedField: Bool
+    @State var showAlert: Bool = false
+    @State var navigate : Bool = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -116,18 +118,11 @@ struct RequestInfoAdminView: View {
                                     ) { category in
                                         Text(category)
                                             .font(.caption)
-                                            .foregroundColor(.black)
-                                            .padding(.horizontal, 12)
+                                            .padding(.horizontal, 10)
                                             .padding(.vertical, 6)
-                                            .background(
-                                                Color("usi")
-                                                    .opacity(0.4)
-                                            )
-                                            .cornerRadius(10)
-                                            .frame(
-                                                maxWidth: .infinity,
-                                                alignment: .leading
-                                            )
+                                            .background(Color("usi").opacity(0.1))
+                                            .foregroundColor(.blue)
+                                            .cornerRadius(8)
                                     }
                                 }
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -140,18 +135,11 @@ struct RequestInfoAdminView: View {
 
                                 Text(request.requestCategory ?? "")
                                     .font(.caption)
-                                    .foregroundColor(.black)
-                                    .padding(.horizontal, 12)
+                                    .padding(.horizontal, 10)
                                     .padding(.vertical, 6)
-                                    .background(
-                                        Color("usi")
-                                            .opacity(0.4)
-                                    )
-                                    .cornerRadius(10)
-                                    .frame(
-                                        maxWidth: .infinity,
-                                        alignment: .leading
-                                    )
+                                    .background(Color("usi").opacity(0.1))
+                                    .foregroundColor(.blue)
+                                    .cornerRadius(8)
 
                             }
                         }
@@ -174,6 +162,18 @@ struct RequestInfoAdminView: View {
                 .padding()
             }
             .background(Color(.systemGroupedBackground))
+        }
+        .navigationDestination(isPresented: $navigate, destination: {
+            PendingRequestView()
+                .navigationBarBackButtonHidden()
+        })
+        .alert("Başarılı", isPresented: $showAlert) {
+            
+            Button("tamam", role: .cancel) {
+                self.navigate = true
+            }
+        } message: {
+            Text("Talep başarılı bir şekilde onaylandı ve açık talepler sayfasında yayına alındı")
         }
         .navigationDestination(
             isPresented: $viewModel.destinated,
@@ -254,19 +254,38 @@ struct RequestInfoAdminView: View {
                     .cornerRadius(10)
                 }
 
-                NavigationLink {
-                    PendingRequestSelectAcademicianView(requestId: request.id)
-                        .environmentObject(viewModel)
-                        .navigationBarBackButtonHidden()
-                } label: {
-                    VStack {
-                        Label("Kabul Et", systemImage: "checkmark")
-                            .frame(maxWidth: .infinity)
+                if request.requestType{
+                    Button {
+                        viewModel.approveOpenRequest(documentId: request.id)
+                        self.showAlert = true
+                    } label: {
+                        VStack {
+                            Label("Kabul Et", systemImage: "checkmark")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .padding()
+                        .background(Color.green.opacity(0.9))
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
                     }
-                    .padding()
-                    .background(Color.green.opacity(0.9))
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+                }else{
+                    //kapal ıtalep
+                    
+                    
+                    NavigationLink {
+                        PendingRequestSelectAcademicianView(requestId: request.id)
+                            .environmentObject(viewModel)
+                            .navigationBarBackButtonHidden()
+                    } label: {
+                        VStack {
+                            Label("Kabul Et", systemImage: "checkmark")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .padding()
+                        .background(Color.green.opacity(0.9))
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                    }
                 }
 
             }

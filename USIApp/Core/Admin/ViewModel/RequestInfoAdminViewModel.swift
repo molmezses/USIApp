@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import SwiftUICore
+import SwiftUI
 import FirebaseFirestore
 
 class RequestInfoAdminViewModel: ObservableObject {
@@ -19,6 +19,8 @@ class RequestInfoAdminViewModel: ObservableObject {
     @Published var destinated: Bool = false
     @Published var fetchedSelectedAcademicians: [AcademicianInfo] = []
     @Published var isLoadingSelectedAcademician: Bool = false
+    @Published var navigate: Bool = false
+    
 
         
     func stringToRequestStatus(string stringData: String) -> RequestStatus {
@@ -61,6 +63,21 @@ class RequestInfoAdminViewModel: ObservableObject {
                     print("Talep onaylandı mesaj: \(self.adminMessage)")
                 case .failure(let error):
                     print("Hata Talep onaylanamadı \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
+    func approveOpenRequest(documentId: String){
+        AdminUserFirestoreService.shared.approvOpenRequest(documentId: documentId, adminMessage: adminMessage) { result in
+            DispatchQueue.main.async {
+                switch result{
+                case .success(_):
+                    self.destinated = true
+                    print("Açık Talep onaylandı mesaj: \(self.adminMessage)")
+                    self.navigate = true
+                case .failure(let error):
+                    print("Hata  Açık Talep onaylanamadı \(error.localizedDescription)")
                 }
             }
         }

@@ -8,7 +8,7 @@
 import Foundation
 import Firebase
 import FirebaseFirestore
-import SwiftUICore
+import SwiftUI
 
 
 class AdminUserFirestoreService{
@@ -28,6 +28,25 @@ class AdminUserFirestoreService{
             "status": "approved",
             "adminMessage": adminMessage,
             "selectedAcademiciansId" : academiciansIdArray
+        ]) { error in
+            if let error = error {
+                print("Error updating document: \(error)")
+                completion(.failure(error))
+            } else {
+                print("Document successfully updated")
+                completion(.success(()))
+            }
+        }
+        
+    }
+    
+    func approvOpenRequest(documentId: String , adminMessage: String  , completion: @escaping (Result<Void, Error>) -> Void){
+        
+        
+        
+        db.document(documentId).updateData([
+            "status": "approved",
+            "adminMessage": adminMessage,
         ]) { error in
             if let error = error {
                 print("Error updating document: \(error)")

@@ -53,6 +53,8 @@ struct OldRequestView: View {
                             } label: {
                                 requestCard(for: request)
                             }
+                            Divider()
+                                .foregroundStyle(.gray)
                         }
 
                     }
@@ -62,7 +64,6 @@ struct OldRequestView: View {
             .refreshable {
                 viewModel.loadRequests()
             }
-            .background(Color(.systemGroupedBackground))
         }
         .onAppear {
             viewModel.loadRequests()
@@ -71,17 +72,15 @@ struct OldRequestView: View {
     
     func requestCard(for request: RequestModel) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            
-            // Üst Bilgi
-            HStack(alignment: .top, spacing: 12) {
-                
-                if let urlString = request.requesterImage,
-                          let url = URL(string: urlString) {
+
+            HStack{
+                // Profil resmi
+                if let url = URL(string: request.requesterImage ?? "") {
                     AsyncImage(url: url) { image in
                         image.resizable()
-                             .scaledToFill()
-                             .frame(width: 50, height: 50)
-                             .clipShape(Circle())
+                            .scaledToFill()
+                            .frame(width: 50, height: 50)
+                            .clipShape(Circle())
                     } placeholder: {
                         ProgressView()
                             .frame(width: 50, height: 50)
@@ -93,57 +92,72 @@ struct OldRequestView: View {
                         .frame(width: 50, height: 50)
                         .clipShape(Circle())
                 }
-                
-                VStack(alignment: .leading, spacing: 4) {
+
+                VStack(alignment: .leading, spacing: 6) {
                     Text(request.requesterName)
                         .font(.headline)
                         .bold()
-                        .foregroundColor(.black) // .foregroundStyle yerine bu daha güvenli
-                    Text(request.requesterCategories)
-                        .font(.subheadline)
+                        .foregroundStyle(.black)
+
+                    Text(request.requesterType == "industry" ? "Sanayi" : request.requesterType == "academician" ? "Akademisyen" : "Öğrenci")
+                        .font(.footnote)
                         .foregroundColor(.gray)
+                        .padding(2)
+
+
                 }
-                
+
                 Spacer()
-                
+
                 Image(systemName: "chevron.right")
                     .foregroundColor(.gray)
             }
             
-            // Açıklama
+            
             Text(request.description)
                 .lineLimit(4)
+                .multilineTextAlignment(.leading)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
-                .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading) // ← hizalama düzeltme
-            
+
             // Tarih
-            Text("Tarih: \(request.date)")
-                .font(.caption2)
-                .foregroundColor(.gray)
-                .frame(maxWidth: .infinity, alignment: .leading) // ← hizalama düzeltme
+            HStack(spacing: 6){
+                Image(systemName: "calendar")
+                    .foregroundStyle(Color("logoBlue"))
+                    .imageScale(.medium)
+                Text("Tarih: \(request.date)")
+                    .font(.caption2)
+                    .foregroundColor(.gray)
+                    .padding(.trailing)
+                if request.requestType{
+                    Image(systemName: "eyeglasses")
+                        .foregroundStyle(Color("logoBlue"))
+                        .imageScale(.medium)
+                    
+                    Text("Açık Talep")
+                        .font(.caption)
+                        .foregroundColor(.black)
+                }
+            }
             
+
             // Kategoriler
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
-                    ForEach(request.selectedCategories, id: \.self) { category in
-                        Text(category)
-                            .font(.caption)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 6)
-                            .background(Color("usi").opacity(0.1))
-                            .foregroundColor(.blue)
-                            .cornerRadius(8)
-                    }
+                    Text(request.requestCategory ?? "Kategori bulunamadı")
+                        .font(.caption)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(Color("categoryBlue"))
+                        .foregroundColor(.black)
+                        .cornerRadius(6)
                 }
             }
+            
+            
         }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(10)
-        .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2) // küçük gölge ekledim
         .padding(.horizontal)
+        
     }
 
 }
