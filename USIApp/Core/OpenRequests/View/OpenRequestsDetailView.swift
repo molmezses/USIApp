@@ -314,6 +314,20 @@ struct OpenRequestsDetailView: View {
             }
             .background(Color(.systemGroupedBackground))
         }
+        .navigationDestination(isPresented: $viewModel.navigateToLoginView, destination: {
+            LoginView()
+                .navigationBarBackButtonHidden()
+        })
+        .alert("Dikkat", isPresented: $viewModel.isNilUser) {
+            Button("iptal", role: .cancel){
+                
+            }
+            Button("Giriş yap"){
+                viewModel.navigateToLoginView = true
+            }
+        } message : {
+            Text("Başvuru yapabilmek için bir hesaba giriş yapmak zorundasınız.")
+        }
         .alert("USIApp", isPresented: $viewModel.showAlert) {
             Button("Tamam") {
                 viewModel.clearFields()

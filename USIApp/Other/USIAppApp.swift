@@ -7,7 +7,6 @@
 
 import SwiftUI
 import FirebaseCore
-import GoogleSignIn
 
 
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -17,10 +16,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         return true
     }
     
-    func application(_ app: UIApplication, open url: URL,
-                        options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-           return GIDSignIn.sharedInstance.handle(url)
-       }
+//    func application(_ app: UIApplication, open url: URL,
+//                        options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+//           return GIDSignIn.sharedInstance.handle(url)
+//       }
 }
 
 @main
@@ -55,6 +54,7 @@ struct USIAppApp: App {
                 .environmentObject(industryAuthViewModel)
                 .environmentObject(requestViewModel)
                 .environmentObject(studentAuthViewModel)
+                .preferredColorScheme(.light)
         }
     }
 }

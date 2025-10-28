@@ -73,6 +73,33 @@ struct SelectionScreen: View {
                 .buttonStyle(GrayButtonStyle())
             }
             
+            HStack(spacing: 10) {
+                Rectangle()
+                    .fill(Color.gray.opacity(0.5))
+                    .frame(height: 1)
+                
+                Text("Giriş yapmadan devam et")
+                    .font(.footnote)
+                    .foregroundColor(.gray)
+                    .lineLimit(1)
+                    .layoutPriority(1)
+                
+                Rectangle()
+                    .fill(Color.gray.opacity(0.5))
+                    .frame(height: 1)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal)
+            .padding(.vertical)
+            
+            NavigationLink("Açık Talepleri Gör") {
+                OpenRequestsView().navigationBarBackButtonHidden()
+            }
+            .buttonStyle(GrayButtonStyle())
+            
+            
+
+            
             Text("Tüm proje fikirleriniz ve hesap bilgileriniz USIApp tarafından korunmaktadır")
                 .multilineTextAlignment(.center)
                 .font(.footnote)
@@ -81,6 +108,8 @@ struct SelectionScreen: View {
         }
     }
 }
+
+
 
 struct GrayButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {

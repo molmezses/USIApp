@@ -21,6 +21,8 @@ class OpenRequestsViewModel: ObservableObject {
     @Published var applyMessage : String = ""
     
     @Published var appyCount: Int = 0
+    @Published var isNilUser : Bool = false
+    @Published var navigateToLoginView: Bool = false
     
     
     
@@ -86,33 +88,39 @@ class OpenRequestsViewModel: ObservableObject {
     
     func apply(request : RequestModel){
         
-        if !(applyMessage == ""){
-            if isAcademicianEmail(email: Auth.auth().currentUser?.email ?? ""){
-                FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-                    switch result {
-                    case .success(let userId):
-                        
-                        OpenRequestsFireStoreService.shared.addApplyUser(requestId: request.id, userId: userId, value: self.applyMessage)
-                        self.alertMessage = "Başvurunuz başarıyla gönderildi. Talep sahibi tarafından değerlendirilmeye alınacaktır."
-                        self.showAlert = true
-                        
-        
+        if Auth.auth().currentUser == nil{
+            isNilUser = true
+        }else{
+            if !(applyMessage == ""){
+                if isAcademicianEmail(email: Auth.auth().currentUser?.email ?? ""){
+                    FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
+                        switch result {
+                        case .success(let userId):
+                            
+                            OpenRequestsFireStoreService.shared.addApplyUser(requestId: request.id, userId: userId, value: self.applyMessage)
+                            self.alertMessage = "Başvurunuz başarıyla gönderildi. Talep sahibi tarafından değerlendirilmeye alınacaktır."
+                            self.showAlert = true
+                            
+            
 
-                        
-                    case .failure(_):
-                        print("Academician ıd çekilemedi")
+                            
+                        case .failure(_):
+                            print("Academician ıd çekilemedi")
+                        }
                     }
+                }else {
+                    OpenRequestsFireStoreService.shared.addApplyUser(requestId: request.id, userId: Auth.auth().currentUser?.uid ?? "hata", value: self.applyMessage)
+                    
+                    self.alertMessage = "Başvurunuz başarıyla gönderildi. Talep sahibi tarafından değerlendirilmeye alınacaktır."
+                    self.showAlert = true
                 }
-            }else {
-                OpenRequestsFireStoreService.shared.addApplyUser(requestId: request.id, userId: Auth.auth().currentUser?.uid ?? "hata", value: self.applyMessage)
-                
-                self.alertMessage = "Başvurunuz başarıyla gönderildi. Talep sahibi tarafından değerlendirilmeye alınacaktır."
+            }else{
+                self.alertMessage = "Lütfen başvuru mesajınızı boş geçmeyiniz."
                 self.showAlert = true
             }
-        }else{
-            self.alertMessage = "Lütfen başvuru mesajınızı boş geçmeyiniz."
-            self.showAlert = true
         }
+        
+        
         
         
         

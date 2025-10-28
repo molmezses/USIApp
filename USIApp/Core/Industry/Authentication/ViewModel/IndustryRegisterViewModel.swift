@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import GoogleSignIn
-import GoogleSignInSwift
 import Firebase
 import FirebaseAuth
 import FirebaseFirestore
@@ -45,6 +43,8 @@ class IndustryRegisterViewModel: ObservableObject{
                         ["email":authViewModel.industryUserSession?.email ?? "email bulunamadı"]
                     )
                     
+                    print("kayit oldu ")
+                    
                     let domain = self.email.components(separatedBy: "@").last ?? "unknown"
                     let data: [String: Any] = [
                         "email": self.email,
@@ -67,26 +67,7 @@ class IndustryRegisterViewModel: ObservableObject{
         }
     }
     
-    func signGoogle(authViewModel: IndustryAuthViewModel) {
-        IndustryAuthService.shared.signInWithGoogle { result in
-            switch result {
-            case .success(let session):
-                authViewModel.industryUserSession = session
-                
-                self.db.document(authViewModel.industryUserSession?.id ?? "id bulunamadı").setData(
-                    ["email":authViewModel.industryUserSession?.email ?? "email bulunamadı"]) { error in
-                        if let error = error {
-                            print("Hata Industry : \(error.localizedDescription)")
-                        }
-                    }
-                self.navigateToIndustryTabView = true
-            case .failure(let error):
-                self.errorMessage = error.localizedDescription
-                print("Hata ındustry :\(self.errorMessage)")
-                
-            }
-        }
-    }
+
     
     
     

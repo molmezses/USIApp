@@ -12,6 +12,8 @@ struct IndustrySettingsView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var authViewModel : IndustryAuthViewModel
     @StateObject var feedbackViewmodel = FeedbackViewModel()
+    @StateObject var viewModel = industrySettingsViewModel()
+    
     
     var body: some View {
         if authViewModel.industryUserSession == nil{
@@ -50,7 +52,7 @@ struct IndustrySettingsView: View {
                                 .padding(.leading)
                                 .padding(.top)
                             VStack{
-                               
+                                
                                 
                                 NavigationLink(destination: {
                                     ForgotPasswordView()
@@ -70,6 +72,36 @@ struct IndustrySettingsView: View {
                                     .foregroundStyle(.black)
                                     .padding(2)
                                 })
+                                
+                                Divider()
+                                    .padding(.vertical , 4)
+                                
+                                Button {
+                                    viewModel.showDeleteAlert = true
+                                } label: {
+                                    HStack {
+                                        Image(systemName: "trash.fill")
+                                            .imageScale(.large)
+                                            .foregroundStyle(.red)
+                                        Text("Hesabımı sil")
+                                            .foregroundStyle(.black)
+                                        Spacer()
+                                        
+                                    }
+                                    .foregroundStyle(.black)
+                                    .padding(2)
+                                }
+                                .alert("Hesabı Sil", isPresented: $viewModel.showDeleteAlert) {
+                                    Button("İptal", role: .cancel) { }
+                                    Button("Sil", role: .destructive) {
+                                        viewModel.deleteAccount(authViewModel: authViewModel)
+                                    }
+                                } message: {
+                                    Text("Bu işlem geri alınamaz. Hesabınızı silmek istediğinize emin misiniz?")
+                                }
+                                
+                                
+                                
                             }
                             .padding()
                             .background(Color("backgroundBlue"))
@@ -84,10 +116,10 @@ struct IndustrySettingsView: View {
                             VStack{
                                 
                                 HStack {
-                                Image(systemName: "textformat")
-                                    .foregroundStyle(.black)
-                                
-                                
+                                    Image(systemName: "textformat")
+                                        .foregroundStyle(.black)
+                                    
+                                    
                                     Text("Uygulama dili")
                                     Spacer()
                                     Menu {
@@ -110,10 +142,10 @@ struct IndustrySettingsView: View {
                                     .padding(.vertical , 4)
                                 
                                 HStack {
-                                Image(systemName: "moon.circle")
-                                    .foregroundStyle(.black)
-                                
-                                
+                                    Image(systemName: "moon.circle")
+                                        .foregroundStyle(.black)
+                                    
+                                    
                                     Text("Uygulama teması")
                                     Spacer()
                                     Menu {
@@ -183,7 +215,7 @@ struct IndustrySettingsView: View {
                                     .padding(2)
                                     .foregroundStyle(.black)
                                 }
-
+                                
                                 Divider()
                                     .padding(.vertical , 4)
                                 
@@ -239,11 +271,16 @@ struct IndustrySettingsView: View {
                         .padding(.bottom)
                         
                         
-                        
+                       
+                            
                         
                     }
                     .padding(.horizontal)
                 }
+            }
+            .navigationDestination(isPresented: $viewModel.navigateLogin) {
+                LoginView()
+                    .navigationBarBackButtonHidden()
             }
         }
     }

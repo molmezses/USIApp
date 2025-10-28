@@ -7,8 +7,6 @@
 
 import Firebase
 import FirebaseAuth
-import GoogleSignIn
-import GoogleSignInSwift
 import SwiftUI
 
 struct IndustryLoginView: View {

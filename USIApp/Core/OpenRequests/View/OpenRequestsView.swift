@@ -6,11 +6,14 @@
 //
 
 import SwiftUI
+import Firebase
+import FirebaseAuth
 
 struct OpenRequestsView: View {
     
     @StateObject var viewModel =  OpenRequestsViewModel()
     @EnvironmentObject var authViewModel : IndustryAuthViewModel
+    @Environment(\.dismiss) var dismiss
     
     
     @State var showNewRequestSheet = false
@@ -20,14 +23,28 @@ struct OpenRequestsView: View {
         VStack(spacing: 0) {
             
             HStack {
-                Button {
-                    
-                } label: {
-                    Image(systemName: "person.fill")
-                        .imageScale(.large)
-                        .foregroundStyle(.black)
-                        .opacity(0)
+                if Auth.auth().currentUser == nil {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .imageScale(.large)
+                            .foregroundStyle(.black)
+                            .opacity(1)
+                    }
                 }
+                else{
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .imageScale(.large)
+                            .foregroundStyle(.black)
+                            .opacity(0)
+                    }
+                    .disabled(true)
+                }
+                
 
                 Image(systemName: "bell.fill")
                     .imageScale(.large)
@@ -54,8 +71,7 @@ struct OpenRequestsView: View {
                         .opacity(0)
                 }
                 NavigationLink {
-                    AddRequestCategoryView()
-                        .navigationBarBackButtonHidden()
+                    EmptyView()
                 } label: {
                     Image(systemName: "plus.app")
                         .imageScale(.large)
@@ -63,6 +79,8 @@ struct OpenRequestsView: View {
                         .bold()
                 }
                 .padding(.leading , 4)
+                .disabled(true)
+                .opacity(0)
 
             }
             .padding(.horizontal)

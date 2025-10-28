@@ -12,6 +12,7 @@ struct StudentSettingsView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var authViewModel : StudentAuthViewModel
     @StateObject var feedbackViewmodel = FeedbackViewModel()
+    @StateObject var viewModel = StudentSettingsViewModel()
 
     
     var body: some View {
@@ -70,6 +71,33 @@ struct StudentSettingsView: View {
                                     .foregroundStyle(.black)
                                     .padding(2)
                                 })
+                                
+                                Divider()
+                                    .padding(.vertical , 4)
+                                
+                                Button {
+                                    viewModel.showDeleteAlert = true
+                                } label: {
+                                    HStack {
+                                        Image(systemName: "trash.fill")
+                                            .imageScale(.large)
+                                            .foregroundStyle(.red)
+                                        Text("Hesabımı sil")
+                                            .foregroundStyle(.black)
+                                        Spacer()
+                                        
+                                    }
+                                    .foregroundStyle(.black)
+                                    .padding(2)
+                                }
+                                .alert("Hesabı Sil", isPresented: $viewModel.showDeleteAlert) {
+                                    Button("İptal", role: .cancel) { }
+                                    Button("Sil", role: .destructive) {
+                                        viewModel.deleteAccount(authViewModel: authViewModel)
+                                    }
+                                } message: {
+                                    Text("Bu işlem geri alınamaz. Hesabınızı silmek istediğinize emin misiniz?")
+                                }
                             }
                             .padding()
                             .background(Color("backgroundBlue"))

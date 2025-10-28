@@ -48,7 +48,9 @@ class IndustryAuthViewModel: ObservableObject {
     
     func logOut(){
         do{
+            try AuthService.shared.logOut()
             try IndustryAuthService.shared.logOut()
+            try StudentAuthService.shared.logOut()
             self.industryUserSession = nil
         }catch{
             self.errorMessage = error.localizedDescription
