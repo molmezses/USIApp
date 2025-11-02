@@ -88,7 +88,7 @@ struct OpenRequestsView: View {
             ScrollView {
                 VStack(spacing: 16) {
                     if viewModel.requests.isEmpty {
-                        Text("Henüz açık talep oluşturulmamış. Talep oluşturmak için teni talep butonuna tıklayınız")
+                        Text("Henüz açık talep oluşturulmamış. Talep oluşturmak için teni talep butonuna tıklayınız.")
                             .frame(maxWidth: .infinity)
                             .foregroundColor(.gray)
                             .padding(.top, 50)
