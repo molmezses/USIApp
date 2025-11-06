@@ -20,6 +20,7 @@ class IndustryRegisterViewModel: ObservableObject{
     @Published var errorMessage = ""
     @Published var isLoading: Bool = false
     @Published var navigateToIndustryTabView: Bool = false
+    @Published var showAlert: Bool = false
     
     let db = Firestore.firestore().collection("Industry")
     
@@ -29,6 +30,7 @@ class IndustryRegisterViewModel: ObservableObject{
         
         guard password == passwordConfirmation else {
             self.errorMessage = "Şifreler birbirleri ile uyuşmuyor"
+            self.showAlert = true
             return
         }
         
@@ -60,6 +62,7 @@ class IndustryRegisterViewModel: ObservableObject{
                     
                 case .failure(let failure):
                     self.errorMessage = failure.localizedDescription
+                    self.showAlert = true
                     print(self.errorMessage)
                 }
                 
