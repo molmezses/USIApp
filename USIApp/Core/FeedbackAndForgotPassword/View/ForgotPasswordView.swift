@@ -69,7 +69,6 @@ struct ForgotPasswordView: View {
                             
                             Button {
                                 viewModel.resetPassword()
-                                dismiss()
                             } label: {
                                 Text("Şifre sıfırlama gönder")
                                     .font(.headline)
@@ -90,12 +89,12 @@ struct ForgotPasswordView: View {
                     }
                 }
             }
-            .alert(isPresented: $viewModel.showAlert) {
-                Alert(
-                    title: Text("Bilgi"),
-                    message: Text(viewModel.message ?? ""),
-                    dismissButton: .default(Text("Tamam"))
-                )
+            .alert("Uyarı" , isPresented: $viewModel.showAlert) {
+                Button("Tamam") {
+                    dismiss()
+                }
+            } message: {
+                Text(viewModel.message)
             }
         }
     }

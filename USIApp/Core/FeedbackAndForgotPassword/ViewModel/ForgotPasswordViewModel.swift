@@ -9,7 +9,7 @@ import FirebaseAuth
 
 class ForgotPasswordViewModel: ObservableObject {
     @Published var email = ""
-    @Published var message: String?
+    @Published var message: String = ""
     @Published var showAlert = false
     
     func resetPassword() {
