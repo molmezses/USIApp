@@ -10,10 +10,12 @@ import SwiftUI
 struct StudentRegisterView: View {
     
     @Environment(\.dismiss) var dismiss
-    @State private var showAlert = false
     @FocusState private var focusedField: Bool
     @EnvironmentObject var viewModel : StudentRegisterViewModel
     @EnvironmentObject var authViewModel : StudentAuthViewModel
+    @State private var showTerms = false
+    
+
     
     var body: some View {
         NavigationStack {
@@ -80,7 +82,7 @@ struct StudentRegisterView: View {
                     
                     VStack {
                         Button {
-                            viewModel.register(authViewModel: authViewModel)
+                            showTerms = true
                         } label: {
                             Text("Kayıt Ol")
                                 .font(.headline)
@@ -91,6 +93,18 @@ struct StudentRegisterView: View {
                                 .cornerRadius(10)
                         }
                         .padding(.horizontal)
+                        .sheet(isPresented: $showTerms) {
+                            TermsOfUseView(
+                                onAccept: {
+                                    showTerms = false
+                                    viewModel.register(authViewModel: authViewModel)
+                                },
+                                onDecline: {
+                                    showTerms = false
+                                }
+                            )
+                        }
+
                     }
                     
                     VStack(spacing: 12){
@@ -156,6 +170,8 @@ struct StudentRegisterView: View {
                         
                         
                 }
+                
+                
                 
                 
             }

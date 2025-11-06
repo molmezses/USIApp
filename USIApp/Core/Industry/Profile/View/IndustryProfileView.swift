@@ -142,6 +142,7 @@ struct IndustryProfileView: View {
                             Text(viewModel.firmExpertArea != "" ? viewModel.firmExpertArea  : "Çalışma alanı  bulunamadı")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
+                                
                         }
                         .padding(.top, 20)
                         

@@ -15,6 +15,7 @@ struct AcademicianRegisterView: View {
     @FocusState private var focusedField: Bool
     @EnvironmentObject var viewModel : RegisterViewModel
     @EnvironmentObject var authViewModel : AuthViewModel
+    @State var showTerms: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -81,7 +82,7 @@ struct AcademicianRegisterView: View {
                     
                     VStack {
                         Button {
-                            viewModel.register(authViewModel: authViewModel)
+                            showTerms = true
                         } label: {
                             Text("Kayıt Ol")
                                 .font(.headline)
@@ -92,6 +93,17 @@ struct AcademicianRegisterView: View {
                                 .cornerRadius(10)
                         }
                         .padding(.horizontal)
+                        .sheet(isPresented: $showTerms) {
+                            TermsOfUseView(
+                                onAccept: {
+                                    showTerms = false
+                                    viewModel.register(authViewModel: authViewModel)
+                                },
+                                onDecline: {
+                                    showTerms = false
+                                }
+                            )
+                        }
                     }
                     
                     VStack(spacing: 12){

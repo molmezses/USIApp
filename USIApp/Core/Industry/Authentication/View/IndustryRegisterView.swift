@@ -15,6 +15,7 @@ struct IndustryRegisterView: View {
     @EnvironmentObject var authViewModel : IndustryAuthViewModel
     @EnvironmentObject var requestViewModel: RequestIndustryViewModel
     @State var selectedTab = 1
+    @State var showTerms: Bool = false
 
     
     
@@ -100,7 +101,7 @@ struct IndustryRegisterView: View {
                         
                         VStack {
                             Button {
-                                viewModel.register(authViewModel: authViewModel)
+                                showTerms = true
                             } label: {
                                 Text("Kayıt Ol")
                                     .font(.headline)
@@ -111,6 +112,17 @@ struct IndustryRegisterView: View {
                                     .cornerRadius(10)
                             }
                             .padding(.horizontal)
+                            .sheet(isPresented: $showTerms) {
+                                TermsOfUseView(
+                                    onAccept: {
+                                        showTerms = false
+                                        viewModel.register(authViewModel: authViewModel)
+                                    },
+                                    onDecline: {
+                                        showTerms = false
+                                    }
+                                )
+                            }
                         }
                         
                         VStack(spacing: 12){

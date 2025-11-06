@@ -17,6 +17,8 @@ class StudentRegisterViewModel: ObservableObject{
     @Published var errorMessage: String? = ""
     @Published var isLoading: Bool = false
     @Published var navigateToStudentTabView: Bool = false
+    @Published var showAlert: Bool = false
+    
     
     let db = Firestore.firestore().collection("Students")
 
@@ -29,6 +31,7 @@ class StudentRegisterViewModel: ObservableObject{
         
         if !email.hasSuffix("@ogr.ahievran.edu.tr"){
             self.errorMessage = "Lütfen @ogr.ahievran.edu.tr uzantılı bir mail ile kayıt olunuz."
+            return false
         }
         
         print("email doğru yazım tamamlandı")
@@ -38,6 +41,7 @@ class StudentRegisterViewModel: ObservableObject{
     func register(authViewModel: StudentAuthViewModel){
         self.isLoading = true
         guard validateEmailPassword() else {
+            self.showAlert = true
             return
         }
         
@@ -68,6 +72,7 @@ class StudentRegisterViewModel: ObservableObject{
                     
                 case .failure(let failure):
                     self.errorMessage = failure.localizedDescription
+                    self.showAlert = true
                     
                 }
                 
@@ -80,5 +85,6 @@ class StudentRegisterViewModel: ObservableObject{
         self.email = ""
         self.password = ""
         self.confirmPassword = ""
+        self.showAlert = false
     }
 }
