@@ -11,21 +11,23 @@ class RegisterViewModel: ObservableObject{
     @Published var email: String = ""
     @Published var password : String = ""
     @Published var confirmPassword : String = ""
-    @Published var errorMessage: String? = ""
+    @Published var errorMessage: String = ""
     @Published var isLoading: Bool = false
     @Published var navigateToVerificationView: Bool = false
+    @Published var showAlert: Bool = false
     
     func validateEmailPassword() -> Bool {
         if !(confirmPassword == password){
             self.errorMessage = "Şifreler birbirleri ile uyuşmuyor"
+            self.showAlert = true
             return false
         }
         
         guard email.hasSuffix("@ahievran.edu.tr")  else {
             self.errorMessage = "Sadece @ahievran.edu.tr uzantılı e-posta adresleri ile kayıt olabilirsiniz."
+            self.showAlert = true
             return false
         }
-        print("email doğru yazım tamamlandı")
         return true
     }
     
@@ -43,17 +45,19 @@ class RegisterViewModel: ObservableObject{
                 self.clearFields()
             case .failure(let error):
                 self.errorMessage = error.localizedDescription
+                self.showAlert  = true
             }
         }
     }
     
-     func clearFields(){
+    func clearFields(){
         self.email = ""
         self.password = ""
         self.confirmPassword = ""
+        self.showAlert = false
     }
     
     
-
+    
     
 }

@@ -11,7 +11,6 @@ import SwiftUI
 struct AcademicianRegisterView: View {
     
     @Environment(\.dismiss) var dismiss
-    @State private var showAlert = false
     @FocusState private var focusedField: Bool
     @EnvironmentObject var viewModel : RegisterViewModel
     @EnvironmentObject var authViewModel : AuthViewModel
@@ -167,6 +166,11 @@ struct AcademicianRegisterView: View {
                     Spacer()
                         
                         
+                }
+                .alert("Uyarı", isPresented: $viewModel.showAlert) {
+                    Button("Tamam", role: .cancel) { }
+                } message: {
+                    Text("\(viewModel.errorMessage)")
                 }
                 
                 
