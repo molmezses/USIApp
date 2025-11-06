@@ -170,7 +170,11 @@ struct StudentRegisterView: View {
                         
                         
                 }
-                
+                .alert("Uyarı" , isPresented: $viewModel.showAlert) {
+                    Button("Tamam" , role: .cancel) { }
+                } message : {
+                    Text("\(viewModel.errorMessage ?? "")")
+                }
                 
                 
                 
