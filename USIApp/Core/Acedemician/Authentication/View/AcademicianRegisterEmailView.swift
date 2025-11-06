@@ -112,8 +112,9 @@ struct AcademicianRegisterEmailView: View {
                             .cornerRadius(10)
                     }
                     .padding(.horizontal)
-                    Button {
-                        
+                    NavigationLink {
+                        ForgotPasswordView()
+                            .navigationBarBackButtonHidden()
                     } label: {
                         Text("Şifremi Unuttum")
                             .frame(maxWidth: .infinity)

@@ -17,7 +17,6 @@ struct ForgotPasswordView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 
-                // MARK: - Üst Başlık
                 HStack {
                     Button {
                         dismiss()
@@ -58,7 +57,6 @@ struct ForgotPasswordView: View {
                                 .padding(.top, 40)
                                 .padding(.horizontal)
                             
-                            // TextField
                             TextField("Email", text: $viewModel.email)
                                 .padding()
                                 .background(.white)
@@ -69,7 +67,6 @@ struct ForgotPasswordView: View {
                                 .textContentType(.emailAddress)
                                 .padding(.horizontal)
                             
-                            // Button
                             Button {
                                 viewModel.resetPassword()
                                 dismiss()

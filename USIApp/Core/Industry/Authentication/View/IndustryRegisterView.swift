@@ -152,8 +152,9 @@ struct IndustryRegisterView: View {
                                     .cornerRadius(10)
                             }
                             .padding(.horizontal)
-                            Button {
-                                
+                            NavigationLink {
+                                ForgotPasswordView()
+                                    .navigationBarBackButtonHidden()
                             } label: {
                                 Text("Şifremi Unuttum")
                                     .frame(maxWidth: .infinity)
@@ -173,7 +174,7 @@ struct IndustryRegisterView: View {
                             Text("Devama tıkladıktan sonra ")
                                         + Text("Terms of Service")
                                             .foregroundColor(Color("logoBlue"))
-                                        + Text(" ve")
+                                        + Text(" ve ")
                                         + Text("Privacy Policy")
                                             .foregroundColor(Color("logoBlue"))
                                         + Text(" kabul etmiş olursunuz")
