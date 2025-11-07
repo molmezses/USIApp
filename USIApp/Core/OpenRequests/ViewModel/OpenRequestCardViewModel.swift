@@ -13,6 +13,11 @@ import FirebaseFirestore
 class OpenRequestCardViewModel: ObservableObject{
     
     @Published var applyCount: Int = 0
+    @Published var showReportCard: Bool = false
+    @Published var reportMessage: String = ""
+    @Published var navToReport: Bool = false
+    
+    
     
     func fetchApplyUserCount(for requestID: String, completion: @escaping (Int) -> Void) {
         let db = Firestore.firestore()
@@ -34,6 +39,18 @@ class OpenRequestCardViewModel: ObservableObject{
             
             completion(applyUsers.count)
         }
+    }
+    
+    func reportPost(){
+        navToReport = true
+    }
+    
+    func blockUser(){
+        
+    }
+    
+    func basvur(){
+        
     }
     
 }
