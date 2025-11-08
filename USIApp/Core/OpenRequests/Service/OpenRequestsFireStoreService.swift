@@ -154,6 +154,25 @@ class OpenRequestsFireStoreService {
            }
        }
     
+    func sendReport(user: String , requestId: String ,  message: String ,  completion: @escaping (Result<Void, Error>) -> Void){
+        let docRef = Firestore.firestore().collection("Reports")
+        
+        let document: [String: Any] = [
+            "user" : user,
+            "message" : message,
+            "requestId" : requestId
+        ]
+        
+        docRef.addDocument(data: document) { error in
+            if let error = error {
+                completion(.failure(error))
+            }else{
+                completion(.success(()))
+            }
+        }
+    }
+    
+    
 
 
     

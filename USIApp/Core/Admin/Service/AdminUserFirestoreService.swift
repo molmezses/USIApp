@@ -408,12 +408,12 @@ class AdminUserFirestoreService{
                 completion(0)
                 return
             }
-
+            
             guard let documents = snapshot?.documents else {
                 completion(0)
                 return
             }
-
+            
             for document in documents {
                 let data = document.data()
                 if let responses = data["academicianResponses"] as? [String: String] {
@@ -422,11 +422,11 @@ class AdminUserFirestoreService{
                     }
                 }
             }
-
+            
             completion(uniqueAcademicianIDs.count)
         }
     }
-
+    
     
     
     func getUserCountAcademicianOrtakTalepFalse(completion: @escaping (Int) -> Void) {
@@ -443,7 +443,7 @@ class AdminUserFirestoreService{
             }
     }
     
-
+    
     func isAdminUser(completion: @escaping (Bool) -> Void) {
         let email = AuthService.shared.getCurrentUser()?.email ?? "admin@admin.admin"
         
@@ -455,19 +455,124 @@ class AdminUserFirestoreService{
                     completion(false)
                     return
                 }
-
+                
                 let isAdmin = !(snapshot?.isEmpty ?? true)
                 completion(isAdmin)
             }
     }
-
-
     
     
     
+    func fetchReports(completion : @escaping (Result<[ReportModel] , Error>) -> Void){
+        
+        let docRef = Firestore.firestore()
+            .collection("Reports")
+        
+        docRef.getDocuments { snapshot, error in
+            if let error = error{
+                completion(.failure(error))
+                return
+            }
+            
+            guard let documents = snapshot?.documents else {
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey : "Belge bulunamadı"])))
+                return
+            }
+            
+            let reports: [ReportModel] = documents.compactMap { doc in
+                
+                let data = doc.data()
+                let message = data["message"] as? String ?? ""
+                let userEmail = data["user"] as? String ?? ""
+                let requestId = data["requestId"] as? String ?? ""
+                
+                return ReportModel(id: doc.documentID,
+                                   userEmail: userEmail,
+                                   requestId: requestId,
+                                   reportMessage: message
+                )
+            }
+            
+            completion(.success(reports))
+            
+            
+        }
+        
+    }
+    
+    func fetchReportedRequestDetail(requestId: String , completion: @escaping (Result<RequestModel, Error>) -> Void){
+        
+        let docRef = Firestore.firestore().collection("Requests").document(requestId)
+        
+        
+        docRef.getDocument { snapshot, error in
+            if let error = error{
+                completion(.failure(error))
+                return
+            }
+            
+            guard let data = snapshot?.data() else {
+                let error = NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Document not found"])
+                completion(.failure(error))
+                return
+            }
+            
+            let request: RequestModel = RequestModel(id: requestId ,
+                                                     title: data["requestTitle"] as? String ?? "",
+                                                     description: data["requestMessage"] as? String ?? "",
+                                                     date: data["createdDate"] as? String ?? "",
+                                                     selectedCategories: [""], status: RequestStatus.approved, requesterID: data["requesterID"] as? String ?? "",
+                                                     requesterCategories: "", requesterName: data["requesterName"] as? String ?? "",
+                                                     requesterAddress: "", requesterEmail: data["requesterEmail"] as? String ?? "",
+                                                     requesterPhone: "", adminMessage: "",
+                                                     requesterImage:data["requesterImage"] as? String ?? "", requesterType: data["requesterType"] as? String ?? "", createdDate: data["createdDate"] as? String ?? "", requestType: true)
+            
+            completion(.success(request))
+            
+            
+        }
+        
+    }
     
     
+    func deleteReport(reportId: String , completion: @escaping (Result<Void , Error>) -> Void){
+        
+        let docRef = Firestore.firestore().collection("Reports").document(reportId)
+        
+        docRef.delete { error in
+            if let error = error {
+                completion(.failure(error))
+            }else{
+                completion(.success(()))
+            }  
+        }
+    }
     
+    func deleteRequest(requestId: String , reportId: String ,  completion: @escaping (Result<Void , Error>) -> Void){
+        
+        let docRef = Firestore.firestore().collection("Requests").document(requestId)
+        
+        docRef.delete { error in
+            if let error = error {
+                completion(.failure(error))
+            }else{
+                
+                let repDocRef = Firestore.firestore().collection("Reports").document(reportId)
+                
+                repDocRef.delete { error in
+                    if let error = error {
+                        print("Error removing document: \(error)")
+                    } else {
+                        print("Document successfully deleted!")
+                    }
+                }
+                completion(.success(()))
+                
+                
+                
+            }
+        }
+    }
     
     
     

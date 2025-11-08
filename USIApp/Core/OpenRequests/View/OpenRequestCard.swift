@@ -109,7 +109,7 @@ struct OpenRequestCard: View {
             
         }
         .navigationDestination(isPresented: $viewModel.navToReport, destination: {
-            OpenRequestReportView()
+            OpenRequestReportView(requestId: request.id )
                 .navigationBarBackButtonHidden()
         })
         .onAppear(perform: {

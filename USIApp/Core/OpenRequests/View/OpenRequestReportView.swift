@@ -12,6 +12,7 @@ struct OpenRequestReportView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject var viewModel = OpenRequestReportViewModel()
     @FocusState var focusedField: Bool
+    var requestId: String
     
     var body: some View {
         VStack(spacing: 0) {
@@ -84,10 +85,10 @@ struct OpenRequestReportView: View {
                     
                     
                     
-                    // Kaydet Butonu
+                    // Gödner Butonu
                     Button {
-                        viewModel.sendToReports()
-                        dismiss()
+                        viewModel.sendToReports(requestId: requestId)
+                        
                     } label: {
                         Text("Gönder")
                             .font(.headline)
@@ -107,9 +108,13 @@ struct OpenRequestReportView: View {
                 focusedField = false
             }
         }
+        .alert("Uyarı" , isPresented: $viewModel.showAlert) {
+            Button("Tamam", role: .cancel) {
+                dismiss()
+            }
+        } message: {
+            Text(viewModel.alertMessage)
+        }
     }
 }
 
-#Preview {
-    OpenRequestReportView()
-}
