@@ -50,9 +50,12 @@ struct OpenRequestCard: View {
                                 Button(action: viewModel.reportPost) {
                                         Label("Şikayet Et", systemImage: "exclamationmark.triangle")
                                     }
-                                Button(role: .destructive , action: viewModel.blockUser) {
-                                        Label("Engelle", systemImage: "xmark")
-                                    }
+                                Button(role: .destructive) {
+                                    viewModel.blockUser(requesterId: request.requesterID)
+                                } label: {
+                                    Label("Engelle", systemImage: "xmark")
+                                }
+
                                     
                             } label: {
                                 Image(systemName: "ellipsis")
@@ -102,6 +105,13 @@ struct OpenRequestCard: View {
                 }
                 .padding(.vertical , 4)
                 
+            }
+            .alert("Uyarı", isPresented: $viewModel.showAlert) {
+                Button(role: .cancel, action: { }) {
+                    Text("Tamam")
+                }
+            } message: {
+                Text("\(viewModel.alertMessage)")
             }
             
             

@@ -59,8 +59,51 @@ class OpenRequestsViewModel: ObservableObject {
         }
     }
     
+    func fetchUserDomain() -> String{
+        if Auth.auth().currentUser != nil{
+            
+            if let user = Auth.auth().currentUser?.email{
+                if user.hasSuffix("@ahievran.edu.tr"){
+                    return "AcademicianInfo"
+                }
+                if user.hasSuffix("@ogr.ahievran.edu.tr"){
+                    return "Students"
+                }else{
+                    return "Industry"
+                }
+            }
+            
+        }
+        
+        return "Industry"
+    }
+    
+    
+    func fetchUserId(completion: @escaping (String?) -> Void) {
+        if fetchUserDomain() == "AcademicianInfo" {
+            FirestoreService.shared.fetchAcademicianDocumentById(byEmail: Auth.auth().currentUser?.email ?? "") { result in
+                switch result {
+                case .success(let userId):
+                    completion(userId)
+                case .failure:
+                    print("Academician ID çekilemedi")
+                    completion(nil)
+                }
+            }
+        } else {
+            if Auth.auth().currentUser?.uid == "" || Auth.auth().currentUser?.uid == nil{
+                completion("Anonoymos User")
+            }
+            completion(Auth.auth().currentUser?.uid ?? "Anonim")
+        }
+    }
+
+    
+    
+    
     func loadRequests() {
-        OpenRequestsFireStoreService.shared.fetchOpenRequests { result in
+        
+        OpenRequestsFireStoreService.shared.fetchOpenRequests() { result in
             switch result {
             case .success(let requests):
                 let dateFormatter = DateFormatter()
@@ -80,6 +123,9 @@ class OpenRequestsViewModel: ObservableObject {
                 print("Hata: \(failure.localizedDescription)")
             }
         }
+        
+        
+        
     }
     
     

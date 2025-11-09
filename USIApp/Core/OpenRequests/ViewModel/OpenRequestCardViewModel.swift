@@ -16,6 +16,8 @@ class OpenRequestCardViewModel: ObservableObject{
     @Published var showReportCard: Bool = false
     @Published var reportMessage: String = ""
     @Published var navToReport: Bool = false
+    @Published var showAlert: Bool = false
+    @Published var alertMessage: String = ""
     
     
     
@@ -45,8 +47,17 @@ class OpenRequestCardViewModel: ObservableObject{
         navToReport = true
     }
     
-    func blockUser(){
-        
+    func blockUser(requesterId: String){
+        OpenRequestsFireStoreService.shared.blockUser(requesterID: requesterId) { result in
+            switch result {
+            case .success():
+                self.alertMessage = "Kullanıcıyı başarılı bir şekilde engellediniz. Artık kullanıcıdan herhangi bir içerik görmeyeceksiniz."
+                self.showAlert = true
+            case .failure(let failure):
+                self.alertMessage = failure.localizedDescription
+                self.showAlert = true
+            }
+        }
     }
     
     func basvur(){

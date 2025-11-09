@@ -8,17 +8,14 @@
 import Foundation
 import Firebase
 import FirebaseFirestore
+import FirebaseAuth
 
 class OpenRequestsFireStoreService {
     
     static let shared = OpenRequestsFireStoreService()
     
-    func fetchOpenRequests(completion: @escaping (Result<[RequestModel], Error>) -> Void) {
+    func fetchOpenRequests(excluding blockedIds: [String] = [] , completion: @escaping (Result<[RequestModel], Error>) -> Void) {
         
-//        guard let requesterId = IndustryAuthService.shared.getCurrentUser()?.id else {
-//            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Kullanıcı ID bulunamadı"])))
-//            return
-//        }
         
         
         let docRef = Firestore.firestore()
@@ -57,6 +54,10 @@ class OpenRequestsFireStoreService {
                 let createdDate = data["createdDate"] as? String ?? ""
                 let requestType = data["requestType"] as? Bool == false
                 let requestCategory = data["requestCategory"] as? String ?? "hatali"
+                
+                if blockedIds.contains(requesterID){
+                    return nil
+                }
 
 
                 
@@ -170,6 +171,64 @@ class OpenRequestsFireStoreService {
                 completion(.success(()))
             }
         }
+    }
+    
+    func blockUser(requesterID: String ,completion: @escaping (Result<Void, Error>) -> Void){
+        
+        let docRef = Firestore.firestore()
+        
+        var userType: String = ""
+        var currentUserId: String = ""
+        
+        guard (Auth.auth().currentUser?.email) != nil else{
+            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey : "Engelleyebilmeniz için oturum açmanız gereklidir"])));
+            return
+        }
+
+        if let userEmail = Auth.auth().currentUser?.email {
+            if userEmail.hasSuffix("@ahievran.edu.tr"){
+                userType = "AcademicianInfo"
+            }else if userEmail.hasSuffix("@ogr.ahievran.edu.tr"){
+                userType = "Students"
+            }else{
+                userType = "Industry"
+            }
+            
+        }
+        
+        if userType == "AcademicianInfo" {
+            FirestoreService.shared.fetchAcademicianDocumentById(byEmail: Auth.auth().currentUser?.email ?? "") { result in
+                switch result {
+                case .success(let userId):
+                    
+                    currentUserId = userId
+                    let userRef = docRef.collection(userType).document(currentUserId)
+                   
+                   userRef.updateData(["blockedUsers" : FieldValue.arrayUnion([requesterID])])
+                    
+                    completion(.success(()))
+                    
+                case .failure(let failure):
+                    print("Academician ıd çekileriken hata \(failure.localizedDescription)")
+                    completion(.failure(failure))
+                }
+            }
+        }else {
+            currentUserId = Auth.auth().currentUser?.uid ?? ""
+            let userRef = docRef.collection(userType).document(currentUserId)
+           
+           userRef.updateData(["blockedUsers" : FieldValue.arrayUnion([requesterID])])
+            
+            completion(.success(()))
+        }
+        
+        
+        
+        print("\(AuthService.shared.getCurrentUser()?.email == "") mailli kullanıcı \(requesterID) id li kullanıcıyı eengelledi")
+        
+        
+        
+        
     }
     
     
