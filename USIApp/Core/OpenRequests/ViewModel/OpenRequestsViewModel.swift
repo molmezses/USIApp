@@ -24,7 +24,7 @@ class OpenRequestsViewModel: ObservableObject {
     @Published var isNilUser : Bool = false
     @Published var navigateToLoginView: Bool = false
     
-
+    
     
     
     
@@ -97,31 +97,97 @@ class OpenRequestsViewModel: ObservableObject {
             completion(Auth.auth().currentUser?.uid ?? "Anonim")
         }
     }
-
+    
     
     
     
     func loadRequests() {
         
-        OpenRequestsFireStoreService.shared.fetchOpenRequests() { result in
-            switch result {
-            case .success(let requests):
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "dd.MM.yyyy"
-
-                self.requests = requests.sorted(by: { (req1, req2) in
-                    guard let date1 = dateFormatter.date(from: req1.createdDate),
-                          let date2 = dateFormatter.date(from: req2.createdDate) else {
-                        return false
-                    }
-                    return date1 > date2
-                })
-
-                print("Başarılı: Talepler tarih sırasına göre sıralandı!")
-
-            case .failure(let failure):
-                print("Hata: \(failure.localizedDescription)")
+        
+        
+        if Auth.auth().currentUser == nil{
+            OpenRequestsFireStoreService.shared.fetchOpenRequests() { result in
+                switch result {
+                case .success(let requests):
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "dd.MM.yyyy"
+                    
+                    self.requests = requests.sorted(by: { (req1, req2) in
+                        guard let date1 = dateFormatter.date(from: req1.createdDate),
+                              let date2 = dateFormatter.date(from: req2.createdDate) else {
+                            return false
+                        }
+                        return date1 > date2
+                    })
+                    
+                    print("Başarılı: Talepler tarih sırasına göre sıralandı!")
+                    
+                case .failure(let failure):
+                    print("Hata: \(failure.localizedDescription)")
+                }
             }
+        }else{
+            
+            fetchUserId { userId in
+                let docRef = Firestore.firestore().collection(self.fetchUserDomain()).document(userId ?? "Anonim")
+                
+                docRef.getDocument { snapshot , error in
+                    if let error = error {
+                        print("Belge alınamadı: \(error.localizedDescription)")
+                        return
+                    }
+                    
+                    guard let data = snapshot?.data() else {
+                        print("Veri bulunamadı")
+                        return
+                    }
+                    
+                    if let blockedUsers = data["blockedUsers"] as? [String] {
+                        OpenRequestsFireStoreService.shared.fetchOpenRequests(excluding: blockedUsers) { result in
+                            switch result {
+                            case .success(let requests):
+                                let dateFormatter = DateFormatter()
+                                dateFormatter.dateFormat = "dd.MM.yyyy"
+                                
+                                self.requests = requests.sorted(by: { (req1, req2) in
+                                    guard let date1 = dateFormatter.date(from: req1.createdDate),
+                                          let date2 = dateFormatter.date(from: req2.createdDate) else {
+                                        return false
+                                    }
+                                    return date1 > date2
+                                })
+                                
+                                print("Başarılı: Talepler tarih sırasına göre sıralandı!")
+                                
+                            case .failure(let failure):
+                                print("Hata: \(failure.localizedDescription)")
+                            }
+                        }
+                    }else{
+                        OpenRequestsFireStoreService.shared.fetchOpenRequests() { result in
+                            switch result {
+                            case .success(let requests):
+                                let dateFormatter = DateFormatter()
+                                dateFormatter.dateFormat = "dd.MM.yyyy"
+                                
+                                self.requests = requests.sorted(by: { (req1, req2) in
+                                    guard let date1 = dateFormatter.date(from: req1.createdDate),
+                                          let date2 = dateFormatter.date(from: req2.createdDate) else {
+                                        return false
+                                    }
+                                    return date1 > date2
+                                })
+                                
+                                print("Başarılı: Talepler tarih sırasına göre sıralandı!")
+                                
+                            case .failure(let failure):
+                                print("Hata: \(failure.localizedDescription)")
+                            }
+                        }
+                    }
+                }
+            }
+           
         }
         
         
@@ -149,8 +215,8 @@ class OpenRequestsViewModel: ObservableObject {
                             self.alertMessage = "Başvurunuz başarıyla gönderildi. Talep sahibi tarafından değerlendirilmeye alınacaktır."
                             self.showAlert = true
                             
-            
-
+                            
+                            
                             
                         case .failure(_):
                             print("Academician ıd çekilemedi")

@@ -117,6 +117,9 @@ struct OpenRequestsView: View {
             
             
         }
+        .onAppear(perform: {
+            viewModel.loadRequests()
+        })
         .navigationDestination(isPresented: $showNewRequestSheet) {
             AddRequestCategoryView()
                 .environmentObject(viewModel)
