@@ -22,6 +22,7 @@ class AdminViewModel : ObservableObject{
     @Published var  pendingRequests = 0
     @Published var  addPointAcademicians = 0
     @Published var ortakProjeSayisiTalep: Int = 0
+    @Published var totalStudents: Int = 0
     
     func getUserCountLoggedInAcademics(domain: String){
         AdminUserFirestoreService.shared.getUserCountByDomain(domain: domain) { count in
@@ -48,6 +49,15 @@ class AdminViewModel : ObservableObject{
             self.loggedInIndustry = (count)
             print(self.totalIndustry)
 
+        }
+    }
+    
+    func getUserCountStudent() {
+        AdminUserFirestoreService.shared.getUserCountByDomain(domain: "ogr.ahievran.edu.tr") { count in
+            print("Toplam Öğrenci")
+            self.totalStudents = (count)
+            print(self.totalIndustry)
+            
         }
     }
     

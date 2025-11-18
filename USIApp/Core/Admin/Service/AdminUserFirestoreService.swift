@@ -334,8 +334,16 @@ class AdminUserFirestoreService{
                     print("çekilen")
                     
                     self.getUserCountByDomain(domain: "ahievran.edu.tr") { academicianLogginCount in
-                        let industryCount = (documents.count) - academicianLogginCount
-                        completion(industryCount)
+                        let countTemp = (documents.count) - academicianLogginCount
+                        
+                        self.getUserCountByDomain(domain: "ogr.ahievran.edu.tr") { studentCount in
+                            let industryCount = (countTemp) - studentCount
+                            
+                            print(industryCount)
+                            completion(industryCount)
+
+                        }
+                        
                     }
                     
                     

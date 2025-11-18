@@ -165,28 +165,40 @@ struct AdminView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
             
-            HStack(spacing: 10) {
-                StatsProgressView(
-                    title: "Akademisyen",
-                    current: viewModel.loggedInAcademics,
-                    total: viewModel.totalAcademics,
-                    color: Color("usi"),
-                    icon: "graduationcap.fill",
-                    height: cardHeight,
-                    industry: false
-                )
-                
-                StatsProgressView(
-                    title: "Sanayici",
-                    current: viewModel.loggedInIndustry,
-                    total: viewModel.totalIndustry,
-                    color: Color("sari"),
-                    icon: "building.2.fill",
-                    height: cardHeight,
-                    industry: true
-                )
+            ScrollView(.horizontal){
+                HStack(spacing: 10) {
+                    StatsProgressView(
+                        title: "Akademisyen",
+                        current: viewModel.loggedInAcademics,
+                        total: viewModel.totalAcademics,
+                        color: Color("usi"),
+                        icon: "graduationcap.fill",
+                        height: cardHeight,
+                        industry: false
+                    )
+                    
+                    StatsProgressView(
+                        title: "Sanayici",
+                        current: viewModel.loggedInIndustry,
+                        total: viewModel.totalIndustry,
+                        color: Color("sari"),
+                        icon: "building.2.fill",
+                        height: cardHeight,
+                        industry: true
+                    )
+                    
+                    StatsProgressView(
+                        title: "Öğrenci",
+                        current: viewModel.totalStudents,
+                        total: viewModel.totalStudents,
+                        color: Color(.systemPink),
+                        icon: "person.2.fill",
+                        height: cardHeight,
+                        industry: false
+                    )
+                }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
         }
     }
     
@@ -267,8 +279,8 @@ struct AdminView: View {
             HStack(spacing: 12) {
                 StatItem(icon: "person.3.fill", value: "\(viewModel.totalAcademics)", label: "Akademisyen", color: Color("usi"))
                 StatItem(icon: "building.2.fill", value: "\(viewModel.totalIndustry)", label: "Sanayi", color: Color("sari"))
+                StatItem(icon: "person.2.fill", value: "\(viewModel.totalStudents)", label: "Öğrenci", color: .pink)
                 StatItem(icon: "checkmark.circle.fill", value: "\(viewModel.approvedRequests)", label: "Onaylanan", color: .green)
-                StatItem(icon: "xmark.circle.fill", value: "\(viewModel.rejectedRequests)", label: "Reddedilem", color: .red)
                 StatItem(icon: "doc.fill", value: "\(viewModel.totalRequests)", label: "Toplam Talep", color: Color.purple)
             }
             .padding()
