@@ -10,7 +10,7 @@ import SwiftUI
 struct StudentRegisterEmailView: View {
     
     @StateObject var viewModel = StudentRegisterViewModel()
-    @EnvironmentObject var authViewModel  : StudentAuthViewModel
+    @EnvironmentObject var authViewModel  : AuthViewModel
     @Environment(\.dismiss) var dismiss
     @FocusState private var focusedField: Bool
 

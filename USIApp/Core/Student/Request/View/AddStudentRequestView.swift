@@ -11,7 +11,7 @@ struct AddStudentRequestView: View {
     
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var viewModel : StudentRequestViewModel
-    @EnvironmentObject var authViewModel : StudentAuthViewModel
+    @EnvironmentObject var authViewModel : AuthViewModel
 
     
     var body: some View {

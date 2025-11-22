@@ -12,7 +12,7 @@ struct IndustryRegisterView: View {
     @StateObject var viewModel = IndustryRegisterViewModel()
     @FocusState private var focusedField: Bool
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var authViewModel : IndustryAuthViewModel
+    @EnvironmentObject var authViewModel : AuthViewModel
     @EnvironmentObject var requestViewModel: RequestIndustryViewModel
     @State var selectedTab = 1
     @State var showTerms: Bool = false
@@ -214,7 +214,4 @@ struct IndustryRegisterView: View {
     
 }
 
-#Preview {
-    IndustryRegisterView()
-        .environmentObject(IndustryAuthViewModel())
-}
+

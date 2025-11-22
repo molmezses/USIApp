@@ -16,10 +16,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         return true
     }
     
-//    func application(_ app: UIApplication, open url: URL,
-//                        options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-//           return GIDSignIn.sharedInstance.handle(url)
-//       }
+
 }
 
 @main
@@ -27,9 +24,7 @@ struct USIAppApp: App {
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject var authViewModel = AuthViewModel()
-    @StateObject var industryAuthViewModel = IndustryAuthViewModel()
     @StateObject var requestViewModel = RequestIndustryViewModel()
-    @StateObject var studentAuthViewModel = StudentAuthViewModel()
     
     init() {
         let appearance = UITabBarAppearance()
@@ -49,11 +44,9 @@ struct USIAppApp: App {
     
     var body: some Scene {
         WindowGroup {
-            LoginView()
+            ContentView()
                 .environmentObject(authViewModel)
-                .environmentObject(industryAuthViewModel)
                 .environmentObject(requestViewModel)
-                .environmentObject(studentAuthViewModel)
                 .preferredColorScheme(.light)
         }
     }

@@ -12,7 +12,7 @@ struct StudentRegisterView: View {
     @Environment(\.dismiss) var dismiss
     @FocusState private var focusedField: Bool
     @EnvironmentObject var viewModel : StudentRegisterViewModel
-    @EnvironmentObject var authViewModel : StudentAuthViewModel
+    @EnvironmentObject var authViewModel : AuthViewModel
     @State private var showTerms = false
     
 

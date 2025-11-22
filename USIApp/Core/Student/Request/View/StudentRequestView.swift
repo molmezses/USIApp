@@ -9,7 +9,7 @@ import SwiftUI
 
 struct StudentRequestView: View {
     
-    @EnvironmentObject var authViewModel : StudentAuthViewModel
+    @EnvironmentObject var authViewModel : AuthViewModel
     @StateObject var viewModel = StudentRequestViewModel()
 
     

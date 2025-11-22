@@ -25,7 +25,7 @@ class IndustryRegisterViewModel: ObservableObject{
     let db = Firestore.firestore().collection("Industry")
     
     
-    func register(authViewModel: IndustryAuthViewModel) {
+    func register(authViewModel: AuthViewModel) {
         isLoading = true
         
         guard password == passwordConfirmation else {
@@ -40,9 +40,9 @@ class IndustryRegisterViewModel: ObservableObject{
                 
                 switch result {
                 case .success(let session):
-                    authViewModel.industryUserSession = session
-                    self.db.document(authViewModel.industryUserSession?.id ?? "id bulunamadı").setData(
-                        ["email":authViewModel.industryUserSession?.email ?? "email bulunamadı"]
+                    authViewModel.userSession = session
+                    self.db.document(authViewModel.userSession?.id ?? "id bulunamadı").setData(
+                        ["email":authViewModel.userSession?.email ?? "email bulunamadı"]
                     )
                     
                     print("kayit oldu ")

@@ -19,7 +19,7 @@ class StudentLoginViewModel: ObservableObject {
 
     
     
-    func login(authViewModel : StudentAuthViewModel){
+    func login(authViewModel : AuthViewModel){
         isLoading = true
         StudentAuthService.shared.login(email: email, password: password) { result in
             DispatchQueue.main.async {
