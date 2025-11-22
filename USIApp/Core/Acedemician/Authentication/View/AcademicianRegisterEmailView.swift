@@ -13,9 +13,10 @@ struct AcademicianRegisterEmailView: View {
     @EnvironmentObject var authViewModel : AuthViewModel
     @Environment(\.dismiss) var dismiss
     @FocusState private var focusedField: Bool
-
-
-    
+    @State private var isSending = false
+    let otpManager = OTPManager()
+    @State private var navigateToOTP = false
+ 
     var body: some View {
         ScrollView {
             VStack {
@@ -27,7 +28,7 @@ struct AcademicianRegisterEmailView: View {
                             .imageScale(.large)
                             .foregroundStyle(.black)
                     }
-
+                    
                     Spacer()
                 }
                 .padding(.top)
@@ -49,7 +50,7 @@ struct AcademicianRegisterEmailView: View {
                         .font(.headline)
                     Text("Kayıt olmak için lütfen E-Mail hesabınızı giriniz")
                         .font(.subheadline)
-                        
+                    
                 }
                 .padding(.bottom, 20)
                 
@@ -68,13 +69,12 @@ struct AcademicianRegisterEmailView: View {
                 .padding(.bottom)
                 
                 VStack {
-                    NavigationLink {
-                        AcademicianRegisterView()
-                            .navigationBarBackButtonHidden()
-                            .environmentObject(authViewModel)
-                            .environmentObject(viewModel)
+                    Button {
+                        
+                        sendCode()
+                        
                     } label: {
-                        Text("Devam")
+                        Text("Doğrulama Kodu Gönder")
                             .font(.headline)
                             .frame(maxWidth: .infinity)
                             .foregroundColor(.white)
@@ -125,19 +125,19 @@ struct AcademicianRegisterEmailView: View {
                     }
                     .padding(.horizontal)
                     
-
+                    
                 }
                 
                 
                 
                 VStack {
                     Text("Devama tıkladıktan sonra ")
-                                + Text("Terms of Service")
-                                    .foregroundColor(Color("logoBlue"))
-                                + Text(" ve")
-                                + Text("Privacy Policy")
-                                    .foregroundColor(Color("logoBlue"))
-                                + Text(" kabul etmiş olursunuz")
+                    + Text("Terms of Service")
+                        .foregroundColor(Color("logoBlue"))
+                    + Text(" ve")
+                    + Text("Privacy Policy")
+                        .foregroundColor(Color("logoBlue"))
+                    + Text(" kabul etmiş olursunuz")
                 }
                 .multilineTextAlignment(.center)
                 .font(.footnote)
@@ -145,13 +145,34 @@ struct AcademicianRegisterEmailView: View {
                 
                 Spacer()
                 Spacer()
-                    
-                    
+                
+                
             }
+            .navigationDestination(isPresented: $navigateToOTP, destination: {
+                OTPVerifyView(email: viewModel.email)
+                    .navigationBarBackButtonHidden()
+                    .environmentObject(authViewModel)
+                    .environmentObject(viewModel)
+            })
             .onTapGesture {
                 self.focusedField = false
             }
             
+        }
+    }
+    
+    func sendCode() {
+        isSending = true
+        
+        otpManager.sendOTP(to: viewModel.email) { success in
+            DispatchQueue.main.async {
+                isSending = false
+                if success {
+                    navigateToOTP = true
+                } else {
+                    // Hata mesajı verebilirsin
+                }
+            }
         }
     }
 }

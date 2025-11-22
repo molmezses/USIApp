@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct AcademicianRegisterView: View {
+struct AcademicianRegisterPasswordView: View {
     
     @Environment(\.dismiss) var dismiss
     @FocusState private var focusedField: Bool
@@ -28,7 +28,7 @@ struct AcademicianRegisterView: View {
                                 .imageScale(.large)
                                 .foregroundStyle(.black)
                         }
-
+                        
                         Spacer()
                     }
                     .padding(.top)
@@ -50,7 +50,7 @@ struct AcademicianRegisterView: View {
                             .font(.headline)
                         Text("Şifrenizi oluşturunuz")
                             .font(.subheadline)
-                            
+                        
                     }
                     .padding(.bottom, 20)
                     
@@ -79,31 +79,24 @@ struct AcademicianRegisterView: View {
                     }
                     .padding(.bottom)
                     
-                    VStack {
-                        Button {
-                            showTerms = true
-                        } label: {
-                            Text("Kayıt Ol")
-                                .font(.headline)
-                                .frame(maxWidth: .infinity)
-                                .foregroundColor(.white)
-                                .padding(16)
-                                .background(Color("logoBlue"))
-                                .cornerRadius(10)
-                        }
-                        .padding(.horizontal)
-                        .sheet(isPresented: $showTerms) {
-                            TermsOfUseView(
-                                onAccept: {
-                                    showTerms = false
-                                    viewModel.register(authViewModel: authViewModel)
-                                },
-                                onDecline: {
-                                    showTerms = false
-                                }
-                            )
-                        }
+                    
+                    NavigationLink {
+                        AcademicianRegisterProfileView()
+                            .environmentObject(authViewModel)
+                            .environmentObject(viewModel)
+                            .navigationBarBackButtonHidden()
+                    } label: {
+                        Text("Devam")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(.white)
+                            .padding(16)
+                            .background(Color("logoBlue"))
+                            .cornerRadius(10)
+                            .padding(.horizontal)
                     }
+                    
+
                     
                     VStack(spacing: 12){
                         
@@ -145,19 +138,19 @@ struct AcademicianRegisterView: View {
                         }
                         .padding(.horizontal)
                         
-
+                        
                     }
                     
                     
                     
                     VStack {
                         Text("Devama tıkladıktan sonra ")
-                                    + Text("Terms of Service")
-                                        .foregroundColor(Color("logoBlue"))
-                                    + Text(" ve ")
-                                    + Text("Privacy Policy")
-                                        .foregroundColor(Color("logoBlue"))
-                                    + Text(" kabul etmiş olursunuz")
+                        + Text("Terms of Service")
+                            .foregroundColor(Color("logoBlue"))
+                        + Text(" ve ")
+                        + Text("Privacy Policy")
+                            .foregroundColor(Color("logoBlue"))
+                        + Text(" kabul etmiş olursunuz")
                     }
                     .multilineTextAlignment(.center)
                     .font(.footnote)
@@ -165,8 +158,8 @@ struct AcademicianRegisterView: View {
                     
                     Spacer()
                     Spacer()
-                        
-                        
+                    
+                    
                 }
                 .alert("Uyarı", isPresented: $viewModel.showAlert) {
                     Button("Tamam", role: .cancel) { }
@@ -179,18 +172,11 @@ struct AcademicianRegisterView: View {
             .onTapGesture {
                 focusedField = false
             }
-            .navigationDestination(isPresented: $viewModel.navigateToVerificationView) {
-                VerficationView()
-                    .navigationBarBackButtonHidden()
-            }
+            
         }
     }
 }
 
 
 
-#Preview {
-    AcademicianRegisterView()
-        .environmentObject(AuthViewModel())
-        .environmentObject(RegisterViewModel())
-}
+
