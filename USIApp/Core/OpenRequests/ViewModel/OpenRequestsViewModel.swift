@@ -64,7 +64,7 @@ class OpenRequestsViewModel: ObservableObject {
             
             if let user = Auth.auth().currentUser?.email{
                 if user.hasSuffix("@ahievran.edu.tr"){
-                    return "AcademicianInfo"
+                    return "Academician"
                 }
                 if user.hasSuffix("@ogr.ahievran.edu.tr"){
                     return "Students"
@@ -78,25 +78,30 @@ class OpenRequestsViewModel: ObservableObject {
         return "Industry"
     }
     
-    
-    func fetchUserId(completion: @escaping (String?) -> Void) {
-        if fetchUserDomain() == "AcademicianInfo" {
-            FirestoreService.shared.fetchAcademicianDocumentById(byEmail: Auth.auth().currentUser?.email ?? "") { result in
-                switch result {
-                case .success(let userId):
-                    completion(userId)
-                case .failure:
-                    print("Academician ID çekilemedi")
-                    completion(nil)
-                }
-            }
-        } else {
-            if Auth.auth().currentUser?.uid == "" || Auth.auth().currentUser?.uid == nil{
-                completion("Anonoymos User")
-            }
-            completion(Auth.auth().currentUser?.uid ?? "Anonim")
-        }
-    }
+//
+//    func fetchUserId(completion: @escaping (String?) -> Void) {
+//        if fetchUserDomain() == "AcademicianInfo" {
+//            
+//            if let userId = Auth.auth().currentUser?.uid{
+//                
+//            }
+//            
+//            FirestoreService.shared.fetchAcademicianDocumentById(byEmail: Auth.auth().currentUser?.email ?? "") { result in
+//                switch result {
+//                case .success(let userId):
+//                    completion(userId)
+//                case .failure:
+//                    print("Academician ID çekilemedi")
+//                    completion(nil)
+//                }
+//            }
+//        } else {
+//            if Auth.auth().currentUser?.uid == "" || Auth.auth().currentUser?.uid == nil{
+//                completion("Anonoymos User")
+//            }
+//            completion(Auth.auth().currentUser?.uid ?? "Anonim")
+//        }
+//    }
     
     
     
@@ -128,8 +133,8 @@ class OpenRequestsViewModel: ObservableObject {
             }
         }else{
             
-            fetchUserId { userId in
-                let docRef = Firestore.firestore().collection(self.fetchUserDomain()).document(userId ?? "Anonim")
+            if let userId = Auth.auth().currentUser?.uid{
+                let docRef = Firestore.firestore().collection(self.fetchUserDomain()).document(userId)
                 
                 docRef.getDocument { snapshot , error in
                     if let error = error {
@@ -186,8 +191,11 @@ class OpenRequestsViewModel: ObservableObject {
                         }
                     }
                 }
-            }
+            
            
+            }
+            
+                
         }
         
         
@@ -207,21 +215,12 @@ class OpenRequestsViewModel: ObservableObject {
         }else{
             if !(applyMessage == ""){
                 if isAcademicianEmail(email: Auth.auth().currentUser?.email ?? ""){
-                    FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-                        switch result {
-                        case .success(let userId):
-                            
-                            OpenRequestsFireStoreService.shared.addApplyUser(requestId: request.id, userId: userId, value: self.applyMessage)
-                            self.alertMessage = "Başvurunuz başarıyla gönderildi. Talep sahibi tarafından değerlendirilmeye alınacaktır."
-                            self.showAlert = true
-                            
-                            
-                            
-                            
-                        case .failure(_):
-                            print("Academician ıd çekilemedi")
-                        }
+                    if let userId = Auth.auth().currentUser?.uid{
+                        OpenRequestsFireStoreService.shared.addApplyUser(requestId: request.id, userId: userId, value: self.applyMessage)
+                        self.alertMessage = "Başvurunuz başarıyla gönderildi. Talep sahibi tarafından değerlendirilmeye alınacaktır."
+                        self.showAlert = true
                     }
+     
                 }else {
                     OpenRequestsFireStoreService.shared.addApplyUser(requestId: request.id, userId: Auth.auth().currentUser?.uid ?? "hata", value: self.applyMessage)
                     

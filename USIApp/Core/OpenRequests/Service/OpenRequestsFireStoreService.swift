@@ -187,7 +187,7 @@ class OpenRequestsFireStoreService {
 
         if let userEmail = Auth.auth().currentUser?.email {
             if userEmail.hasSuffix("@ahievran.edu.tr"){
-                userType = "AcademicianInfo"
+                userType = "Academician"
             }else if userEmail.hasSuffix("@ogr.ahievran.edu.tr"){
                 userType = "Students"
             }else{
@@ -196,23 +196,22 @@ class OpenRequestsFireStoreService {
             
         }
         
-        if userType == "AcademicianInfo" {
-            FirestoreService.shared.fetchAcademicianDocumentById(byEmail: Auth.auth().currentUser?.email ?? "") { result in
-                switch result {
-                case .success(let userId):
-                    
-                    currentUserId = userId
-                    let userRef = docRef.collection(userType).document(currentUserId)
-                   
-                   userRef.updateData(["blockedUsers" : FieldValue.arrayUnion([requesterID])])
-                    
-                    completion(.success(()))
-                    
-                case .failure(let failure):
-                    print("Academician ıd çekileriken hata \(failure.localizedDescription)")
-                    completion(.failure(failure))
-                }
+        if userType == "Academician" {
+            
+            if let userId = Auth.auth().currentUser?.uid{
+                
+                currentUserId = userId
+                let userRef = docRef.collection(userType).document(currentUserId)
+               
+               userRef.updateData(["blockedUsers" : FieldValue.arrayUnion([requesterID])])
+                
+                completion(.success(()))
+                
+            
             }
+            
+            
+                    
         }else {
             currentUserId = Auth.auth().currentUser?.uid ?? ""
             let userRef = docRef.collection(userType).document(currentUserId)
