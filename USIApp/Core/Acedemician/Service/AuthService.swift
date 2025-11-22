@@ -32,29 +32,34 @@ final class AuthService{
         }
     }
     
-    func register(email: String , password: String , completion: @escaping (Result<Void , Error>) -> Void) {
+    func register(email: String , password: String ,faculty: String , nameAndSurname: String , department: String ,  completion: @escaping (Result<UserSession , Error>) -> Void) {
         Auth.auth().createUser(withEmail: email, password: password) { result, error in
             if let error = error {
                 return completion(.failure(error))
             }
             
-            result?.user.sendEmailVerification(completion: { error in
-                if let error = error {
-                    completion(.failure(error))
-                } else {
-                    
-                    let domain = email.components(separatedBy: "@").last ?? "unknown"
-                    let data: [String: Any] = [
-                        "email": email,
-                        "domain": domain,
-                        "id": result?.user.uid ?? "unkown"
-                    ]
-                    
-                    Firestore.firestore().collection("UserDomains").document(result?.user.uid ?? "unkown").setData(data)
-                    
-                    completion(.success(()))
-                }
-            })
+            guard let user = result?.user else {
+                return completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey : "User not found"])))
+            }
+            
+            let session = UserSession(id: user.uid, email: user.email ?? "noEmail")
+            
+            let docRef = Firestore.firestore().collection("Academician").document(user.uid)
+            
+            let data: [String : Any] = [
+                "email" : email ,
+                "bolum" : faculty ,
+                "adSoyad" : nameAndSurname ,
+                "program" : department
+            ]
+            
+            docRef.setData(data)
+            
+            
+            
+            
+            completion(.success(session))
+            
         }
     }
     

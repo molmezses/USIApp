@@ -10,6 +10,9 @@ import Foundation
 class RegisterViewModel: ObservableObject{
     @Published var email: String = ""
     @Published var password : String = ""
+    @Published var nameAndSurName: String = ""
+    @Published var faculty: String = ""
+    @Published var department: String = ""
     @Published var confirmPassword : String = ""
     @Published var errorMessage: String = ""
     @Published var isLoading: Bool = false
@@ -23,7 +26,7 @@ class RegisterViewModel: ObservableObject{
             return false
         }
         
-        guard email.hasSuffix("@ahievran.edu.tr")  else {
+        guard email.hasSuffix("@gmail.com")  else {
             self.errorMessage = "Sadece @ahievran.edu.tr uzantılı e-posta adresleri ile kayıt olabilirsiniz."
             self.showAlert = true
             return false
@@ -37,11 +40,10 @@ class RegisterViewModel: ObservableObject{
             return
         }
         
-        AuthService.shared.register(email: email, password: password) { result in
+        AuthService.shared.register(email: email, password: password , faculty: faculty , nameAndSurname: nameAndSurName , department: department) { result in
             switch result{
             case .success(_):
-                print("doğrulama gönderildi")
-                self.navigateToVerificationView = true
+                
                 self.clearFields()
             case .failure(let error):
                 self.errorMessage = error.localizedDescription
@@ -55,6 +57,9 @@ class RegisterViewModel: ObservableObject{
         self.password = ""
         self.confirmPassword = ""
         self.showAlert = false
+        self.faculty = ""
+        self.department = ""
+        self.nameAndSurName = ""
     }
     
     
