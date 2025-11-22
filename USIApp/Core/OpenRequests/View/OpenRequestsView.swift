@@ -12,7 +12,7 @@ import FirebaseAuth
 struct OpenRequestsView: View {
     
     @StateObject var viewModel =  OpenRequestsViewModel()
-    @EnvironmentObject var authViewModel : IndustryAuthViewModel
+    @EnvironmentObject var authViewModel : AuthViewModel
     @Environment(\.dismiss) var dismiss
     
     

@@ -13,34 +13,32 @@ final class AuthViewModel : ObservableObject{
     @Published var errorMessage : String? = nil
     @Published var isLoadind : Bool = false
     
+    private var authStateListener: AuthStateDidChangeListenerHandle?
+
+    
     
     init() {
-        if let session = AuthService.shared.getCurrentUser() {
-            
-            FirestoreService.shared.fetchAcademicianDocumentById(byEmail: Auth.auth().currentUser?.email ?? "") { result in
-                switch result {
-                case .success(_):
-                    self.userSession = session
-                case.failure(_):
-                    self.userSession = nil
-                }
+        if let currentUser = Auth.auth().currentUser{
+            self.userSession = UserSession(id: currentUser.uid , email:  currentUser.email ?? "noEmail")
+        }
+        
+        addAuthListener()
+        
+    }
+    
+    func addAuthListener(){
+        authStateListener = Auth.auth().addStateDidChangeListener { auth, user in
+            if let user = user{
+                self.userSession = UserSession(id: user.uid, email: user.email ?? "noEmail")
+            }else{
+                self.userSession = nil
             }
-            
-        } else {
-            self.userSession = nil
         }
     }
     
     func logOut(){
-        do {
-            try AuthService.shared.logOut()
-            try IndustryAuthService.shared.logOut()
-            try StudentAuthService.shared.logOut()
-
-            self.userSession = nil
-        }catch{
-            self.errorMessage = error.localizedDescription
-        }
+        try? Auth.auth().signOut()
+        self.userSession = nil
     }
     
     

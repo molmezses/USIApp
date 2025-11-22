@@ -38,7 +38,7 @@ class StudentRegisterViewModel: ObservableObject{
         return true
     }
     
-    func register(authViewModel: StudentAuthViewModel){
+    func register(authViewModel: AuthViewModel){
         self.isLoading = true
         guard validateEmailPassword() else {
             self.showAlert = true

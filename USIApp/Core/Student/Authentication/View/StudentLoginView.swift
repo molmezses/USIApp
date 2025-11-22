@@ -12,14 +12,13 @@ struct StudentLoginView: View {
     @Environment(\.dismiss) var dismiss
     @State var navigate: Bool = false
     @FocusState var focusedField: Bool
-    @EnvironmentObject var authViewModel: StudentAuthViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject var viewModel = StudentLoginViewModel()
     
     
     var body: some View {
         NavigationStack {
-            if authViewModel.userSession == nil{
-                HStack {
+            HStack {
                     Button {
                         dismiss()
                     } label: {
@@ -27,7 +26,7 @@ struct StudentLoginView: View {
                             .imageScale(.large)
                             .foregroundStyle(.black)
                     }
-
+                    
                     Spacer()
                 }
                 .padding(.top)
@@ -52,7 +51,7 @@ struct StudentLoginView: View {
                                 .font(.headline)
                             Text("Giriş yapmak için lütfen bilgilerinizi giriniz.")
                                 .font(.subheadline)
-                                
+                            
                         }
                         .padding(.bottom, 20)
                         
@@ -78,8 +77,8 @@ struct StudentLoginView: View {
                                 .focused($focusedField)
                                 .autocorrectionDisabled()
                                 .textInputAutocapitalization(.never)
-
-                                
+                            
+                            
                         }
                         .padding(.bottom)
                         
@@ -140,24 +139,24 @@ struct StudentLoginView: View {
                             }
                             .padding(.horizontal)
                             
-
+                            
                         }
                         
                         
                         
                         VStack {
                             Text("Devama tıkladıktan sonra ")
-                                        + Text("Terms of Service")
-                                            .foregroundColor(Color("logoBlue"))
-                                        + Text(" ve ")
-                                        + Text("Privacy Policy")
-                                            .foregroundColor(Color("logoBlue"))
-                                        + Text(" kabul etmiş olursunuz")
+                            + Text("Terms of Service")
+                                .foregroundColor(Color("logoBlue"))
+                            + Text(" ve ")
+                            + Text("Privacy Policy")
+                                .foregroundColor(Color("logoBlue"))
+                            + Text(" kabul etmiş olursunuz")
                         }
                         .multilineTextAlignment(.center)
                         .font(.footnote)
                         .padding()
-   
+                        
                     }
                     
                 }
@@ -169,20 +168,14 @@ struct StudentLoginView: View {
                         .navigationBarBackButtonHidden()
                 }
                 .alert("Hata", isPresented: $viewModel.showAlert) {
-                            Button("Tamam", role: .cancel) { }
-                        } message: {
-                            Text("Kullanıcı adı veya parola hatalı. Lütfen tekrar deneyiniz.")
-                        }
-            }else{
-                
-                StudentTabView(selectedTab: 0)
-                    .environmentObject(authViewModel)
-                    .navigationBarBackButtonHidden()
+                    Button("Tamam", role: .cancel) { }
+                } message: {
+                    Text("Kullanıcı adı veya parola hatalı. Lütfen tekrar deneyiniz.")
+                }
             }
         }
     }
-}
-
-#Preview {
-    StudentLoginView()
-}
+    
+    #Preview {
+        StudentLoginView()
+    }

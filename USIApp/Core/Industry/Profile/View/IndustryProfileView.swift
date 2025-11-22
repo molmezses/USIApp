@@ -9,7 +9,7 @@ import SwiftUI
 import PhotosUI
 
 struct IndustryProfileView: View {
-    @EnvironmentObject var authViewModel: IndustryAuthViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject var viewModel = IndustryProfileViewModel()
 
     @State private var showImagePicker = false

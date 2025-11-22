@@ -16,7 +16,7 @@ final class StudentAuthService{
     
     private init(){}
     
-    func login(email: String , password: String , completion: @escaping (Result<StudentUserSession , Error>) -> Void) {
+    func login(email: String , password: String , completion: @escaping (Result<UserSession , Error>) -> Void) {
         Auth.auth().signIn(withEmail: email, password: password) { result, error in
             if let error = error{
                 return completion(.failure(error))
@@ -26,12 +26,12 @@ final class StudentAuthService{
                 return completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey : "User not found"])))
             }
             
-            let session = StudentUserSession(id: user.uid, email: user.email ?? "")
+            let session = UserSession(id: user.uid, email: user.email ?? "")
             completion(.success(session))
         }
     }
     
-    func register(email: String , password: String , completion: @escaping (Result<StudentUserSession , Error>) -> Void){
+    func register(email: String , password: String , completion: @escaping (Result<UserSession , Error>) -> Void){
         
         
         
@@ -45,7 +45,7 @@ final class StudentAuthService{
                 return completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey : "User not found"])))
             }
             
-            let session = StudentUserSession(id: user.uid, email: user.email ?? "")
+            let session = UserSession(id: user.uid, email: user.email ?? "")
             completion(.success(session))
             
             

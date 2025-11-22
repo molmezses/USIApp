@@ -23,14 +23,14 @@ class IndustryLoginViewModel: ObservableObject {
 
     
     
-    func login(authViewModel : IndustryAuthViewModel){
+    func login(authViewModel : AuthViewModel){
         isLoading = true
         IndustryAuthService.shared.login(email: email, password: password) { result in
             DispatchQueue.main.async {
                 self.isLoading = false
                 switch result {
                 case .success(let session):
-                    authViewModel.industryUserSession = session
+                    authViewModel.userSession = session
                     self.email = ""
                     self.password = ""
                 case .failure(let error):

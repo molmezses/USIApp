@@ -26,7 +26,7 @@ class RegisterViewModel: ObservableObject{
             return false
         }
         
-        guard email.hasSuffix("@gmail.com")  else {
+        guard email.hasSuffix("@ahievran.edu.tr")  else {
             self.errorMessage = "Sadece @ahievran.edu.tr uzantılı e-posta adresleri ile kayıt olabilirsiniz."
             self.showAlert = true
             return false
@@ -42,7 +42,9 @@ class RegisterViewModel: ObservableObject{
         
         AuthService.shared.register(email: email, password: password , faculty: faculty , nameAndSurname: nameAndSurName , department: department) { result in
             switch result{
-            case .success(_):
+            case .success(let session):
+                
+                authViewModel.userSession = session
                 
                 self.clearFields()
             case .failure(let error):

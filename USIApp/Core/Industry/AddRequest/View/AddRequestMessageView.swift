@@ -10,7 +10,7 @@ import SwiftUI
 struct AddRequestMessageView: View {
     
     @EnvironmentObject var viewModel: RequestIndustryViewModel
-    @EnvironmentObject var authViewModel : IndustryAuthViewModel
+    @EnvironmentObject var authViewModel : AuthViewModel
     @Environment(\.dismiss) var dismiss
     @State var navigateRequestView: Bool = false
     @State var selectedTab = 0

@@ -10,16 +10,12 @@ import SwiftUI
 struct IndustrySettingsView: View {
     
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var authViewModel : IndustryAuthViewModel
+    @EnvironmentObject var authViewModel : AuthViewModel
     @StateObject var feedbackViewmodel = FeedbackViewModel()
     @StateObject var viewModel = industrySettingsViewModel()
     
     
     var body: some View {
-        if authViewModel.industryUserSession == nil{
-            LoginView()
-                .navigationBarBackButtonHidden()
-        }else{
             VStack {
                 HStack {
                     Button {
@@ -282,7 +278,7 @@ struct IndustrySettingsView: View {
                 LoginView()
                     .navigationBarBackButtonHidden()
             }
-        }
+        
     }
 }
 

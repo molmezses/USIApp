@@ -19,7 +19,7 @@ class StudentSettingsViewModel: ObservableObject {
     
     
     
-    func deleteAccount(authViewModel : StudentAuthViewModel) {
+    func deleteAccount(authViewModel : AuthViewModel) {
         guard let user = Auth.auth().currentUser else { return }
         
         
@@ -49,7 +49,7 @@ class StudentSettingsViewModel: ObservableObject {
     }
     
     
-    func logOutDelete(authViewModel : StudentAuthViewModel){
+    func logOutDelete(authViewModel : AuthViewModel){
         do{
             try AuthService.shared.logOut()
             try IndustryAuthService.shared.logOut()

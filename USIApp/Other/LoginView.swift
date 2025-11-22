@@ -9,107 +9,89 @@
 import SwiftUI
 
 struct LoginView: View {
-    @StateObject var viewModel = FirstLoginViewModel()
-    @EnvironmentObject var studentAuthViewModel : StudentAuthViewModel
+    
+    @EnvironmentObject var authViewModel: AuthViewModel
     
     var body: some View {
         NavigationStack {
-            Group {
-                if viewModel.domain.isEmpty {
-                    SelectionScreen()
-                } else if viewModel.domain == "ahievran.edu.tr" {
-                    AcedemicianLoginView()
-                        .navigationBarBackButtonHidden()
-                } else if viewModel.domain == "ogr.ahievran.edu.tr" {
-                    StudentLoginView()
-                        .navigationBarBackButtonHidden()
-                } else {
-                    IndustryLoginView()
-                        .environmentObject(studentAuthViewModel)
-                        .navigationBarBackButtonHidden()
+            VStack {
+                Spacer()
+                VStack {
+                    Image("usiLogo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 160, height: 160)
+                    Text("USIApp")
+                        .font(.title)
+                        .bold()
                 }
-            }
-            .animation(.easeInOut, value: viewModel.domain)
-        }
-    }
-}
+                .padding(.bottom, 40)
+                
+                VStack {
+                    Text("USIApp'e Hoşgeldiniz").font(.headline)
+                    Text("Lütfen devam etmek için hesabınızı seçiniz.")
+                        .font(.subheadline)
+                }
+                .padding(.bottom, 20)
+                
+                VStack(spacing: 24) {
+                    NavigationLink("Akademisyen") {
+                        AcedemicianLoginView().navigationBarBackButtonHidden()
+                            .environmentObject(authViewModel)
+                    }
+                    .buttonStyle(GrayButtonStyle())
+                    
+                    NavigationLink("Öğrenci") {
+                        StudentLoginView().navigationBarBackButtonHidden()
+                            .environmentObject(authViewModel)
 
-struct SelectionScreen: View {
-    var body: some View {
-        VStack {
-            Spacer()
-            VStack {
-                Image("usiLogo")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 160, height: 160)
-                Text("USIApp")
-                    .font(.title)
-                    .bold()
-            }
-            .padding(.bottom, 40)
-            
-            VStack {
-                Text("USIApp'e Hoşgeldiniz").font(.headline)
-                Text("Lütfen devam etmek için hesabınızı seçiniz.")
-                    .font(.subheadline)
-            }
-            .padding(.bottom, 20)
-            
-            VStack(spacing: 24) {
-                NavigationLink("Akademisyen") {
-                    AcedemicianLoginView().navigationBarBackButtonHidden()
+                    }
+                    .buttonStyle(GrayButtonStyle())
+                    
+                    NavigationLink("Sanayi") {
+                        IndustryLoginView().navigationBarBackButtonHidden()
+                            .environmentObject(authViewModel)
+
+                    }
+                    .buttonStyle(GrayButtonStyle())
+                }
+                
+                HStack(spacing: 10) {
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.5))
+                        .frame(height: 1)
+                    
+                    Text("Giriş yapmadan devam et")
+                        .font(.footnote)
+                        .foregroundColor(.gray)
+                        .lineLimit(1)
+                        .layoutPriority(1)
+                    
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.5))
+                        .frame(height: 1)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal)
+                .padding(.vertical)
+                
+                NavigationLink("Açık Talepleri Gör") {
+                    OpenRequestsView().navigationBarBackButtonHidden()
                 }
                 .buttonStyle(GrayButtonStyle())
                 
-                NavigationLink("Öğrenci") {
-                    StudentLoginView().navigationBarBackButtonHidden()
-                }
-                .buttonStyle(GrayButtonStyle())
                 
-                NavigationLink("Sanayi") {
-                    IndustryLoginView().navigationBarBackButtonHidden()
-                }
-                .buttonStyle(GrayButtonStyle())
-            }
-            
-            HStack(spacing: 10) {
-                Rectangle()
-                    .fill(Color.gray.opacity(0.5))
-                    .frame(height: 1)
+
                 
-                Text("Giriş yapmadan devam et")
+                Text("Tüm proje fikirleriniz ve hesap bilgileriniz USIApp tarafından korunmaktadır")
+                    .multilineTextAlignment(.center)
                     .font(.footnote)
-                    .foregroundColor(.gray)
-                    .lineLimit(1)
-                    .layoutPriority(1)
-                
-                Rectangle()
-                    .fill(Color.gray.opacity(0.5))
-                    .frame(height: 1)
+                    .padding()
+                Spacer()
             }
-            .frame(maxWidth: .infinity)
-            .padding(.horizontal)
-            .padding(.vertical)
-            
-            NavigationLink("Açık Talepleri Gör") {
-                OpenRequestsView().navigationBarBackButtonHidden()
-            }
-            .buttonStyle(GrayButtonStyle())
-            
-            
-
-            
-            Text("Tüm proje fikirleriniz ve hesap bilgileriniz USIApp tarafından korunmaktadır")
-                .multilineTextAlignment(.center)
-                .font(.footnote)
-                .padding()
-            Spacer()
         }
     }
 }
-
-
 
 struct GrayButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {

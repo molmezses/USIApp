@@ -18,7 +18,7 @@ class industrySettingsViewModel: ObservableObject {
     
     
     
-    func deleteAccount(authViewModel : IndustryAuthViewModel) {
+    func deleteAccount(authViewModel : AuthViewModel) {
         guard let user = Auth.auth().currentUser else { return }
         
         
@@ -48,12 +48,12 @@ class industrySettingsViewModel: ObservableObject {
     }
     
     
-    func logOutDelete(authViewModel : IndustryAuthViewModel){
+    func logOutDelete(authViewModel : AuthViewModel){
         do{
             try AuthService.shared.logOut()
             try IndustryAuthService.shared.logOut()
             try StudentAuthService.shared.logOut()
-            authViewModel.industryUserSession = nil
+            authViewModel.userSession = nil
         }catch{
             print(error.localizedDescription)
         }

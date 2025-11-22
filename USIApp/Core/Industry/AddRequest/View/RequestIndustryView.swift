@@ -10,7 +10,7 @@ import SwiftUI
 struct RequestIndustryView: View {
     
     @EnvironmentObject var viewModel: RequestIndustryViewModel
-    @EnvironmentObject var authViewModel : IndustryAuthViewModel
+    @EnvironmentObject var authViewModel : AuthViewModel
     
     
     @State var showNewRequestSheet = false

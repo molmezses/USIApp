@@ -10,7 +10,7 @@ import PhotosUI
 
 
 struct StudentProfileView: View {
-    @EnvironmentObject var authViewModel: StudentAuthViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject var viewModel = StudentProfileViewModel()
 
     @State private var showImagePicker = false

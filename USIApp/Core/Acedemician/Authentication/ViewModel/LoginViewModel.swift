@@ -31,7 +31,6 @@ class LoginViewModel: ObservableObject{
                         self.errorMessage = self.translateFirebaseError(nsError)
                     }
                     self.showAlert = true
-                    print("Hatalı giriş")
                 }
             }
         }

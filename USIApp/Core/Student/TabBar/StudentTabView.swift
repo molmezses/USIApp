@@ -10,7 +10,7 @@ import SwiftUI
 struct StudentTabView: View {
     
      @State var selectedTab : Int
-    @EnvironmentObject var authViewModel : StudentAuthViewModel
+    @EnvironmentObject var authViewModel : AuthViewModel
     
     var body: some View {
         
