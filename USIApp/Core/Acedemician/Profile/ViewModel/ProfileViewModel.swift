@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseFirestore
+import FirebaseAuth
 
 class ProfileViewModel: ObservableObject {
     
@@ -20,31 +21,24 @@ class ProfileViewModel: ObservableObject {
     
     func loadAcademicianInfo(){
         
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-            switch result {
-            case .success(let documentID):
+        if let userId = Auth.auth().currentUser?.uid {
+            FirestoreService.shared.fetchAcademicianInfo(byId: userId) { result in
                 
-                FirestoreService.shared.fetchAcademicianInfo(byId: documentID) { result in
-                    
-                    switch result {
-                    case .success(let info):
-                            
-                        self.academicianInfo = info
-                        self.adSoyad = info.adSoyad
-                        self.email = info.email
-                        self.unvan = info.unvan
-                        self.photo = info.photo
-                        print("AcademicianID : \(documentID)")
+                switch result {
+                case .success(let info):
                         
-                        
-                    case .failure(let error):
-                        print("Hata loadAcademicianInfo : \(error.localizedDescription)")
-                    }
+                    self.academicianInfo = info
+                    self.adSoyad = info.adSoyad
+                    self.email = info.email
+                    self.unvan = info.unvan
+                    self.photo = info.photo
+                    print("AcademicianID : \(userId)")
                     
+                    
+                case .failure(let error):
+                    print("Hata loadAcademicianInfo : \(error.localizedDescription)")
                 }
                 
-            case .failure(let error):
-                print("Hata loadAcademiicanInfo: \(error.localizedDescription)")
             }
         }
         

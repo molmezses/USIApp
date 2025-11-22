@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 class AcademicianViewModel: ObservableObject {
     @Published var isOn: Bool = true
@@ -24,188 +25,184 @@ class AcademicianViewModel: ObservableObject {
     @Published var preEducationList: [String] = []
     @Published var giveEducationList: [String] = []
     @Published var firmList: [Firma] = []
-
+    
     
     
     func loadAcademicianInfo(){
         
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-            switch result {
-            case .success(let documentID):
+        if let userId = Auth.auth().currentUser?.uid {
+            FirestoreService.shared.fetchAcademicianInfo(byId: userId) { result in
                 
-                FirestoreService.shared.fetchAcademicianInfo(byId: documentID) { result in
+                switch result {
+                case .success(let info):
                     
-                    switch result {
-                    case .success(let info):
-                            
-                        self.adSoyad = info.adSoyad
-                        self.unvan = info.unvan
-                        self.photo = info.photo
-                        self.email = info.email
-                        self.akademikGecmis = info.akademikGecmis
-                        self.isOn = info.ortakProjeTalep
-                        self.personelTel = info.personelTel
-                        self.kurumsalTel = info.kurumsalTel
-                        self.webSite = info.webSite
-                        self.konum = "\(info.il)/\(info.ilce)"
-                        self.loadExpertArea()
-                        self.loadConsultancyField()
-                        self.loadPrevConsultancyField()
-                        self.loadPreEducation()
-                        self.loadGiveEducation()
-                        self.loadFirmalar()
-                        
-                        
-                    case .failure(let error):
-                        print("Hata loadAcademicianInfo : \(error.localizedDescription)")
-                    }
+                    self.adSoyad = info.adSoyad
+                    self.unvan = info.unvan
+                    self.photo = info.photo
+                    self.email = info.email
+                    self.akademikGecmis = info.akademikGecmis
+                    self.isOn = info.ortakProjeTalep
+                    self.personelTel = info.personelTel
+                    self.kurumsalTel = info.kurumsalTel
+                    self.webSite = info.webSite
+                    self.konum = "\(info.il)/\(info.ilce)"
+                    self.loadExpertArea()
+                    self.loadConsultancyField()
+                    self.loadPrevConsultancyField()
+                    self.loadPreEducation()
+                    self.loadGiveEducation()
+                    self.loadFirmalar()
                     
+                    
+                case .failure(let error):
+                    print("Hata loadAcademicianInfo : \(error.localizedDescription)")
                 }
                 
-            case .failure(let error):
-                print("Hata loadAcademiicanInfo: \(error.localizedDescription)")
             }
+            
+            
         }
+        
         
     }
     
-
+    
     
     func loadExpertArea(){
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-            switch result {
-            case .success(let documentID):
+        
+        if let userId = Auth.auth().currentUser?.uid {
+            
+            
+            FirestoreService.shared.fetchAcademicianInfo(byId: userId) { result in
                 
-                FirestoreService.shared.fetchAcademicianInfo(byId: documentID) { result in
+                switch result {
+                case .success(let info):
                     
-                    switch result {
-                    case .success(let info):
-                        
-                        self.expertList = info.uzmanlikAlani
-                        
-                    case .failure(let error):
-                        print("Hata : Load Expert Area \(error.localizedDescription)")
-                    }
+                    self.expertList = info.uzmanlikAlani
                     
+                case .failure(let error):
+                    print("Hata : Load Expert Area \(error.localizedDescription)")
                 }
                 
-            case .failure(_):
-                print("Hata : Load Expert Area DocumentId")
             }
         }
+        
+        
         
         
     }
     
     func loadConsultancyField(){
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-            switch result {
-            case .success(let documentID):
+        
+        
+        
+        if let userId = Auth.auth().currentUser?.uid {
+            FirestoreService.shared.fetchAcademicianInfo(byId: userId) { result in
                 
-                FirestoreService.shared.fetchAcademicianInfo(byId: documentID) { result in
+                switch result {
+                case .success(let info):
                     
-                    switch result {
-                    case .success(let info):
-                        
-                        self.consultancyList = info.verebilecegiDanismanlikKonuları
-                        
-                    case .failure(let error):
-                        print("Hata : Load ConsultancyField  \(error.localizedDescription)")
-                    }
+                    self.consultancyList = info.verebilecegiDanismanlikKonuları
                     
+                case .failure(let error):
+                    print("Hata : Load ConsultancyField  \(error.localizedDescription)")
                 }
                 
-            case .failure(_):
-                print("Hata : Load Load ConsultancyField  DocumentId")
             }
         }
+        
+        
+        
+        
+        
     }
     
     func loadPrevConsultancyField(){
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-            switch result {
-            case .success(let documentID):
+        
+        if let userId = Auth.auth().currentUser?.uid {
+            FirestoreService.shared.fetchAcademicianInfo(byId: userId) { result in
                 
-                FirestoreService.shared.fetchAcademicianInfo(byId: documentID) { result in
+                switch result {
+                case .success(let info):
                     
-                    switch result {
-                    case .success(let info):
-                        
-                        self.prevConsultanList = info.dahaOncekiDanismanliklar
-                        
-                    case .failure(let error):
-                        print("Hata : prevConsultanList  \(error.localizedDescription)")
-                    }
+                    self.prevConsultanList = info.dahaOncekiDanismanliklar
                     
+                case .failure(let error):
+                    print("Hata : prevConsultanList  \(error.localizedDescription)")
                 }
                 
-            case .failure(_):
-                print("Hata : prevConsultanList  DocumentId")
             }
         }
+        
+        
+        
+        
+        
+        
     }
     
     func loadPreEducation(){
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-            switch result {
-            case .success(let documentID):
+        
+        if let userId = Auth.auth().currentUser?.uid {
+            FirestoreService.shared.fetchAcademicianInfo(byId: userId) { result in
                 
-                FirestoreService.shared.fetchAcademicianInfo(byId: documentID) { result in
+                switch result {
+                case .success(let info):
                     
-                    switch result {
-                    case .success(let info):
-                        
-                        self.preEducationList = info.dahaOncekiVerdigiEgitimler
-                        
-                    case .failure(let error):
-                        print("Hata : prevConsultanList  \(error.localizedDescription)")
-                    }
+                    self.preEducationList = info.dahaOncekiVerdigiEgitimler
                     
+                case .failure(let error):
+                    print("Hata : prevConsultanList  \(error.localizedDescription)")
                 }
                 
-            case .failure(_):
-                print("Hata : prevConsultanList  DocumentId")
             }
         }
+        
+        
+        
+        
+        
+        
     }
     
     func loadGiveEducation(){
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-            switch result {
-            case .success(let documentID):
+        
+        if let userId = Auth.auth().currentUser?.uid {
+            
+            
+            FirestoreService.shared.fetchAcademicianInfo(byId: userId) { result in
                 
-                FirestoreService.shared.fetchAcademicianInfo(byId: documentID) { result in
+                switch result {
+                case .success(let info):
                     
-                    switch result {
-                    case .success(let info):
-                        
-                        self.giveEducationList = info.verebilecegiEgitimler
-                        
-                    case .failure(let error):
-                        print("Hata : prevConsultanList  \(error.localizedDescription)")
-                    }
+                    self.giveEducationList = info.verebilecegiEgitimler
                     
+                case .failure(let error):
+                    print("Hata : prevConsultanList  \(error.localizedDescription)")
                 }
                 
-            case .failure(_):
-                print("Hata : prevConsultanList  DocumentId")
             }
         }
+        
+        
+        
+        
+        
     }
     
     func loadFirmalar() {
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-            switch result {
-            case .success(let id):
-                FirestoreService.shared.fetchFirmalar(forAcademicianId: id) { [weak self] firmalar in
-                    DispatchQueue.main.async {
-                        self?.firmList = firmalar
-                    }
+        
+        if let userId = Auth.auth().currentUser?.uid {
+            
+            FirestoreService.shared.fetchFirmalar(forAcademicianId: userId) { [weak self] firmalar in
+                DispatchQueue.main.async {
+                    self?.firmList = firmalar
                 }
-            case .failure(let error):
-                print("Hata: Academician ID bulunamadı: \(error.localizedDescription)")
             }
         }
+        
+        
+        
     }
     
 }

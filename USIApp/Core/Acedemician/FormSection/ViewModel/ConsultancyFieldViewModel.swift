@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import FirebaseAuth
 class ConsultancyFieldViewModel: ObservableObject {
     @Published  var consultancyDesc: String = ""
     @Published  var consultancyList: [String] = []
@@ -29,27 +29,24 @@ class ConsultancyFieldViewModel: ObservableObject {
     
     
     func loadConsultancyField(){
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-            switch result {
-            case .success(let documentID):
+        
+        if let userId = Auth.auth().currentUser?.uid {
+            FirestoreService.shared.fetchAcademicianInfo(byId: userId) { result in
                 
-                FirestoreService.shared.fetchAcademicianInfo(byId: documentID) { result in
+                switch result {
+                case .success(let info):
                     
-                    switch result {
-                    case .success(let info):
-                        
-                        self.consultancyList = info.verebilecegiDanismanlikKonuları
-                        
-                    case .failure(let error):
-                        print("Hata : Load ConsultancyField  \(error.localizedDescription)")
-                    }
+                    self.consultancyList = info.verebilecegiDanismanlikKonuları
                     
+                case .failure(let error):
+                    print("Hata : Load ConsultancyField  \(error.localizedDescription)")
                 }
                 
-            case .failure(_):
-                print("Hata : Load Load ConsultancyField  DocumentId")
             }
         }
+                
+                
+            
     }
     
     func deleteConsultancyItem(_ item: String) {
