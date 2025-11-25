@@ -14,84 +14,38 @@ struct LoginView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                Spacer()
-                VStack {
-                    Image("usiLogo")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 160, height: 160)
-                    Text("USIApp")
-                        .font(.title)
-                        .bold()
-                }
-                .padding(.bottom, 40)
+            VStack(spacing: 20) {
+                Image("usiLogo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 160, height: 160)
                 
-                VStack {
-                    Text("USIApp'e Hoşgeldiniz").font(.headline)
-                    Text("Lütfen devam etmek için hesabınızı seçiniz.")
-                        .font(.subheadline)
-                }
-                .padding(.bottom, 20)
+                Text("USIApp'e Hoşgeldiniz").font(.headline)
+                Text("Lütfen devam etmek için hesabınızı seçiniz.").font(.subheadline)
                 
-                VStack(spacing: 24) {
-                    NavigationLink("Akademisyen") {
-                        AcedemicianLoginView().navigationBarBackButtonHidden()
-                            .environmentObject(authViewModel)
-                    }
-                    .buttonStyle(GrayButtonStyle())
-                    
-                    NavigationLink("Öğrenci") {
-                        StudentLoginView().navigationBarBackButtonHidden()
-                            .environmentObject(authViewModel)
-
-                    }
-                    .buttonStyle(GrayButtonStyle())
-                    
-                    NavigationLink("Sanayi") {
-                        IndustryLoginView().navigationBarBackButtonHidden()
-                            .environmentObject(authViewModel)
-
-                    }
-                    .buttonStyle(GrayButtonStyle())
-                }
-                
-                HStack(spacing: 10) {
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.5))
-                        .frame(height: 1)
-                    
-                    Text("Giriş yapmadan devam et")
-                        .font(.footnote)
-                        .foregroundColor(.gray)
-                        .lineLimit(1)
-                        .layoutPriority(1)
-                    
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.5))
-                        .frame(height: 1)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.horizontal)
-                .padding(.vertical)
-                
-                NavigationLink("Açık Talepleri Gör") {
-                    OpenRequestsView().navigationBarBackButtonHidden()
+                NavigationLink("Akademisyen") {
+                    AcedemicianLoginView()
+                        .environmentObject(authViewModel)
                 }
                 .buttonStyle(GrayButtonStyle())
                 
+                NavigationLink("Öğrenci") {
+                    StudentLoginView()
+                        .environmentObject(authViewModel)
+                }
+                .buttonStyle(GrayButtonStyle())
                 
-
-                
-                Text("Tüm proje fikirleriniz ve hesap bilgileriniz USIApp tarafından korunmaktadır")
-                    .multilineTextAlignment(.center)
-                    .font(.footnote)
-                    .padding()
-                Spacer()
+                NavigationLink("Sanayi") {
+                    IndustryLoginView()
+                        .environmentObject(authViewModel)
+                }
+                .buttonStyle(GrayButtonStyle())
             }
+            .padding()
         }
     }
 }
+
 
 struct GrayButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {

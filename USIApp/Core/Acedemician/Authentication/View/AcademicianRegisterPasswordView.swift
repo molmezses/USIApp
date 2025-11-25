@@ -17,7 +17,6 @@ struct AcademicianRegisterPasswordView: View {
     @State var showTerms: Bool = false
     
     var body: some View {
-        NavigationStack {
             ScrollView {
                 VStack {
                     HStack {
@@ -173,7 +172,7 @@ struct AcademicianRegisterPasswordView: View {
                 focusedField = false
             }
             
-        }
+        
     }
 }
 

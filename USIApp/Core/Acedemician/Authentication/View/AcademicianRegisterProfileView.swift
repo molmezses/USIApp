@@ -16,7 +16,6 @@ struct AcademicianRegisterProfileView: View {
     @State var showTerms: Bool = false
     
     var body: some View {
-        NavigationStack {
             ScrollView {
                 VStack {
                     HStack {
@@ -183,7 +182,7 @@ struct AcademicianRegisterProfileView: View {
             .onTapGesture {
                 focusedField = false
             }
-        }
+        
     }
 }
 

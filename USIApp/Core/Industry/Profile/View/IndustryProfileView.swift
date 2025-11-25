@@ -16,7 +16,7 @@ struct IndustryProfileView: View {
     @State private var selectedItem: PhotosPickerItem? = nil
 
     var body: some View {
-        NavigationStack {
+        NavigationStack{
             VStack {
                 HStack {
                     
@@ -189,6 +189,7 @@ struct IndustryProfileView: View {
                 }
             }
         }
+        
     }
 
     func menuRow(icon: String, text: String, color: Color) -> some View {

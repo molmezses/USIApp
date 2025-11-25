@@ -10,9 +10,7 @@ import Firebase
 import FirebaseAuth
 import FirebaseFirestore
 
-
-
-class IndustryRegisterViewModel: ObservableObject{
+class IndustryRegisterViewModel: ObservableObject {
     
     @Published var email: String = ""
     @Published var password: String = ""
@@ -23,7 +21,6 @@ class IndustryRegisterViewModel: ObservableObject{
     @Published var showAlert: Bool = false
     
     let db = Firestore.firestore().collection("Industry")
-    
     
     func register(authViewModel: AuthViewModel) {
         isLoading = true
@@ -41,11 +38,7 @@ class IndustryRegisterViewModel: ObservableObject{
                 switch result {
                 case .success(let session):
                     authViewModel.userSession = session
-                    self.db.document(authViewModel.userSession?.id ?? "id bulunamadı").setData(
-                        ["email":authViewModel.userSession?.email ?? "email bulunamadı"]
-                    )
-                    
-                    print("kayit oldu ")
+                    self.db.document(session.id).setData(["email": session.email])
                     
                     let domain = self.email.components(separatedBy: "@").last ?? "unknown"
                     let data: [String: Any] = [
@@ -53,28 +46,15 @@ class IndustryRegisterViewModel: ObservableObject{
                         "domain": domain,
                         "id": session.id
                     ]
-                    
                     Firestore.firestore().collection("UserDomains").document(session.id).setData(data)
                     
-                    
                     self.navigateToIndustryTabView = true
-                    print("session başarılı")
                     
                 case .failure(let failure):
                     self.errorMessage = failure.localizedDescription
                     self.showAlert = true
-                    print(self.errorMessage)
                 }
-                
             }
         }
     }
-    
-
-    
-    
-    
-    
-    
-    
 }

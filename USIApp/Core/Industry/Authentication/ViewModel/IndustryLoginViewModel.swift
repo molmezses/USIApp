@@ -18,7 +18,6 @@ class IndustryLoginViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var errorMessage = ""
     @Published var isLoading: Bool = false
-    @Published var isAlreadyRegister : Bool = false
     @Published var showAlert: Bool = false
 
     
