@@ -14,8 +14,7 @@ struct IndustryTabView: View {
     @EnvironmentObject var requestViewModel : RequestIndustryViewModel
 
     var body: some View {
-            VStack {
-                    
+            NavigationStack {
                     
                     TabView(selection: $selectedTab) {
                         

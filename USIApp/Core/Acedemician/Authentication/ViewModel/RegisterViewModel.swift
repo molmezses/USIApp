@@ -42,9 +42,8 @@ class RegisterViewModel: ObservableObject{
         
         AuthService.shared.register(email: email, password: password , faculty: faculty , nameAndSurname: nameAndSurName , department: department) { result in
             switch result{
-            case .success(let session):
+            case .success(_):
                 
-                authViewModel.userSession = session
                 
                 self.clearFields()
             case .failure(let error):

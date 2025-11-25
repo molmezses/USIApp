@@ -65,6 +65,7 @@ struct OTPVerifyView: View {
             AcademicianRegisterPasswordView()
                 .environmentObject(viewModel)
                 .environmentObject(authViewModel)
+                .navigationBarBackButtonHidden()
         })
         .padding()
     }

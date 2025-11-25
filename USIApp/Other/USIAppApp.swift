@@ -8,15 +8,12 @@
 import SwiftUI
 import FirebaseCore
 
-
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
         return true
     }
-    
-
 }
 
 @main
@@ -30,17 +27,13 @@ struct USIAppApp: App {
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = UIColor.systemBackground
-        
-        // Gölge eklemek
-        appearance.shadowColor = UIColor.black.withAlphaComponent(0.15) // gölge rengi
-        appearance.shadowImage = UIImage() // default çizgiyi sıfırlıyoruz
-        
+        appearance.shadowColor = UIColor.black.withAlphaComponent(0.15)
+        appearance.shadowImage = UIImage()
         UITabBar.appearance().standardAppearance = appearance
         if #available(iOS 15.0, *) {
             UITabBar.appearance().scrollEdgeAppearance = appearance
         }
     }
-
     
     var body: some Scene {
         WindowGroup {

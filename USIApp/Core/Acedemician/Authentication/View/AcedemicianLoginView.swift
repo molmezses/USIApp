@@ -19,7 +19,6 @@ struct AcedemicianLoginView: View {
     
     
     var body: some View {
-        NavigationStack {
             HStack {
                 Button {
                     dismiss()
@@ -86,7 +85,9 @@ struct AcedemicianLoginView: View {
                     
                     VStack {
                         Button {
-                            viewModel.login(authViewModel: authViewModel)
+                                viewModel.login(authViewModel: authViewModel)
+
+                            
                         } label: {
                             Text("Giriş Yap")
                                 .font(.headline)
@@ -171,7 +172,7 @@ struct AcedemicianLoginView: View {
                 Text("Kullanıcı adı veya parola hatalı. Lütfen tekrar deneyiniz.")
             }
             
-        }
+        
     }
 }
 

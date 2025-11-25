@@ -163,10 +163,6 @@ struct StudentLoginView: View {
                 .onTapGesture {
                     focusedField = false
                 }
-                .navigationDestination(isPresented: $navigate) {
-                    AcademicianTabView(selectedTab: 1)
-                        .navigationBarBackButtonHidden()
-                }
                 .alert("Hata", isPresented: $viewModel.showAlert) {
                     Button("Tamam", role: .cancel) { }
                 } message: {

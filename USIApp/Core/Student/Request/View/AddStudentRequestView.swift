@@ -13,6 +13,7 @@ struct AddStudentRequestView: View {
     @EnvironmentObject var viewModel : StudentRequestViewModel
     @EnvironmentObject var authViewModel : AuthViewModel
 
+
     
     var body: some View {
         VStack(spacing: 0) {
@@ -125,6 +126,8 @@ struct AddStudentRequestView: View {
                     
                     Button(action: {
                         viewModel.saveRequestData()
+                        
+                         
                     }) {
                         Text("Kaydet")
                             .fontWeight(.semibold)
