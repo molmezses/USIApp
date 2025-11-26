@@ -4,3 +4,5 @@
 *.xcuserstate
 
 Config.plist
+USIApp/Core/MailOTP/Config.plist
+USIApp/Other/MailOTP/Config.plist
