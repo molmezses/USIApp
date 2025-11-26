@@ -104,7 +104,7 @@ struct SettingsView: View {
                                         HStack {
                                             Image(systemName: "trash.fill")
                                                 .imageScale(.large)
-                                                .foregroundStyle(.red)
+                                                .foregroundStyle(.black)
                                             Text("Hesabımı sil")
                                                 .foregroundStyle(.black)
                                             Spacer()
@@ -199,7 +199,7 @@ struct SettingsView: View {
                                     .padding(.leading)
                                 VStack{
                                     Button {
-                                        FeedbackViewModel().sendSupportMail()
+                                        feedbackViewmodel.sendSupportMail()
                                     } label: {
                                         HStack {
                                             Image(systemName: "questionmark.circle.fill")

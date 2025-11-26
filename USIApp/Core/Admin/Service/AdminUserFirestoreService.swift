@@ -315,7 +315,7 @@ class AdminUserFirestoreService{
     }
     
     func getUserCountAcademician(completion: @escaping (Int) -> Void) {
-        Firestore.firestore().collection("AcademicianInfo")
+        Firestore.firestore().collection("Academician")
             .getDocuments { snapshot, error in
                 if let documents = snapshot?.documents {
                     print("çekilen")
@@ -438,7 +438,7 @@ class AdminUserFirestoreService{
     
     
     func getUserCountAcademicianOrtakTalepFalse(completion: @escaping (Int) -> Void) {
-        Firestore.firestore().collection("AcademicianInfo")
+        Firestore.firestore().collection("Academician")
             .whereField("ortakProjeTalep", isEqualTo: "Hayır")
             .getDocuments { snapshot, error in
                 if let documents = snapshot?.documents {

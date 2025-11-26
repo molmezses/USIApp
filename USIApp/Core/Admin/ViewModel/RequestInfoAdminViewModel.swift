@@ -73,7 +73,6 @@ class RequestInfoAdminViewModel: ObservableObject {
             DispatchQueue.main.async {
                 switch result{
                 case .success(_):
-                    self.destinated = true
                     print("Açık Talep onaylandı mesaj: \(self.adminMessage)")
                     self.navigate = true
                 case .failure(let error):
@@ -88,7 +87,6 @@ class RequestInfoAdminViewModel: ObservableObject {
             DispatchQueue.main.async {
                 switch result{
                 case .success(_):
-                    self.destinated = true
                     print("Talep reddedildi mesaj: \(self.adminMessage)")
                     AdminUserFirestoreService.shared.moveOldRequestsReject(from: "Requests", documentId: documentId, to: "OldRequests")
                 case .failure(let error):
