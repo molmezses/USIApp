@@ -22,8 +22,8 @@ class LoginViewModel: ObservableObject{
             DispatchQueue.main.async {
                 self.isLoading = false
                 switch result {
-                case .success(let session):
-                    authViewModel.userSession = session
+                case .success:
+                    
                     self.email = ""
                     self.password = ""
                 case .failure(let error):
@@ -31,7 +31,6 @@ class LoginViewModel: ObservableObject{
                         self.errorMessage = self.translateFirebaseError(nsError)
                     }
                     self.showAlert = true
-                    print("Hatalı giriş")
                 }
             }
         }

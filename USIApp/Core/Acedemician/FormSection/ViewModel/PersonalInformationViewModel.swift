@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseFirestore
+import FirebaseAuth
 
 
 
@@ -29,41 +30,34 @@ class PersonalInformationViewModel: ObservableObject {
     
     
     func loadPersonelInformation(){
-        
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-            switch result {
-            case .success(let documentID):
+       
+        if let userId = Auth.auth().currentUser?.uid{
+            FirestoreService.shared.fetchAcademicianInfo(byId: userId) { result in
                 
-                FirestoreService.shared.fetchAcademicianInfo(byId: documentID) { result in
+                switch result {
+                case .success(let info):
                     
-                    switch result {
-                    case .success(let info):
-                        
-                        let nameSurname = info.adSoyad
-                        let  reversed = String(nameSurname.reversed())
-                        
-                        let components = reversed.components(separatedBy: " ")
-                        let firstPart = components.first ?? ""
-                        let remainingPart = components.dropFirst().joined(separator: " ")
-                        
-                        let surName = String(firstPart.reversed())
-                        let name = String(remainingPart.reversed())
-                        
-                        self.name = name
-                        self.surName = surName
-                        
-                        self.unvan = self.unvanFormat(unvan: info.unvan)
-                        self.academicianInfo = info
-                        
-                        
-                    case .failure(let error):
-                        print("Hata loadAcademicianInfo : \(error.localizedDescription)")
-                    }
+                    let nameSurname = info.adSoyad
+                    let  reversed = String(nameSurname.reversed())
                     
+                    let components = reversed.components(separatedBy: " ")
+                    let firstPart = components.first ?? ""
+                    let remainingPart = components.dropFirst().joined(separator: " ")
+                    
+                    let surName = String(firstPart.reversed())
+                    let name = String(remainingPart.reversed())
+                    
+                    self.name = name
+                    self.surName = surName
+                    
+                    self.unvan = self.unvanFormat(unvan: info.unvan)
+                    self.academicianInfo = info
+                    
+                    
+                case .failure(let error):
+                    print("Hata loadAcademicianInfo : \(error.localizedDescription)")
                 }
                 
-            case .failure(let error):
-                print("Hata loadAcademiicanInfo: \(error.localizedDescription)")
             }
         }
         
@@ -96,23 +90,29 @@ class PersonalInformationViewModel: ObservableObject {
     
     func updateUnvan(){
         let db = Firestore.firestore()
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-            switch  result {
-            case .success(let id):
-                
-                let docRef = db.collection("AcademicianInfo").document(id)
-                docRef.updateData(["unvan" : self.unvan]){ error in
-                    if let error = error{
-                        print("HATA: \(error.localizedDescription)")
-                    }else{
-                        print("Başarılı")
-                    }
+        
+        if let userId = Auth.auth().currentUser?.uid{
+            let docRef = db.collection("Academician").document(userId)
+            
+            let data : [String:Any] = [
+                "unvan" : self.unvan,
+                "adSoyad" : "\(self.name) \(self.surName)"
+            ]
+            
+            docRef.updateData(data){ error in
+                if let error = error{
+                    print("HATA: \(error.localizedDescription)")
+                }else{
+                    print("Başarılı")
                 }
-                
-            case .failure(let error):
-                print("HATA: \(error.localizedDescription)")
             }
         }
+
+        
+                
+                
+                
+            
     }
     
     

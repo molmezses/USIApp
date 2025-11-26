@@ -9,6 +9,8 @@ import SwiftUI
 import Foundation
 import Firebase
 import FirebaseAuth
+import PhotosUI
+
 
 
 struct ProfileView: View {
@@ -19,6 +21,7 @@ struct ProfileView: View {
     @State var navSignOut : Bool = false
     @EnvironmentObject var authViewModel : AuthViewModel
     @StateObject var viewModel = ProfileViewModel()
+    @State private var selectedItem: PhotosPickerItem? = nil
     
     var body: some View {
         NavigationStack{
@@ -74,32 +77,65 @@ struct ProfileView: View {
                         VStack(alignment: .leading, spacing: 0) {
                             HStack {
                                 Spacer()
-                                
-                                if let url = URL(string: viewModel.photo) {
-                                    AsyncImage(url: url) { phase in
-                                        if let image = phase.image {
-                                            image
-                                                .resizable()
-                                                .frame(width: 140, height: 140)
-                                                .clipShape(Circle())
-                                        } else if phase.error != nil {
-                                            Image(systemName: "person.crop.circle.badge.exclamationmark")
-                                        } else {
+                                ZStack(alignment: .bottomTrailing) {
+                                    if let selectedImage = viewModel.selectedImage {
+                                        Image(uiImage: selectedImage)
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: 140, height: 140)
+                                            .clipShape(Circle())
+                                    } else if let urlString = viewModel.academicianImageURL,
+                                              let url = URL(string: urlString) {
+                                        AsyncImage(url: url) { image in
+                                            image.resizable()
+                                                 .scaledToFill()
+                                                 .frame(width: 140, height: 140)
+                                                 .clipShape(Circle())
+                                        } placeholder: {
                                             ProgressView()
+                                                .frame(width: 140, height: 140)
+                                        }
+                                    } else {
+                                        Image("DefaultProfilePhoto")
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: 140, height: 140)
+                                            .clipShape(Circle())
+                                    }
+
+                                    Button {
+                                        showImagePicker.toggle()
+                                    } label: {
+                                        Image(systemName: "plus.circle.fill")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 32, height: 32)
+                                            .foregroundStyle(.white, .gray)
+                                    }
+                                }
+                                .photosPicker(
+                                    isPresented: $showImagePicker,
+                                    selection: $selectedItem,
+                                    matching: .images,
+                                    photoLibrary: .shared()
+                                )
+                                .onChange(of: selectedItem) { newItem in
+                                    Task {
+                                        if let newItem = newItem,
+                                           let data = try? await newItem.loadTransferable(type: Data.self),
+                                           let uiImage = UIImage(data: data) {
+                                            viewModel.selectedImage = uiImage
+
+                                            if let academicianId = Auth.auth().currentUser?.uid {
+                                                await viewModel.uploadImageAndSaveLink(academicianId: academicianId)
+                                            }
+                                        
                                         }
                                     }
-                                    .frame(width: 140, height: 140)
-                                    .clipShape(Circle())
-                                } else {
-                                    Image(systemName: "person.circle")
-                                        .resizable()
-                                        .frame(width: 140, height: 140)
-                                        .clipShape(Circle())
                                 }
-                                
-                                
                                 Spacer()
                             }
+                            
                             
                             //MARK: AD SOYAD
                             HStack{

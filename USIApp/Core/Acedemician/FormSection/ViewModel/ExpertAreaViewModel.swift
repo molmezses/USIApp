@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 class ExpertAreaViewModel: ObservableObject{
     @Published  var expertDesc: String = ""
@@ -15,28 +16,21 @@ class ExpertAreaViewModel: ObservableObject{
     
     
     func loadExpertArea(){
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-            switch result {
-            case .success(let documentID):
+        
+        if let userId = Auth.auth().currentUser?.uid{
+            FirestoreService.shared.fetchAcademicianInfo(byId: userId) { result in
                 
-                FirestoreService.shared.fetchAcademicianInfo(byId: documentID) { result in
+                switch result {
+                case .success(let info):
                     
-                    switch result {
-                    case .success(let info):
-                        
-                        self.expertList = info.uzmanlikAlani
-                        
-                    case .failure(let error):
-                        print("Hata : Load Expert Area \(error.localizedDescription)")
-                    }
+                    self.expertList = info.uzmanlikAlani
                     
+                case .failure(let error):
+                    print("Hata : Load Expert Area \(error.localizedDescription)")
                 }
                 
-            case .failure(_):
-                print("Hata : Load Expert Area DocumentId")
             }
         }
-        
         
     }
     

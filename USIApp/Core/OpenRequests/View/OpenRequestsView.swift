@@ -12,7 +12,7 @@ import FirebaseAuth
 struct OpenRequestsView: View {
     
     @StateObject var viewModel =  OpenRequestsViewModel()
-    @EnvironmentObject var authViewModel : IndustryAuthViewModel
+    @EnvironmentObject var authViewModel : AuthViewModel
     @Environment(\.dismiss) var dismiss
     
     
@@ -20,111 +20,113 @@ struct OpenRequestsView: View {
     
     
     var body: some View {
-        VStack(spacing: 0) {
-            
-            HStack {
-                if Auth.auth().currentUser == nil {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .imageScale(.large)
-                            .foregroundStyle(.black)
-                            .opacity(1)
-                    }
-                }
-                else{
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .imageScale(.large)
-                            .foregroundStyle(.black)
-                            .opacity(0)
-                    }
-                    .disabled(true)
-                }
+        NavigationStack{
+            VStack(spacing: 0) {
                 
-
-                Image(systemName: "bell.fill")
-                    .imageScale(.large)
-                    .foregroundStyle(.black)
-                    .opacity(0)
-
-                Spacer()
-                Image("usiLogo")
-                    .resizable()
-                    .frame(width: 50, height: 50)
-                Spacer()
-                Button {
+                HStack {
+                    if Auth.auth().currentUser == nil {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "chevron.left")
+                                .imageScale(.large)
+                                .foregroundStyle(.black)
+                                .opacity(1)
+                        }
+                    }
+                    else{
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "chevron.left")
+                                .imageScale(.large)
+                                .foregroundStyle(.black)
+                                .opacity(0)
+                        }
+                        .disabled(true)
+                    }
                     
-                } label: {
+
                     Image(systemName: "bell.fill")
                         .imageScale(.large)
                         .foregroundStyle(.black)
                         .opacity(0)
-                }
-                .overlay(alignment: .topTrailing) {
-                    Circle()
-                        .frame(width: 10, height: 10)
-                        .foregroundStyle(.red)
-                        .opacity(0)
-                }
-                NavigationLink {
-                    EmptyView()
-                } label: {
-                    Image(systemName: "plus.app")
-                        .imageScale(.large)
-                        .foregroundStyle(.black)
-                        .bold()
-                }
-                .padding(.leading , 4)
-                .disabled(true)
-                .opacity(0)
 
-            }
-            .padding(.horizontal)
-            
-            ScrollView {
-                VStack(spacing: 16) {
-                    if viewModel.requests.isEmpty {
-                        Text("Henüz açık talep oluşturulmamış. Talep oluşturmak için teni talep butonuna tıklayınız.")
-                            .frame(maxWidth: .infinity)
-                            .foregroundColor(.gray)
-                            .padding(.top, 50)
-                            .padding(.horizontal)
-                    } else {
-                        ForEach(viewModel.requests) { request in
-                            NavigationLink {
-                                OpenRequestsDetailView(request: request)
-                                    .navigationBarBackButtonHidden()
+                    Spacer()
+                    Image("usiLogo")
+                        .resizable()
+                        .frame(width: 50, height: 50)
+                    Spacer()
+                    Button {
+                        
+                    } label: {
+                        Image(systemName: "bell.fill")
+                            .imageScale(.large)
+                            .foregroundStyle(.black)
+                            .opacity(0)
+                    }
+                    .overlay(alignment: .topTrailing) {
+                        Circle()
+                            .frame(width: 10, height: 10)
+                            .foregroundStyle(.red)
+                            .opacity(0)
+                    }
+                    NavigationLink {
+                        EmptyView()
+                    } label: {
+                        Image(systemName: "plus.app")
+                            .imageScale(.large)
+                            .foregroundStyle(.black)
+                            .bold()
+                    }
+                    .padding(.leading , 4)
+                    .disabled(true)
+                    .opacity(0)
+
+                }
+                .padding(.horizontal)
+                
+                ScrollView {
+                    VStack(spacing: 16) {
+                        if viewModel.requests.isEmpty {
+                            Text("Henüz açık talep oluşturulmamış. Talep oluşturmak için teni talep butonuna tıklayınız.")
+                                .frame(maxWidth: .infinity)
+                                .foregroundColor(.gray)
+                                .padding(.top, 50)
+                                .padding(.horizontal)
+                        } else {
+                            ForEach(viewModel.requests) { request in
+                                NavigationLink {
+                                    OpenRequestsDetailView(request: request)
+                                        .navigationBarBackButtonHidden()
+                                    
+                                } label: {
+                                    OpenRequestCard(request: request)
+                                }
+                                Rectangle()
+                                    .frame(maxWidth: .infinity, maxHeight: 1)
+                                    .foregroundStyle(Color("backgroundBlue"))
                                 
-                            } label: {
-                                OpenRequestCard(request: request)
                             }
-                            Rectangle()
-                                .frame(maxWidth: .infinity, maxHeight: 1)
-                                .foregroundStyle(Color("backgroundBlue"))
-                            
                         }
                     }
+                    .padding(.top)
                 }
-                .padding(.top)
+                .refreshable {
+                    viewModel.loadRequests()
+                }
+                
+                
             }
-            .refreshable {
+            .onAppear(perform: {
                 viewModel.loadRequests()
+            })
+            .navigationDestination(isPresented: $showNewRequestSheet) {
+                AddRequestCategoryView()
+                    .environmentObject(viewModel)
+                    .environmentObject(authViewModel)
+                    .navigationBarBackButtonHidden()
             }
-            
-            
-        }
-        .onAppear(perform: {
-            viewModel.loadRequests()
-        })
-        .navigationDestination(isPresented: $showNewRequestSheet) {
-            AddRequestCategoryView()
-                .environmentObject(viewModel)
-                .environmentObject(authViewModel)
-                .navigationBarBackButtonHidden()
         }
         
     }

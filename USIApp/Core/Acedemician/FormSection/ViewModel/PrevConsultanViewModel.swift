@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 class PrevConsultanViewModel: ObservableObject{
     @Published  var prevConsultanDesc: String = ""
@@ -13,33 +14,32 @@ class PrevConsultanViewModel: ObservableObject{
     
     
     func loadPrevConsultancyField(){
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-            switch result {
-            case .success(let documentID):
+        
+        if let userId = Auth.auth().currentUser?.uid {
+            
+            
+            FirestoreService.shared.fetchAcademicianInfo(byId: userId) { result in
                 
-                FirestoreService.shared.fetchAcademicianInfo(byId: documentID) { result in
+                switch result {
+                case .success(let info):
                     
-                    switch result {
-                    case .success(let info):
-                        
-                        self.prevConsultanList = info.dahaOncekiDanismanliklar
-                        
-                    case .failure(let error):
-                        print("Hata : prevConsultanList  \(error.localizedDescription)")
-                    }
+                    self.prevConsultanList = info.dahaOncekiDanismanliklar
                     
+                case .failure(let error):
+                    print("Hata : prevConsultanList  \(error.localizedDescription)")
                 }
                 
-            case .failure(_):
-                print("Hata : prevConsultanList  DocumentId")
             }
         }
+        
+        
+        
     }
     
     func addPrevConsultancy() {
         let trimmed = self.prevConsultanDesc.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
-
+        
         FirestoreService.shared.addPrevConsultancyField(consultancy:trimmed) { error in
             if let error = error {
                 print("Ekleme hatası: \(error.localizedDescription)")

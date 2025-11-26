@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 class PreEducationViewModel: ObservableObject {
     
@@ -16,33 +17,32 @@ class PreEducationViewModel: ObservableObject {
     
     
     func loadPreEducation(){
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-            switch result {
-            case .success(let documentID):
+        
+        if let userId = Auth.auth().currentUser?.uid{
+            
+            
+            FirestoreService.shared.fetchAcademicianInfo(byId: userId) { result in
                 
-                FirestoreService.shared.fetchAcademicianInfo(byId: documentID) { result in
+                switch result {
+                case .success(let info):
                     
-                    switch result {
-                    case .success(let info):
-                        
-                        self.preEducationList = info.dahaOncekiVerdigiEgitimler
-                        
-                    case .failure(let error):
-                        print("Hata : prevConsultanList  \(error.localizedDescription)")
-                    }
+                    self.preEducationList = info.dahaOncekiVerdigiEgitimler
                     
+                case .failure(let error):
+                    print("Hata : prevConsultanList  \(error.localizedDescription)")
                 }
                 
-            case .failure(_):
-                print("Hata : prevConsultanList  DocumentId")
             }
         }
+        
+        
+        
     }
     
     func addPreEducation() {
         let trimmed = self.preEducationDesc.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
-
+        
         FirestoreService.shared.addPreEducation(education: trimmed) { error in
             if let error = error {
                 print("Ekleme hatası: \(error.localizedDescription)")

@@ -10,7 +10,7 @@ import PhotosUI
 
 
 struct StudentProfileView: View {
-    @EnvironmentObject var authViewModel: StudentAuthViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject var viewModel = StudentProfileViewModel()
 
     @State private var showImagePicker = false
@@ -157,18 +157,6 @@ struct StudentProfileView: View {
                         }
                         .padding(.horizontal)
 
-//                        Button(action: {
-//                            authViewModel.logOut()
-//                        }) {
-//                            Text("Çıkış Yap")
-//                                .frame(maxWidth: .infinity)
-//                                .padding()
-//                                .foregroundColor(.white)
-//                                .background(Color.red)
-//                                .cornerRadius(8)
-//                        }
-//                        .padding(.horizontal)
-//                        .padding(.top, 20)
                     }
                 }
                 .refreshable {

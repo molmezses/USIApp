@@ -1,14 +1,13 @@
 //
-//  AcademicianRegisterView.swift
+//  AcademicianRegisterProfileView.swift
 //  USIApp
 //
-//  Created by Mustafa Ölmezses on 4.07.2025.
+//  Created by Mustafa Ölmezses on 22.11.2025.
 //
-
 
 import SwiftUI
 
-struct AcademicianRegisterView: View {
+struct AcademicianRegisterProfileView: View {
     
     @Environment(\.dismiss) var dismiss
     @FocusState private var focusedField: Bool
@@ -17,7 +16,6 @@ struct AcademicianRegisterView: View {
     @State var showTerms: Bool = false
     
     var body: some View {
-        NavigationStack {
             ScrollView {
                 VStack {
                     HStack {
@@ -28,7 +26,7 @@ struct AcademicianRegisterView: View {
                                 .imageScale(.large)
                                 .foregroundStyle(.black)
                         }
-
+                        
                         Spacer()
                     }
                     .padding(.top)
@@ -48,14 +46,14 @@ struct AcademicianRegisterView: View {
                     VStack {
                         Text("Kayıt Ol")
                             .font(.headline)
-                        Text("Şifrenizi oluşturunuz")
+                        Text("Profilinizi oluşturunuz")
                             .font(.subheadline)
-                            
+                        
                     }
                     .padding(.bottom, 20)
                     
                     VStack(spacing: 12){
-                        SecureFieldWithButton(title: "Şifre", text: $viewModel.password)
+                        TextField("Adınız ve Soyadınız", text: $viewModel.nameAndSurName)
                             .padding()
                             .background(
                                 RoundedRectangle(cornerRadius: 8)
@@ -63,10 +61,10 @@ struct AcademicianRegisterView: View {
                             )
                             .padding(.horizontal)
                             .focused($focusedField)
-                            .textInputAutocapitalization(.never)
                             .autocorrectionDisabled()
+                            .textInputAutocapitalization(.never)
                         
-                        SecureFieldWithButton(title: "Şifre Tekrar", text: $viewModel.confirmPassword)
+                        TextField("Fakülteniz", text: $viewModel.faculty)
                             .padding()
                             .background(
                                 RoundedRectangle(cornerRadius: 8)
@@ -76,8 +74,22 @@ struct AcademicianRegisterView: View {
                             .focused($focusedField)
                             .autocorrectionDisabled()
                             .textInputAutocapitalization(.never)
+                        
+                        TextField("Bölümünüz", text: $viewModel.department)
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color(.systemGray3), lineWidth: 1)
+                            )
+                            .padding(.horizontal)
+                            .focused($focusedField)
+                            .autocorrectionDisabled()
+                            .textInputAutocapitalization(.never)
+                        
+                        
                     }
                     .padding(.bottom)
+                    
                     
                     VStack {
                         Button {
@@ -104,6 +116,9 @@ struct AcademicianRegisterView: View {
                             )
                         }
                     }
+                    
+                    
+                    
                     
                     VStack(spacing: 12){
                         
@@ -132,32 +147,20 @@ struct AcademicianRegisterView: View {
                                 .cornerRadius(10)
                         }
                         .padding(.horizontal)
-                        NavigationLink {
-                            ForgotPasswordView()
-                                .navigationBarBackButtonHidden()
-                        } label: {
-                            Text("Şifremi Unuttum")
-                                .frame(maxWidth: .infinity)
-                                .foregroundColor(.black)
-                                .padding(16)
-                                .background(Color("grayButtonColor"))
-                                .cornerRadius(10)
-                        }
-                        .padding(.horizontal)
                         
-
+                        
                     }
                     
                     
                     
                     VStack {
                         Text("Devama tıkladıktan sonra ")
-                                    + Text("Terms of Service")
-                                        .foregroundColor(Color("logoBlue"))
-                                    + Text(" ve ")
-                                    + Text("Privacy Policy")
-                                        .foregroundColor(Color("logoBlue"))
-                                    + Text(" kabul etmiş olursunuz")
+                        + Text("Terms of Service")
+                            .foregroundColor(Color("logoBlue"))
+                        + Text(" ve ")
+                        + Text("Privacy Policy")
+                            .foregroundColor(Color("logoBlue"))
+                        + Text(" kabul etmiş olursunuz")
                     }
                     .multilineTextAlignment(.center)
                     .font(.footnote)
@@ -165,8 +168,8 @@ struct AcademicianRegisterView: View {
                     
                     Spacer()
                     Spacer()
-                        
-                        
+                    
+                    
                 }
                 .alert("Uyarı", isPresented: $viewModel.showAlert) {
                     Button("Tamam", role: .cancel) { }
@@ -179,18 +182,11 @@ struct AcademicianRegisterView: View {
             .onTapGesture {
                 focusedField = false
             }
-            .navigationDestination(isPresented: $viewModel.navigateToVerificationView) {
-                VerficationView()
-                    .navigationBarBackButtonHidden()
-            }
-        }
+        
     }
 }
 
 
 
-#Preview {
-    AcademicianRegisterView()
-        .environmentObject(AuthViewModel())
-        .environmentObject(RegisterViewModel())
-}
+
+

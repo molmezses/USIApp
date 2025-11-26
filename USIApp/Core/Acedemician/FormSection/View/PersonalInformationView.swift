@@ -65,13 +65,12 @@ struct PersonalInformationView: View {
                             .font(.headline)
                             .frame(height: 55)
                             .padding(.horizontal)
-                            .background(Color(.gray).opacity(0.2))
+                            .background(.white)
                             .mask(RoundedRectangle(cornerRadius: 10))
                             .multilineTextAlignment(.leading)
                             .keyboardType(.default)
                             .focused($focusName, equals: .name)
                             .padding(.horizontal)
-                            .disabled(true)
                         
                         
                         
@@ -80,13 +79,12 @@ struct PersonalInformationView: View {
                             .font(.headline)
                             .frame(height: 55)
                             .padding(.horizontal)
-                            .background(Color(.gray).opacity(0.2))
+                            .background(.white)
                             .mask(RoundedRectangle(cornerRadius: 10))
                             .multilineTextAlignment(.leading)
                             .keyboardType(.default)
                             .focused($focusName, equals: .surname)
                             .padding(.horizontal)
-                            .disabled(true)
                         
                         Text("Ünvanınızı Seçiniz")
                             .font(.headline)

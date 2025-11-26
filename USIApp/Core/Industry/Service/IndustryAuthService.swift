@@ -15,7 +15,7 @@ final class IndustryAuthService{
     
     private init(){}
     
-    func login(email: String , password: String , completion: @escaping (Result<IndustryUserSession , Error>) -> Void){
+    func login(email: String , password: String , completion: @escaping (Result<UserSession , Error>) -> Void){
         Auth.auth().signIn(withEmail: email, password: password){result , error in
             
             if let error = error{
@@ -26,13 +26,13 @@ final class IndustryAuthService{
                 return completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey : "User not found"])))
             }
             
-            let session = IndustryUserSession(id: user.uid, email: user.email ?? "")
+            let session = UserSession(id: user.uid, email: user.email ?? "")
             completion(.success(session))
             
         }
     }
     
-    func register(email: String , password: String , completion: @escaping (Result<IndustryUserSession , Error>) -> Void){
+    func register(email: String , password: String , completion: @escaping (Result<UserSession , Error>) -> Void){
         
         
         
@@ -46,7 +46,7 @@ final class IndustryAuthService{
                 return completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey : "User not found"])))
             }
             
-            let session = IndustryUserSession(id: user.uid, email: user.email ?? "")
+            let session = UserSession(id: user.uid, email: user.email ?? "")
             completion(.success(session))
             
             

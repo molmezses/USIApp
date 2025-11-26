@@ -10,13 +10,11 @@ import SwiftUI
 struct IndustryTabView: View {
     
     @State  var selectedTab: Int
-    @EnvironmentObject var authViewModel : IndustryAuthViewModel
+    @EnvironmentObject var authViewModel : AuthViewModel
     @EnvironmentObject var requestViewModel : RequestIndustryViewModel
 
     var body: some View {
-            VStack {
-                if authViewModel.industryUserSession != nil {
-                    
+            NavigationStack {
                     
                     TabView(selection: $selectedTab) {
                         
@@ -50,10 +48,7 @@ struct IndustryTabView: View {
                     .tabViewStyle(.automatic)
                     .tint(Color("logoBlue"))
 
-                }else{
-                    LoginView()
-                        .navigationBarBackButtonHidden()
-                }
+                
             }
         
     }

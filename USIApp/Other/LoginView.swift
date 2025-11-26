@@ -9,119 +9,115 @@
 import SwiftUI
 
 struct LoginView: View {
-    @StateObject var viewModel = FirstLoginViewModel()
-    @EnvironmentObject var studentAuthViewModel : StudentAuthViewModel
+    
+    @EnvironmentObject var authViewModel: AuthViewModel
+    @State private var animate: Bool = false
     
     var body: some View {
         NavigationStack {
-            Group {
-                if viewModel.domain.isEmpty {
-                    SelectionScreen()
-                } else if viewModel.domain == "ahievran.edu.tr" {
-                    AcedemicianLoginView()
-                        .navigationBarBackButtonHidden()
-                } else if viewModel.domain == "ogr.ahievran.edu.tr" {
-                    StudentLoginView()
-                        .navigationBarBackButtonHidden()
-                } else {
-                    IndustryLoginView()
-                        .environmentObject(studentAuthViewModel)
-                        .navigationBarBackButtonHidden()
-                }
-            }
-            .animation(.easeInOut, value: viewModel.domain)
-        }
-    }
-}
-
-struct SelectionScreen: View {
-    var body: some View {
-        VStack {
-            Spacer()
-            VStack {
+            VStack(spacing: 20) {
+                Spacer()
+                
                 Image("usiLogo")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 160, height: 160)
-                Text("USIApp")
-                    .font(.title)
-                    .bold()
-            }
-            .padding(.bottom, 40)
-            
-            VStack {
-                Text("USIApp'e Hoşgeldiniz").font(.headline)
-                Text("Lütfen devam etmek için hesabınızı seçiniz.")
-                    .font(.subheadline)
-            }
-            .padding(.bottom, 20)
-            
-            VStack(spacing: 24) {
-                NavigationLink("Akademisyen") {
-                    AcedemicianLoginView().navigationBarBackButtonHidden()
+                    .frame(width: animate ? 160 : 40,
+                           height: animate ? 160 : 40)
+                    .opacity(animate ? 1 : 0)
+                    .scaleEffect(animate ? 1 : 0.6)
+                    .animation(.spring(response: 0.6, dampingFraction: 0.7), value: animate)
+                
+                VStack(spacing: 8) {
+                    Text("USIApp'e Hoşgeldiniz")
+                        .font(.headline)
+                        .opacity(animate ? 1 : 0)
+                    
+                    Text("Lütfen devam etmek için hesabınızı seçiniz.")
+                        .font(.subheadline)
+                        .opacity(animate ? 1 : 0)
                 }
-                .buttonStyle(GrayButtonStyle())
-                
-                NavigationLink("Öğrenci") {
-                    StudentLoginView().navigationBarBackButtonHidden()
-                }
-                .buttonStyle(GrayButtonStyle())
-                
-                NavigationLink("Sanayi") {
-                    IndustryLoginView().navigationBarBackButtonHidden()
-                }
-                .buttonStyle(GrayButtonStyle())
-            }
-            
-            HStack(spacing: 10) {
-                Rectangle()
-                    .fill(Color.gray.opacity(0.5))
-                    .frame(height: 1)
-                
-                Text("Giriş yapmadan devam et")
-                    .font(.footnote)
-                    .foregroundColor(.gray)
-                    .lineLimit(1)
-                    .layoutPriority(1)
-                
-                Rectangle()
-                    .fill(Color.gray.opacity(0.5))
-                    .frame(height: 1)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.horizontal)
-            .padding(.vertical)
-            
-            NavigationLink("Açık Talepleri Gör") {
-                OpenRequestsView().navigationBarBackButtonHidden()
-            }
-            .buttonStyle(GrayButtonStyle())
-            
-            
 
-            
-            Text("Tüm proje fikirleriniz ve hesap bilgileriniz USIApp tarafından korunmaktadır")
-                .multilineTextAlignment(.center)
-                .font(.footnote)
-                .padding()
-            Spacer()
+                
+                Spacer().frame(height: 20)
+                
+                VStack(spacing: 15) {
+                    AnimatedButton(title: "Akademisyen", delay: 0.4) {
+                        AcedemicianLoginView()
+                            .environmentObject(authViewModel)
+                            .navigationBarBackButtonHidden()
+                    }
+                    AnimatedButton(title: "Öğrenci", delay: 0.55) {
+                        StudentLoginView()
+                            .environmentObject(authViewModel)
+                            .navigationBarBackButtonHidden()
+                    }
+                    AnimatedButton(title: "Sanayi", delay: 0.7) {
+                        IndustryLoginView()
+                            .environmentObject(authViewModel)
+                            .navigationBarBackButtonHidden()
+                    }
+                    
+                    HStack(spacing: 10) {
+                        Rectangle()
+                            .fill(Color.gray.opacity(0.5))
+                            .frame(height: 1)
+                        
+                        Text("Giriş yapmadan devam et")
+                            .font(.footnote)
+                            .foregroundColor(.gray)
+                            .lineLimit(1)
+                            .layoutPriority(1)
+                        
+                        Rectangle()
+                            .fill(Color.gray.opacity(0.5))
+                            .frame(height: 1)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal)
+                    .padding(.vertical)
+                    
+                    AnimatedButton(title: "Açık Talepleri Gör", delay: 0.85) {
+                        OpenRequestsView()
+                            .navigationBarBackButtonHidden()
+                    }
+                }
+                
+                Spacer()
+            }
+            .onAppear {
+                animate = true
+            }
         }
     }
 }
 
 
-
-struct GrayButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .frame(maxWidth: .infinity)
-            .foregroundColor(.black)
-            .padding(16)
-            .background(Color("grayButtonColor"))
-            .cornerRadius(10)
-            .padding(.horizontal)
+struct AnimatedButton<Destination: View>: View {
+    
+    var title: String
+    var delay: Double
+    var destination: () -> Destination
+    
+    @State private var show: Bool = false
+    
+    var body: some View {
+        NavigationLink(destination: destination()) {
+            Text(title)
+                .frame(maxWidth: .infinity)
+                .foregroundColor(.black)
+                .padding(16)
+                .background(Color("grayButtonColor"))
+                .cornerRadius(10)
+                .padding(.horizontal)
+                .opacity(show ? 1 : 0)
+                .offset(y: show ? 0 : 20)
+                .animation(.easeOut(duration: 0.45).delay(delay), value: show)
+                .rotationEffect(.degrees(show ? 0 : 360))
+        }
+        .onAppear { show = true }
     }
 }
+
 
 #Preview {
     LoginView()

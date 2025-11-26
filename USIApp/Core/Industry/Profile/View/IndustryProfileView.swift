@@ -9,14 +9,14 @@ import SwiftUI
 import PhotosUI
 
 struct IndustryProfileView: View {
-    @EnvironmentObject var authViewModel: IndustryAuthViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject var viewModel = IndustryProfileViewModel()
 
     @State private var showImagePicker = false
     @State private var selectedItem: PhotosPickerItem? = nil
 
     var body: some View {
-        NavigationStack {
+        NavigationStack{
             VStack {
                 HStack {
                     
@@ -189,6 +189,7 @@ struct IndustryProfileView: View {
                 }
             }
         }
+        
     }
 
     func menuRow(icon: String, text: String, color: Color) -> some View {

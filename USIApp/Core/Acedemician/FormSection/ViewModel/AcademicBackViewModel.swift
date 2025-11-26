@@ -6,57 +6,47 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 class AcademicBackViewModel: ObservableObject {
     
     @Published  var description: String = ""
     
+    
+    
     func loadAcademicBackData() {
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-            switch result {
-            case .success(let documentID):
-                FirestoreService.shared.fetchAcademicianInfo(byId: documentID) { result in
-                    switch result {
-                    case .success(let info):
-                        self.description = info.akademikGecmis
-                    default:
-                        print("Hata : AcademicBack Document not found")
-                    }
+        
+        if let userId = Auth.auth().currentUser?.uid {
+            FirestoreService.shared.fetchAcademicianInfo(byId: userId) { result in
+                switch result {
+                case .success(let info):
+                    self.description = info.akademikGecmis
+                default:
+                    print("Hata : AcademicBack Document not found")
                 }
-            case .failure(_):
-                print("Hata : AcademicBack DocumentId not found")
             }
         }
+                
     }
     
     
     func updateAcademicBack(){
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
+        if let userId = Auth.auth().currentUser?.uid {
+            let data: [String: String] = [
+                            "akademikGecmis": self.description,
+                        ]
             
-            switch result {
-            case .success(let documentID):
+            FirestoreService.shared.updateAcademicBack(forDocumentId: userId, data: data) { result in
                 
-                let data: [String: String] = [
-                                "akademikGecmis": self.description,
-                            ]
-                
-                FirestoreService.shared.updateAcademicBack(forDocumentId: documentID, data: data) { result in
-                    
-                    switch result {
-                    case .success(_):
-                        print("AcademicBackData Updated")
-                    case .failure(_):
-                        print("Hata: AcademicBackData Update")
+                switch result {
+                case .success(_):
+                    print("AcademicBackData Updated")
+                case .failure(_):
+                    print("Hata: AcademicBackData Update")
 
-                    }
-                    
                 }
                 
-            case .failure(_):
-                print("Hata : UpdateAcademicBack DocumentId not found")
-
             }
-            
         }
     }
     

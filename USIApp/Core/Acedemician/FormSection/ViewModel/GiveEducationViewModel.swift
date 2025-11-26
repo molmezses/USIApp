@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 class GiveEducationViewModel: ObservableObject {
     
@@ -14,33 +15,34 @@ class GiveEducationViewModel: ObservableObject {
     
     
     func loadGiveEducation(){
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-            switch result {
-            case .success(let documentID):
+        
+        if let userId = Auth.auth().currentUser?.uid {
+            
+            FirestoreService.shared.fetchAcademicianInfo(byId: userId) { result in
                 
-                FirestoreService.shared.fetchAcademicianInfo(byId: documentID) { result in
+                switch result {
+                case .success(let info):
                     
-                    switch result {
-                    case .success(let info):
-                        
-                        self.giveEducationList = info.verebilecegiEgitimler
-                        
-                    case .failure(let error):
-                        print("Hata : prevConsultanList  \(error.localizedDescription)")
-                    }
+                    self.giveEducationList = info.verebilecegiEgitimler
                     
+                case .failure(let error):
+                    print("Hata : prevConsultanList  \(error.localizedDescription)")
                 }
                 
-            case .failure(_):
-                print("Hata : prevConsultanList  DocumentId")
             }
         }
+        
+        
+        
+        
+        
+        
     }
     
     func addGiveEducation() {
         let trimmed = self.giveEducationDesc.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
-
+        
         FirestoreService.shared.addGiveEducation(education: trimmed) { error in
             if let error = error {
                 print("Ekleme hatası: \(error.localizedDescription)")

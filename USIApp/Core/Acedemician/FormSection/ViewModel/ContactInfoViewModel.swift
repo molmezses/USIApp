@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 enum ContactInfoEnum {
     case telNo
@@ -130,65 +131,59 @@ class ContactInfoViewModel: ObservableObject{
     
     
     func updateContactInfo(){
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email  ?? "") { result in
-            switch result{
-            case .success(let documentID):
+        
+        if let userId = Auth.auth().currentUser?.uid{
+            let data: [String: String] = [
+                "il": self.selectedCity,
+                "ilce": self.selectedDistrict,
+                "web": self.website,
+                "personelTel": self.personelTel,
+                "kurumsalTel": self.kurumsalTel
+            ]
+            
+            FirestoreService.shared.updateContactInfo(forDocumentId: userId, data: data) { result in
                 
-                let data: [String: String] = [
-                                "il": self.selectedCity,
-                                "ilce": self.selectedDistrict,
-                                "web": self.website,
-                                "personelTel": self.personelTel,
-                                "kurumsalTel": self.kurumsalTel
-                            ]
-                
-                FirestoreService.shared.updateContactInfo(forDocumentId: documentID, data: data) { result in
-                    
-                    switch result{
-                    case .success(_):
-                        print("ContactInfo Updated")
-                    case .failure(_):
-                        print("Hata : ContactInfo Updated")
-                    }
-                    
+                switch result{
+                case .success(_):
+                    print("ContactInfo Updated")
+                case .failure(_):
+                    print("Hata : ContactInfo Updated")
                 }
                 
-            case .failure(_):
-                print("Hata : Document ID bulunamadı UpdateContactInfo")
             }
         }
+        
+        
+        
+        
     }
     
     func loadContactInfo(){
-        
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
+        if let userId = Auth.auth().currentUser?.uid{
             
-            switch result {
-            case .success(let documentID):
+            FirestoreService.shared.fetchAcademicianInfo(byId: userId) { result in
                 
-                FirestoreService.shared.fetchAcademicianInfo(byId: documentID) { result in
+                switch result {
+                case .success(let info):
                     
-                    switch result {
-                    case .success(let info):
-                        
-                        self.selectedCity = info.il
-                        self.selectedDistrict = info.ilce
-                        self.personelTel = info.personelTel
-                        self.kurumsalTel = info.kurumsalTel
-                        self.website = info.webSite
-                        
-                    case .failure(_):
-                        print("Hata : FetchAcademicianInfo LoadContact AcademicianInfo")
-
-                    }
+                    self.selectedCity = info.il
+                    self.selectedDistrict = info.ilce
+                    self.personelTel = info.personelTel
+                    self.kurumsalTel = info.kurumsalTel
+                    self.website = info.webSite
+                    
+                case .failure(_):
+                    print("Hata : FetchAcademicianInfo LoadContact AcademicianInfo")
                     
                 }
                 
-            case .failure(_):
-                print("Hata : FetchAcademicianInfo LoadContact DocumentId")
             }
             
+            
         }
+        
+        
+        
         
     }
     

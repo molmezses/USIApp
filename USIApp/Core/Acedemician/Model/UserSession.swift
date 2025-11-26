@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct UserSession: Identifiable , Codable{
+struct UserSession: Identifiable , Codable , Equatable{
     
     var id: String
     var email: String

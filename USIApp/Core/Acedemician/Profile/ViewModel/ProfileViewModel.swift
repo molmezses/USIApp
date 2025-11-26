@@ -7,6 +7,8 @@
 
 import Foundation
 import FirebaseFirestore
+import FirebaseAuth
+import FirebaseStorage
 
 class ProfileViewModel: ObservableObject {
     
@@ -14,37 +16,38 @@ class ProfileViewModel: ObservableObject {
     @Published var adSoyad: String = ""
     @Published var email: String = ""
     @Published var unvan: String = ""
-    @Published var photo: String = ""
     @Published var isAdminUserAccount: Bool = false
+    @Published var selectedImage: UIImage? = nil
+    @Published var academicianImageURL: String? = nil
+    @Published var isUploading = false
+    @Published var uploadProgress: Double = 0.0
+
     
+    private let storage = Storage.storage()
+    private let firestore = Firestore.firestore()
+
+
     
     func loadAcademicianInfo(){
         
-        FirestoreService.shared.fetchAcademicianDocumentById(byEmail: AuthService.shared.getCurrentUser()?.email ?? "") { result in
-            switch result {
-            case .success(let documentID):
+        if let userId = Auth.auth().currentUser?.uid {
+            FirestoreService.shared.fetchAcademicianInfo(byId: userId) { result in
                 
-                FirestoreService.shared.fetchAcademicianInfo(byId: documentID) { result in
-                    
-                    switch result {
-                    case .success(let info):
-                            
-                        self.academicianInfo = info
-                        self.adSoyad = info.adSoyad
-                        self.email = info.email
-                        self.unvan = info.unvan
-                        self.photo = info.photo
-                        print("AcademicianID : \(documentID)")
+                switch result {
+                case .success(let info):
                         
-                        
-                    case .failure(let error):
-                        print("Hata loadAcademicianInfo : \(error.localizedDescription)")
-                    }
+                    self.academicianInfo = info
+                    self.adSoyad = info.adSoyad
+                    self.email = info.email
+                    self.unvan = info.unvan
+                    self.academicianImageURL = info.photo
+                    print("AcademicianID : \(userId)")
                     
+                    
+                case .failure(let error):
+                    print("Hata loadAcademicianInfo : \(error.localizedDescription)")
                 }
                 
-            case .failure(let error):
-                print("Hata loadAcademiicanInfo: \(error.localizedDescription)")
             }
         }
         
@@ -60,6 +63,52 @@ class ProfileViewModel: ObservableObject {
             }
         }
 
+    }
+    
+    @MainActor
+    func uploadImageAndSaveLink(academicianId: String) async {
+        guard let imageData = selectedImage?.jpegData(compressionQuality: 0.3) else {
+            print("HATA: Resim seçilmedi.")
+            return
+        }
+
+        isUploading = true
+
+        do {
+            let imageRef = storage.reference().child("academician_images/\(academicianId)")
+
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                let uploadTask = imageRef.putData(imageData, metadata: nil) { metadata, error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume(returning: ())
+                    }
+                }
+
+                uploadTask.observe(.progress) { snapshot in
+                    DispatchQueue.main.async {
+                        self.uploadProgress = Double(snapshot.progress?.fractionCompleted ?? 0)
+                    }
+                }
+            }
+
+            let downloadURL = try await imageRef.downloadURL()
+
+            try await firestore.collection("Academician").document(academicianId)
+                .updateData(["photo": downloadURL.absoluteString])
+
+            DispatchQueue.main.async {
+                self.academicianImageURL = downloadURL.absoluteString
+            }
+
+            print(" Resim başarıyla kaydedildi.")
+
+        } catch {
+            print(" HATA: \(error.localizedDescription)")
+        }
+
+        isUploading = false
     }
    
 

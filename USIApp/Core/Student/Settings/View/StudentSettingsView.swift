@@ -10,7 +10,7 @@ import SwiftUI
 struct StudentSettingsView: View {
     
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var authViewModel : StudentAuthViewModel
+    @EnvironmentObject var authViewModel : AuthViewModel
     @StateObject var feedbackViewmodel = FeedbackViewModel()
     @StateObject var viewModel = StudentSettingsViewModel()
 
