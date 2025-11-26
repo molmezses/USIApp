@@ -29,7 +29,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		8EE712812E1FA67400B01AFA /* Exceptions for "USIApp" folder in "USIApp" target */ = {
+		8E8D77642ED7235300798807 /* Exceptions for "USIApp" folder in "USIApp" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -42,7 +42,7 @@
 		8E621FAA2E1322B0004F90BA /* USIApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				8EE712812E1FA67400B01AFA /* Exceptions for "USIApp" folder in "USIApp" target */,
+				8E8D77642ED7235300798807 /* Exceptions for "USIApp" folder in "USIApp" target */,
 			);
 			path = USIApp;
 			sourceTree = "<group>";
