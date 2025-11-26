@@ -28,7 +28,7 @@ struct LoginView: View {
                     .animation(.spring(response: 0.6, dampingFraction: 0.7), value: animate)
                 
                 VStack(spacing: 8) {
-                    Text("USIApp'e Hoşgeldiniz")
+                    Text("USIApp'e Hoşgeldinizz")
                         .font(.headline)
                         .opacity(animate ? 1 : 0)
                     
