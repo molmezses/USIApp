@@ -39,7 +39,7 @@ class ApplyUsersCardViewModel: ObservableObject {
         let collections = [
             ("Students", "studentName", "studentImage"),
             ("Industry", "firmaAdi", "requesterImage"),
-            ("AcademicianInfo", "adSoyad", "photo")
+            ("Academician", "adSoyad", "photo")
         ]
         
         func searchNext(index: Int) {

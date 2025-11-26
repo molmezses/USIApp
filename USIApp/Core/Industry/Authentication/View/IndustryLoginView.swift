@@ -89,6 +89,7 @@ struct IndustryLoginView: View {
                             IndustryRegisterView()
                                 .environmentObject(authViewModel)
                                 .environmentObject(requestViewModel)
+                                .navigationBarBackButtonHidden()
                         } label: {
                             Text("Kayıt Ol")
                                 .frame(maxWidth: .infinity)

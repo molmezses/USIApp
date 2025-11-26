@@ -12,179 +12,177 @@ struct RequestInfoAdminView: View {
     @State var navigate : Bool = false
 
     var body: some View {
-        VStack(spacing: 0) {
-            // Başlık
-            HStack {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 18, weight: .semibold))
+        NavigationStack {
+            VStack(spacing: 0) {
+                // Başlık
+                HStack {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundColor(.black)
+                    }
+                    Spacer()
+                    Text("Talep Detayı")
+                        .font(.headline)
                         .foregroundColor(.black)
+                    Spacer()
+                    Image(systemName: "chevron.left").opacity(0)
                 }
-                Spacer()
-                Text("Talep Detayı")
-                    .font(.headline)
-                    .foregroundColor(.black)
-                Spacer()
-                Image(systemName: "chevron.left").opacity(0)
-            }
-            .padding()
+                .padding()
 
-            ScrollView {
-                VStack(spacing: 20) {
+                ScrollView {
+                    VStack(spacing: 20) {
 
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack(spacing: 16) {
-                            if let url = URL(string: requesterImage) {
-                                AsyncImage(url: url) { image in
-                                    image.resizable()
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack(spacing: 16) {
+                                if let url = URL(string: requesterImage) {
+                                    AsyncImage(url: url) { image in
+                                        image.resizable()
+                                            .scaledToFill()
+                                            .frame(width: 50, height: 50)
+                                            .clipShape(Circle())
+                                    } placeholder: {
+                                        ProgressView()
+                                            .frame(width: 50, height: 50)
+                                    }
+                                } else {
+                                    Image("DefaultProfilePhoto")
+                                        .resizable()
                                         .scaledToFill()
                                         .frame(width: 50, height: 50)
                                         .clipShape(Circle())
-                                } placeholder: {
-                                    ProgressView()
-                                        .frame(width: 50, height: 50)
                                 }
-                            } else {
-                                Image("DefaultProfilePhoto")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 50, height: 50)
-                                    .clipShape(Circle())
+
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(request.requesterName)
+                                        .frame(
+                                            maxWidth: .infinity,
+                                            alignment: .leading
+                                        )
+                                        .font(.headline)
+                                    Text(request.requesterType == "industry" ? "Sanayi" : request.requesterType == "student" ? "Öğrenci" : "Akademisyen")
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
+                                    Text("📧 \(request.requesterEmail)")
+                                        .font(.footnote)
+                                        .foregroundColor(.secondary)
+
+                                    Text("📞 \(request.requesterPhone)")
+                                        .font(.footnote)
+                                        .foregroundColor(.secondary)
+
+                                }
+                            }
+                        }
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(10)
+                        .shadow(radius: 2)
+
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text(request.title)
+                                .font(.title3.bold())
+
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Açıklama")
+                                    .font(.subheadline.bold())
+                                Text(request.description)
+                                    .foregroundColor(.secondary)
                             }
 
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(request.requesterName)
-                                    .frame(
-                                        maxWidth: .infinity,
-                                        alignment: .leading
-                                    )
-                                    .font(.headline)
-                                Text(request.requesterType == "industry" ? "Sanayi" : request.requesterType == "student" ? "Öğrenci" : "Akademisyen")
-                                    .font(.subheadline)
+                                Text("Oluşturulma Tarihi")
+                                    .font(.subheadline.bold())
+                                Text(request.date)
                                     .foregroundColor(.gray)
-                                Text("📧 \(request.requesterEmail)")
-                                    .font(.footnote)
-                                    .foregroundColor(.secondary)
-
-                                Text("📞 \(request.requesterPhone)")
-                                    .font(.footnote)
-                                    .foregroundColor(.secondary)
-
                             }
-                        }
-                    }
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(10)
-                    .shadow(radius: 2)
 
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text(request.title)
-                            .font(.title3.bold())
+                            if request.requesterType == "industry" {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("Kategoriler")
+                                        .font(.subheadline.bold())
 
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Açıklama")
-                                .font(.subheadline.bold())
-                            Text(request.description)
-                                .foregroundColor(.secondary)
-                        }
-
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Oluşturulma Tarihi")
-                                .font(.subheadline.bold())
-                            Text(request.date)
-                                .foregroundColor(.gray)
-                        }
-
-                        if request.requesterType == "industry" {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("Kategoriler")
-                                    .font(.subheadline.bold())
-
-                                LazyVGrid(
-                                    columns: [
-                                        GridItem(
-                                            .adaptive(minimum: 100),
-                                            spacing: 8
-                                        )
-                                    ],
-                                    spacing: 8
-                                ) {
-                                    ForEach(
-                                        request.selectedCategories,
-                                        id: \.self
-                                    ) { category in
-                                        Text(category)
-                                            .font(.caption)
-                                            .padding(.horizontal, 10)
-                                            .padding(.vertical, 6)
-                                            .background(Color("usi").opacity(0.1))
-                                            .foregroundColor(.blue)
-                                            .cornerRadius(8)
+                                    LazyVGrid(
+                                        columns: [
+                                            GridItem(
+                                                .adaptive(minimum: 100),
+                                                spacing: 8
+                                            )
+                                        ],
+                                        spacing: 8
+                                    ) {
+                                        ForEach(
+                                            request.selectedCategories,
+                                            id: \.self
+                                        ) { category in
+                                            Text(category)
+                                                .font(.caption)
+                                                .padding(.horizontal, 10)
+                                                .padding(.vertical, 6)
+                                                .background(Color("usi").opacity(0.1))
+                                                .foregroundColor(.blue)
+                                                .cornerRadius(8)
+                                        }
                                     }
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+
                                 }
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                            } else {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("Talep Kategorisi")
+                                        .font(.subheadline.bold())
 
+                                    Text(request.requestCategory ?? "")
+                                        .font(.caption)
+                                        .padding(.horizontal, 10)
+                                        .padding(.vertical, 6)
+                                        .background(Color("usi").opacity(0.1))
+                                        .foregroundColor(.blue)
+                                        .cornerRadius(8)
+
+                                }
                             }
-                        } else {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("Talep Kategorisi")
-                                    .font(.subheadline.bold())
 
-                                Text(request.requestCategory ?? "")
-                                    .font(.caption)
-                                    .padding(.horizontal, 10)
-                                    .padding(.vertical, 6)
-                                    .background(Color("usi").opacity(0.1))
-                                    .foregroundColor(.blue)
-                                    .cornerRadius(8)
+                            Divider()
 
+                            if request.status == .pending {
+                                RequestAnswer()
+                            } else {
+                                SelectedAcademicianView()
                             }
-                        }
 
-                        Divider()
-
-                        if request.status == .pending {
-                            RequestAnswer()
-                        } else {
-                            SelectedAcademicianView()
                         }
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(10)
+                        .shadow(radius: 2)
 
                     }
                     .padding()
-                    .background(Color.white)
-                    .cornerRadius(10)
-                    .shadow(radius: 2)
-
                 }
-                .padding()
+                .background(Color(.systemGroupedBackground))
             }
-            .background(Color(.systemGroupedBackground))
-        }
-        .navigationDestination(isPresented: $navigate, destination: {
-            PendingRequestView()
-                .navigationBarBackButtonHidden()
-        })
-        .alert("Başarılı", isPresented: $showAlert) {
-            
-            Button("tamam", role: .cancel) {
-                self.navigate = true
-            }
-        } message: {
-            Text("Talep başarılı bir şekilde onaylandı ve açık talepler sayfasında yayına alındı")
-        }
-        .navigationDestination(
-            isPresented: $viewModel.destinated,
-            destination: {
+            .navigationDestination(isPresented: $navigate, destination: {
                 PendingRequestView()
                     .navigationBarBackButtonHidden()
+            })
+            .alert("Başarılı", isPresented: $showAlert) {
+                
+                Button("tamam", role: .cancel) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15){
+                        self.navigate = true
+                    }
+                }
+            } message: {
+                Text("Talep başarılı bir şekilde onaylandı ve açık talepler sayfasında yayına alındı")
             }
-        )
-        .onTapGesture {
-            focusedField = false
+            .onTapGesture {
+                focusedField = false
+            }
         }
+        
     }
 
     func SelectedAcademicianView() -> some View {

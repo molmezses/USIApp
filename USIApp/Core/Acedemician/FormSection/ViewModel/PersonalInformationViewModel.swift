@@ -93,7 +93,13 @@ class PersonalInformationViewModel: ObservableObject {
         
         if let userId = Auth.auth().currentUser?.uid{
             let docRef = db.collection("Academician").document(userId)
-            docRef.updateData(["unvan" : self.unvan]){ error in
+            
+            let data : [String:Any] = [
+                "unvan" : self.unvan,
+                "adSoyad" : "\(self.name) \(self.surName)"
+            ]
+            
+            docRef.updateData(data){ error in
                 if let error = error{
                     print("HATA: \(error.localizedDescription)")
                 }else{
