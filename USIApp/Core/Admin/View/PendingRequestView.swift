@@ -148,16 +148,38 @@ struct PendingRequestView: View {
             }
             
 
-            // Kategoriler
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    Text(request.requestCategory ?? "Kategori bulunamadı")
-                        .font(.caption)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(Color("categoryBlue"))
-                        .foregroundColor(.black)
-                        .cornerRadius(6)
+           
+            
+            if request.requesterType == "industry"{
+                // Kategoriler
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(request.selectedCategories, id: \.self) { category in
+                                Text(category)
+                                    .font(.caption)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(Color("categoryBlue"))
+                                    .foregroundColor(.black)
+                                    .cornerRadius(6)
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                
+
+            }else{
+                // Kategoriler
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        Text(request.requestCategory ?? "Kategori bulunamadı")
+                            .font(.caption)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Color("categoryBlue"))
+                            .foregroundColor(.black)
+                            .cornerRadius(6)
+                    }
                 }
             }
             
