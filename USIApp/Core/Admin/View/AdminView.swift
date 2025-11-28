@@ -101,7 +101,7 @@ struct AdminView: View {
                                 HStack {
                                     Image(systemName: "xmark.shield.fill")
                                         .resizable()
-                                        .foregroundStyle(Color("logoBlue"))
+                                        .foregroundStyle(Color("usi"))
                                         .frame(width: 28, height: 28)
                                     Text("Raporlar / Şikayetler")
                                     Spacer()
