@@ -23,8 +23,6 @@ struct AdminView: View {
                         // Talep İstatistikleri
                         requestStatsSection
                         
-                        // Ortak Proje
-                        ortakProjeStatus
                         
                         // Genel İstatistikler
                         statsSummaryView
@@ -38,7 +36,7 @@ struct AdminView: View {
                                 HStack {
                                     Image(systemName: "clock.fill")
                                         .resizable()
-                                        .foregroundStyle(Color("logoBlue"))
+                                        .foregroundStyle(Color("usi"))
                                         .frame(width: 28, height: 28)
                                     Text("Bekleyen Talepler")
                                     Spacer()
@@ -65,9 +63,9 @@ struct AdminView: View {
                                 HStack {
                                     Image(systemName: "calendar.badge.clock")
                                         .resizable()
-                                        .foregroundStyle(Color("logoBlue"))
+                                        .foregroundStyle(Color("usi"))
                                         .frame(width: 28, height: 28)
-                                    Text("Eski talepler")
+                                    Text("Değerlendirilmiş Talepler")
                                     Spacer()
                                     Image(systemName: "chevron.right")
                                 }
@@ -84,9 +82,9 @@ struct AdminView: View {
                                 HStack {
                                     Image(systemName: "person.circle.fill")
                                         .resizable()
-                                        .foregroundStyle(Color("logoBlue"))
+                                        .foregroundStyle(Color("usi"))
                                         .frame(width: 28, height: 28)
-                                    Text("Admin kullanıcısı ekle")
+                                    Text("Admin Kullanıcısı Ekle")
                                     Spacer()
                                     Image(systemName: "chevron.right")
                                 }
@@ -169,33 +167,31 @@ struct AdminView: View {
                 HStack(spacing: 10) {
                     StatsProgressView(
                         title: "Akademisyen",
-                        current: viewModel.loggedInAcademics,
+                        current: viewModel.totalAcademics,
                         total: viewModel.totalAcademics,
                         color: Color("usi"),
                         icon: "graduationcap.fill",
                         height: cardHeight,
-                        industry: false
+                        isTotal: true
                     )
                     
                     StatsProgressView(
                         title: "Sanayici",
-                        current: viewModel.loggedInIndustry,
+                        current: viewModel.totalIndustry,
                         total: viewModel.totalIndustry,
                         color: Color("sari"),
                         icon: "building.2.fill",
                         height: cardHeight,
-                        industry: true
-                    )
+                        isTotal: true                    )
                     
                     StatsProgressView(
                         title: "Öğrenci",
                         current: viewModel.totalStudents,
                         total: viewModel.totalStudents,
-                        color: Color(.systemPink),
+                        color: .yellow,
                         icon: "person.2.fill",
                         height: cardHeight,
-                        industry: false
-                    )
+                        isTotal: true                    )
                 }
                 .padding(.horizontal)
             }
@@ -212,56 +208,23 @@ struct AdminView: View {
             
             HStack(spacing: 16) {
                 StatsProgressView(
-                    title: "Onaylanan",
+                    title: "Onaylanan Talep",
                     current: viewModel.approvedRequests,
                     total: viewModel.totalRequests,
                     color: .green,
                     icon: "checkmark.circle.fill",
                     height: cardHeight,
-                    industry: false
+                    isTotal: false
                 )
                 
                 StatsProgressView(
-                    title: "Reddedilen",
-                    current: viewModel.rejectedRequests,
+                    title: "Toplam Talep ",
+                    current: viewModel.totalRequests,
                     total: viewModel.totalRequests,
-                    color: .red,
+                    color: .purple,
                     icon: "xmark.circle.fill",
                     height: cardHeight,
-                    industry: false
-                )
-            }
-            .padding(.horizontal)
-        }
-    }
-    
-    // MARK: - Ortak Proje Durumu
-    private var ortakProjeStatus: some View {
-        VStack(spacing: 16) {
-            Text("Ortak Proje Talebi ")
-                .font(.headline)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
-            
-            HStack(spacing: 16) {
-                StatsProgressView(
-                    title: "Ortak proje ",
-                    current: (viewModel.loggedInAcademics - viewModel.ortakProjeSayisiTalep),
-                    total: viewModel.loggedInAcademics,
-                    color: .purple,
-                    icon: "checkmark.circle.fill",
-                    height: cardHeight,
-                    industry: false
-                )
-                
-                StatsProgressView(
-                    title: "Atananlar",
-                    current: viewModel.addPointAcademicians,
-                    total: viewModel.loggedInAcademics,
-                    color: .mint,
-                    icon: "chevron.right",
-                    height: cardHeight,
-                    industry: false
+                    isTotal: true
                 )
             }
             .padding(.horizontal)
@@ -279,7 +242,7 @@ struct AdminView: View {
             HStack(spacing: 12) {
                 StatItem(icon: "person.3.fill", value: "\(viewModel.totalAcademics)", label: "Akademisyen", color: Color("usi"))
                 StatItem(icon: "building.2.fill", value: "\(viewModel.totalIndustry)", label: "Sanayi", color: Color("sari"))
-                StatItem(icon: "person.2.fill", value: "\(viewModel.totalStudents)", label: "Öğrenci", color: .pink)
+                StatItem(icon: "person.2.fill", value: "\(viewModel.totalStudents)", label: "Öğrenci", color: .yellow)
                 StatItem(icon: "checkmark.circle.fill", value: "\(viewModel.approvedRequests)", label: "Onaylanan", color: .green)
                 StatItem(icon: "doc.fill", value: "\(viewModel.totalRequests)", label: "Toplam Talep", color: Color.purple)
             }
@@ -302,7 +265,7 @@ struct StatsProgressView: View {
     let color: Color
     let icon: String
     let height: CGFloat
-    let industry: Bool?
+    let isTotal: Bool
     
     var percentage: Double {
         total == 0 ? 0 : Double(current) / Double(total)
@@ -313,7 +276,7 @@ struct StatsProgressView: View {
     var body: some View {
         VStack(spacing: 8) {
             Label(title, systemImage: icon)
-                .font(.subheadline)
+                .font(.footnote)
             
             ZStack {
                 Circle()
@@ -329,7 +292,7 @@ struct StatsProgressView: View {
                     .animation(.easeOut(duration: 1.2), value: animatedPercentage)
                 
                 VStack {
-                    if !(industry ?? true) {
+                    if !isTotal {
                         Text("%\(Int(animatedPercentage * 100 ))")
                             .font(.title2)
                             .bold()
