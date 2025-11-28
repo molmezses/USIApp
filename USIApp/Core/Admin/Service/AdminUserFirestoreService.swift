@@ -302,17 +302,7 @@ class AdminUserFirestoreService{
         }
     }
     
-    func getUserCountByDomain(domain: String, completion: @escaping (Int) -> Void) {
-        Firestore.firestore().collection("UserDomains")
-            .whereField("domain", isEqualTo: domain)
-            .getDocuments { snapshot, error in
-                if let documents = snapshot?.documents {
-                    completion(documents.count)
-                } else {
-                    completion(0)
-                }
-            }
-    }
+
     
     func getUserCountAcademician(completion: @escaping (Int) -> Void) {
         Firestore.firestore().collection("Academician")
@@ -327,31 +317,33 @@ class AdminUserFirestoreService{
             }
     }
     
-    func getUserCountIndustry(completion: @escaping (Int) -> Void) {
-        Firestore.firestore().collection("UserDomains")
+    func getUserCountStudents(completion: @escaping (Int) -> Void) {
+        Firestore.firestore().collection("Students")
             .getDocuments { snapshot, error in
                 if let documents = snapshot?.documents {
                     print("çekilen")
-                    
-                    self.getUserCountByDomain(domain: "ahievran.edu.tr") { academicianLogginCount in
-                        let countTemp = (documents.count) - academicianLogginCount
-                        
-                        self.getUserCountByDomain(domain: "ogr.ahievran.edu.tr") { studentCount in
-                            let industryCount = (countTemp) - studentCount
-                            
-                            print(industryCount)
-                            completion(industryCount)
-
-                        }
-                        
-                    }
-                    
-                    
+                    print(documents.count)
+                    completion(documents.count)
                 } else {
                     completion(0)
                 }
             }
     }
+    
+    func getUserCountIndustry(completion: @escaping (Int) -> Void) {
+        Firestore.firestore().collection("Industry")
+            .getDocuments { snapshot, error in
+                if let documents = snapshot?.documents {
+                    print("çekilen")
+                    print(documents.count)
+                    completion(documents.count)
+                } else {
+                    completion(0)
+                }
+            }
+    }
+    
+
     
     func getRequestCount(completion: @escaping (Int) -> Void) {
         Firestore.firestore().collection("Requests")
@@ -366,7 +358,7 @@ class AdminUserFirestoreService{
     }
     
     func getApprovedRequestCount(completion: @escaping (Int) -> Void) {
-        Firestore.firestore().collection("OldRequests")
+        Firestore.firestore().collection("Requests")
             .whereField("status", isEqualTo: "approved")
             .getDocuments { snapshot, error in
                 if let documents = snapshot?.documents {
@@ -378,18 +370,6 @@ class AdminUserFirestoreService{
             }
     }
     
-    func getRejectedRequestCount(completion: @escaping (Int) -> Void) {
-        Firestore.firestore().collection("OldRequests")
-            .whereField("status", isEqualTo: "rejected")
-            .getDocuments { snapshot, error in
-                if let documents = snapshot?.documents {
-                    print("çekilen Onaylanmış talep  sayısı :")
-                    completion(documents.count)
-                } else {
-                    completion(0)
-                }
-            }
-    }
     
     func getPendingRequestCount(completion: @escaping (Int) -> Void) {
         Firestore.firestore().collection("Requests")

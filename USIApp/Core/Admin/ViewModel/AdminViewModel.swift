@@ -12,10 +12,8 @@ import FirebaseFirestore
 
 class AdminViewModel : ObservableObject{
     
-    @Published var loggedInAcademics: Int = 0
     @Published var totalAcademics = 0
     @Published var totalIndustry = 0
-    @Published var loggedInIndustry = 0
     @Published var  totalRequests = 0
     @Published var  approvedRequests = 0
     @Published var  rejectedRequests = 0
@@ -24,14 +22,7 @@ class AdminViewModel : ObservableObject{
     @Published var ortakProjeSayisiTalep: Int = 0
     @Published var totalStudents: Int = 0
     
-    func getUserCountLoggedInAcademics(domain: String){
-        AdminUserFirestoreService.shared.getUserCountByDomain(domain: domain) { count in
-            print("Giriş yapan akedmisyen")
-            self.loggedInAcademics = (count)
-            print(self.loggedInAcademics)
 
-        }
-    }
     
     func getUserCountAcademician(){
         AdminUserFirestoreService.shared.getUserCountAcademician { count in
@@ -46,18 +37,17 @@ class AdminViewModel : ObservableObject{
         AdminUserFirestoreService.shared.getUserCountIndustry { count in
             print("Toplam Sanayi")
             self.totalIndustry = (count)
-            self.loggedInIndustry = (count)
             print(self.totalIndustry)
 
         }
     }
     
-    func getUserCountStudent() {
-        AdminUserFirestoreService.shared.getUserCountByDomain(domain: "ogr.ahievran.edu.tr") { count in
+    func getUserCountStudents() {
+        AdminUserFirestoreService.shared.getUserCountStudents { count in
             print("Toplam Öğrenci")
             self.totalStudents = (count)
             print(self.totalIndustry)
-            
+
         }
     }
     
@@ -78,13 +68,7 @@ class AdminViewModel : ObservableObject{
         }
     }
     
-    func getRejectedRequestCount() {
-        AdminUserFirestoreService.shared.getRejectedRequestCount { count in
-            print("Toplam Reddedilmiş Talep")
-            self.rejectedRequests = (count)
-            print(self.rejectedRequests)
-        }
-    }
+
     
     
     func getPendingRequestCount() {
@@ -104,23 +88,17 @@ class AdminViewModel : ObservableObject{
     }
     
     
-    func getUserCountAcademicianOrtakTalepFalse(){
-        AdminUserFirestoreService.shared.getUserCountAcademicianOrtakTalepFalse { count in
-            self.ortakProjeSayisiTalep = count
-        }
-    }
+
     
     
     func getAllStats(){
-        getUserCountLoggedInAcademics(domain: "ahievran.edu.tr")
         getUserCountAcademician()
         getUserCountIndustry()
+        getUserCountStudents()
         getTotalRequestCount()
         getApprovedRequestCount()
-        getRejectedRequestCount()
         getPendingRequestCount()
         getAcademicianResponseCounts()
-        getUserCountAcademicianOrtakTalepFalse()
     }
     
     
