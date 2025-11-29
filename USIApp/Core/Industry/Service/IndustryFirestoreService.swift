@@ -140,34 +140,45 @@ class IndustryFirestoreService {
             switch result {
             case .success(let info):
                 
-                
-                let document: [String: Any] = [
-                    "requesterName" : info.firmaAdi,
-                    "requesterCategories" : info.calismaAlani,
-                    "requesterEmail" : info.email,
-                    "requesterID" : requsterID,
-                    "selectedCategories" : selectedCategories,
-                    "requestTitle" : requestTitle,
-                    "requestMessage" : requestMessage,
-                    "createdDate" : self.getCurrentDateAsString(),
-                    "status" : "pending",
-                    "requesterAddress" : info.adres,
-                    "requesterImage" : info.requesterImage,
-                    "requesterType" : "industry",
-                    "requesterPhone": info.tel,
-                    "requestType" : requestType,
-                ]
-                
-                Firestore.firestore()
-                    .collection("Requests")
-                    .addDocument(data: document) { error in
-                        if let error = error {
-                            print("Hata: \(error.localizedDescription)")
-                        } else {
-                            print("Başarılı")
-                        }
-                        completion(error)
+                Authorities.shared.checkAuthorization { docName in
+                    
+                    if let doc = docName{
+                    
+                        let document: [String: Any] = [
+                            "requesterName" : info.firmaAdi,
+                            "requesterCategories" : info.calismaAlani,
+                            "requesterEmail" : info.email,
+                            "requesterID" : requsterID,
+                            "selectedCategories" : selectedCategories,
+                            "requestTitle" : requestTitle,
+                            "requestMessage" : requestMessage,
+                            "createdDate" : self.getCurrentDateAsString(),
+                            "status" : [
+                                doc : "pending"
+                            ],
+                            "requesterAddress" : info.adres,
+                            "requesterImage" : info.requesterImage,
+                            "requesterType" : "industry",
+                            "requesterPhone": info.tel,
+                            "requestType" : requestType,
+                        ]
+                        
+                        Firestore.firestore()
+                            .collection("Requests")
+                            .addDocument(data: document) { error in
+                                if let error = error {
+                                    print("Hata: \(error.localizedDescription)")
+                                } else {
+                                    print("Başarılı")
+                                }
+                                completion(error)
+                            }
+                        
+                    }else{
+                        print("eşleşen domain yok ")
                     }
+                    
+                }
                 
             case .failure(let failure):
                 print("Hata : \(failure.localizedDescription)")

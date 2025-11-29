@@ -532,32 +532,47 @@ class FirestoreService{
                 switch result {
                 case .success(let info):
                     
-                    let document: [String: Any] = [
-                        "requesterName" : info.adSoyad,
-                        "requesterEmail" : info.email,
-                        "requesterID" : userId,
-                        "requestCategory" : requestCategory,
-                        "requestTitle" : requestTitle,
-                        "requestMessage" : requestMessage,
-                        "createdDate" : self.getCurrentDateAsString(),
-                        "status" : "pending",
-                        "requesterAddress" : "",
-                        "requesterImage" : info.photo,
-                        "requesterType" : "academician",
-                        "requesterPhone" : info.personelTel != "" ? info.personelTel : info.kurumsalTel == "" ? "Bulunamadı" : info.kurumsalTel,
-                        "requestType" : requestType
-                    ]
                     
-                    Firestore.firestore()
-                        .collection("Requests")
-                        .addDocument(data: document) { error in
-                            if let error = error {
-                                print("Hata: \(error.localizedDescription)")
-                            } else {
-                                print("Başarılı")
-                            }
-                            completion(error)
+                    Authorities.shared.checkAuthorization { matchedDoc in
+                        if let doc = matchedDoc{
+                            
+                            let document: [String: Any] = [
+                                "requesterName" : info.adSoyad,
+                                "requesterEmail" : info.email,
+                                "requesterID" : userId,
+                                "requestCategory" : requestCategory,
+                                "requestTitle" : requestTitle,
+                                "requestMessage" : requestMessage,
+                                "createdDate" : self.getCurrentDateAsString(),
+                                "status" : [
+                                    doc : "pending"
+                                ],
+                                "requesterAddress" : "",
+                                "requesterImage" : info.photo,
+                                "requesterType" : "academician",
+                                "requesterPhone" : info.personelTel != "" ? info.personelTel : info.kurumsalTel == "" ? "Bulunamadı" : info.kurumsalTel,
+                                "requestType" : requestType
+                            ]
+                            
+                            Firestore.firestore()
+                                .collection("Requests")
+                                .addDocument(data: document) { error in
+                                    if let error = error {
+                                        print("Hata: \(error.localizedDescription)")
+                                    } else {
+                                        print("Başarılı")
+                                    }
+                                    completion(error)
+                                }
+                            
+                            print("eşleşen bulundu \( matchedDoc ?? "bulunamadı")")
+                        }else{
+                            print("eşleşen domain yok ")
                         }
+                    }
+                    
+                    
+                   
                     
                 case .failure(let failure):
                     print("Hata : saverequets : \(failure.localizedDescription)")

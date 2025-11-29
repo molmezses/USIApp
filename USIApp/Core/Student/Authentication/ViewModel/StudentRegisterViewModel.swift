@@ -29,7 +29,7 @@ class StudentRegisterViewModel: ObservableObject{
             return false
         }
         
-        if !email.hasSuffix("@ogr.ahievran.edu.tr"){
+        if !email.hasSuffix("@ogr.nisantasi.edu.tr"){
             self.errorMessage = "Lütfen @ogr.ahievran.edu.tr uzantılı bir mail ile kayıt olunuz."
             return false
         }

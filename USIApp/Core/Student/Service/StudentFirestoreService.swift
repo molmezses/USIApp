@@ -65,39 +65,49 @@ class StudentFirestoreService {
         }
     }
     
+
+    
     func saveRequest(requestTitle: String , requestMessage: String, requestCategory: String , requestType: Bool ,completion: @escaping (Error?) -> Void){
         
         
         self.fetchStudentProfileData { result in
             switch result {
             case .success(let info):
-                
-                let document: [String: Any] = [
-                    "requesterName" : info.studentName,
-                    "requesterEmail" : info.studentEmail,
-                    "requesterID" : info.id,
-                    "requestCategory" : requestCategory,
-                    "requestTitle" : requestTitle,
-                    "requestMessage" : requestMessage,
-                    "createdDate" : self.getCurrentDateAsString(),
-                    "status" : "pending",
-                    "requesterAddress" : "",
-                    "requesterImage" : info.studentImage,
-                    "requesterType" : "student",
-                    "requesterPhone" : info.studentPhone,
-                    "requestType" :requestType
-                ]
-                
-                Firestore.firestore()
-                    .collection("Requests")
-                    .addDocument(data: document) { error in
-                        if let error = error {
-                            print("Hata: \(error.localizedDescription)")
-                        } else {
-                            print("Başarılı")
-                        }
-                        completion(error)
+
+                Authorities.shared.checkAuthorization { docName in
+                    if let doc = docName{
+                        let document: [String: Any] = [
+                            "requesterName" : info.studentName,
+                            "requesterEmail" : info.studentEmail,
+                            "requesterID" : info.id,
+                            "requestCategory" : requestCategory,
+                            "requestTitle" : requestTitle,
+                            "requestMessage" : requestMessage,
+                            "createdDate" : self.getCurrentDateAsString(),
+                            "status" : [
+                                doc : "pending"
+                            ],
+                            "requesterAddress" : "",
+                            "requesterImage" : info.studentImage,
+                            "requesterType" : "student",
+                            "requesterPhone" : info.studentPhone,
+                            "requestType" :requestType
+                        ]
+                        
+                        Firestore.firestore()
+                            .collection("Requests")
+                            .addDocument(data: document) { error in
+                                if let error = error {
+                                    print("Hata: \(error.localizedDescription)")
+                                } else {
+                                    print("Başarılı")
+                                }
+                                completion(error)
+                            }
+                    }else{
+                        print("document domain adı bulunamadı StudetFiresotre service")
                     }
+                }
                 
             case .failure(let error):
                 print("SaveRequest hatası student : \(error.localizedDescription)")
