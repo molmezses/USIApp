@@ -12,9 +12,9 @@ struct RequestInfoAdminView: View {
     @State var navigate : Bool = false
 
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                // Başlık
+        NavigationStack{
+            VStack {
+                // Üst Başlık
                 HStack {
                     Button {
                         dismiss()
@@ -23,142 +23,251 @@ struct RequestInfoAdminView: View {
                             .font(.system(size: 18, weight: .semibold))
                             .foregroundColor(.black)
                     }
+                    
                     Spacer()
+                    
                     Text("Talep Detayı")
                         .font(.headline)
                         .foregroundColor(.black)
+                    
                     Spacer()
-                    Image(systemName: "chevron.left").opacity(0)
+                    
+                    Image(systemName: "chevron.left")
+                        .opacity(0)
                 }
                 .padding()
-
+                .background(.white)
+                .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
+                
+                
                 ScrollView {
                     VStack(spacing: 20) {
-
+                        // Admin Bilgisi
                         VStack(alignment: .leading, spacing: 12) {
-                            HStack(spacing: 16) {
+                            Text("Talep Sahibi")
+                                .frame(maxWidth: .infinity , alignment: .leading)
+                                .font(.headline)
+                                .padding(.bottom, 4)
+                            
+                            
+                            HStack(alignment: .top, spacing: 12) {
+                                
                                 if let url = URL(string: requesterImage) {
                                     AsyncImage(url: url) { image in
                                         image.resizable()
                                             .scaledToFill()
-                                            .frame(width: 50, height: 50)
+                                            .frame(width: 40, height: 40)
                                             .clipShape(Circle())
                                     } placeholder: {
                                         ProgressView()
-                                            .frame(width: 50, height: 50)
+                                            .frame(width: 40, height: 40)
                                     }
                                 } else {
                                     Image("DefaultProfilePhoto")
                                         .resizable()
                                         .scaledToFill()
-                                        .frame(width: 50, height: 50)
+                                        .frame(width: 40, height: 40)
                                         .clipShape(Circle())
                                 }
-
+                                
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(request.requesterName)
-                                        .frame(
-                                            maxWidth: .infinity,
-                                            alignment: .leading
-                                        )
-                                        .font(.headline)
+                                        .font(.subheadline.bold())
                                     Text(request.requesterType == "industry" ? "Sanayi" : request.requesterType == "student" ? "Öğrenci" : "Akademisyen")
                                         .font(.subheadline)
-                                        .foregroundColor(.gray)
-                                    Text("📧 \(request.requesterEmail)")
-                                        .font(.footnote)
+                                    Text("Mail: \(request.requesterEmail)")
+                                        .font(.caption)
                                         .foregroundColor(.secondary)
-
-                                    Text("📞 \(request.requesterPhone)")
-                                        .font(.footnote)
+                                    Text("Tel: \(request.requesterPhone == "" ? "Bilinmiyor" : request.requesterPhone)")
+                                        .font(.caption)
                                         .foregroundColor(.secondary)
-
                                 }
                             }
+                            
                         }
                         .padding()
                         .background(Color.white)
-                        .cornerRadius(10)
-                        .shadow(radius: 2)
-
-                        VStack(alignment: .leading, spacing: 16) {
-                            Text(request.title)
-                                .font(.title3.bold())
-
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Açıklama")
-                                    .font(.subheadline.bold())
-                                Text(request.description)
-                                    .foregroundColor(.secondary)
-                            }
-
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Oluşturulma Tarihi")
-                                    .font(.subheadline.bold())
-                                Text(request.date)
+                        .cornerRadius(12)
+                        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+                        
+                        
+                        
+                        // Talep Bilgileri
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Talep Bilgileri")
+                                .font(.headline)
+                                .padding(.bottom, 4)
+                            
+                            // Şirket Bilgileri
+                            HStack {
+                                Image(systemName: "building.2")
+                                    .frame(width: 25)
                                     .foregroundColor(.gray)
+                                Text("Talep Sahibi Türü")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                Spacer()
+                                Text(request.requesterType == "industry" ? "Sanayi" : request.requesterType == "student" ? "Öğrenci" : "Akademisyen")
+                                    .font(.subheadline)
+                                    .bold()
                             }
-
-                            if request.requesterType == "industry" {
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text("Kategoriler")
-                                        .font(.subheadline.bold())
-
-                                    LazyVGrid(
-                                        columns: [
-                                            GridItem(
-                                                .adaptive(minimum: 100),
-                                                spacing: 8
-                                            )
-                                        ],
-                                        spacing: 8
-                                    ) {
-                                        ForEach(
-                                            request.selectedCategories,
-                                            id: \.self
-                                        ) { category in
-                                            Text(category)
-                                                .font(.caption)
-                                                .padding(.horizontal, 10)
-                                                .padding(.vertical, 6)
-                                                .background(Color("usi").opacity(0.1))
-                                                .foregroundColor(.blue)
-                                                .cornerRadius(8)
+                            
+                            // Talep Sahibi
+                            HStack {
+                                Image(systemName: "person")
+                                    .frame(width: 25)
+                                    .foregroundColor(.gray)
+                                Text("Talep Sahibi")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                Spacer()
+                                Text(request.requesterName)
+                                    .font(.subheadline)
+                                    .bold()
+                            }
+                            
+                            // İletişim
+                            HStack {
+                                Image(systemName: "envelope")
+                                    .frame(width: 25)
+                                    .foregroundColor(.gray)
+                                Text("İletişim")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                Spacer()
+                                Text(request.requesterEmail)
+                                    .font(.subheadline)
+                                    .bold()
+                            }
+                            
+                            // Telefon
+                            HStack {
+                                Image(systemName: "phone")
+                                    .frame(width: 25)
+                                    .foregroundColor(.gray)
+                                Text("Telefon")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                Spacer()
+                                Text("Tel: \(request.requesterPhone == "" ? "Bilinmiyor" : request.requesterPhone)")
+                                    .font(.subheadline)
+                                    .bold()
+                            }
+                            
+                            // Adres
+                            HStack {
+                                Image(systemName: "mappin.and.ellipse")
+                                    .frame(width: 25)
+                                    .foregroundColor(.gray)
+                                Text("Adres")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                Spacer()
+                                Text(request.requesterType == "industry" ? request.requesterAddress : "Adres bulunamadı")
+                                    .font(.subheadline)
+                                    .bold()
+                                    .multilineTextAlignment(.trailing)
+                            }
+                            
+                            Divider()
+                            
+                            // Tarih
+                            HStack {
+                                Image(systemName: "calendar")
+                                    .frame(width: 25)
+                                    .foregroundColor(.gray)
+                                Text("Oluşturulma Tarihi")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                Spacer()
+                                Text(request.date)
+                                    .font(.subheadline)
+                                    .bold()
+                            }
+                            
+                            
+                            
+                            Divider()
+                            
+                            
+                            // Başlık
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Talep Başlığı")
+                                    .font(.subheadline)
+                                    .bold()
+                                
+                                Text(request.title)
+                                    .font(.body)
+                                    .padding()
+                                    .background(Color.gray.opacity(0.1))
+                                    .cornerRadius(8)
+                            }
+                            
+                            // Açıklama
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Talep Açıklaması")
+                                    .font(.subheadline)
+                                    .bold()
+                                
+                                Text(request.description)
+                                    .font(.body)
+                                    .padding()
+                                    .background(Color.gray.opacity(0.1))
+                                    .cornerRadius(8)
+                            }
+                            
+                            // Talep Alanı
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Talep Alanı")
+                                    .font(.subheadline)
+                                    .bold()
+                                
+                                // Kategoriler
+                                if request.requesterType == "industry" {
+                                    ScrollView(.horizontal, showsIndicators: false) {
+                                        HStack(spacing: 8) {
+                                            ForEach(request.selectedCategories, id: \.self) { category in
+                                                Text(category)
+                                                    .font(.caption)
+                                                    .padding(.horizontal, 10)
+                                                    .padding(.vertical, 6)
+                                                    .background(Color("usi").opacity(0.1))
+                                                    .foregroundColor(.blue)
+                                                    .cornerRadius(8)
+                                            }
                                         }
                                     }
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                                }
-                            } else {
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text("Talep Kategorisi")
-                                        .font(.subheadline.bold())
-
-                                    Text(request.requestCategory ?? "")
+                                }else{
+                                    Text("\(request.requestCategory ?? "hatali")")
                                         .font(.caption)
                                         .padding(.horizontal, 10)
                                         .padding(.vertical, 6)
                                         .background(Color("usi").opacity(0.1))
                                         .foregroundColor(.blue)
                                         .cornerRadius(8)
-
                                 }
                             }
-
-                            Divider()
-
+                        }
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(12)
+                        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+                        
+                        
+                        
+                        // Onay/Red Butonları
+                        HStack(spacing: 20) {
                             if request.status == .pending {
                                 RequestAnswer()
                             } else {
                                 SelectedAcademicianView()
                             }
-
                         }
                         .padding()
                         .background(Color.white)
-                        .cornerRadius(10)
-                        .shadow(radius: 2)
-
+                        .cornerRadius(12)
+                        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+                        
                     }
                     .padding()
                 }
@@ -181,8 +290,8 @@ struct RequestInfoAdminView: View {
             .onTapGesture {
                 focusedField = false
             }
+            
         }
-        
     }
 
     func SelectedAcademicianView() -> some View {
