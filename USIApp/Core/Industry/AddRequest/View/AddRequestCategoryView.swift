@@ -188,6 +188,10 @@ struct AddRequestCategoryView: View {
             }
             .background(Color(.systemGroupedBackground))
         }
+        .onAppear(perform: {
+            viewModel.clearFields()
+            
+        })
         .navigationDestination(isPresented: $nextPage) {
             AddRequestMessageView()
                 .navigationBarBackButtonHidden()

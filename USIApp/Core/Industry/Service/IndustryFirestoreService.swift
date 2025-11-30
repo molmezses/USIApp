@@ -144,8 +144,13 @@ class IndustryFirestoreService {
                 
                 var statusMap: [String : String] = [:]
                 
-                for name in documentNames {
-                    statusMap[name] = "pending"
+                if requestType{
+                        statusMap["ahievran"] = "pending"
+                    
+                }else{
+                    for name in documentNames {
+                        statusMap[name] = "pending"
+                    }
                 }
                 
                 

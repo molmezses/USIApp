@@ -13,6 +13,7 @@ struct AddRequestMessageView: View {
     @EnvironmentObject var authViewModel : AuthViewModel
     @Environment(\.dismiss) var dismiss
     @State var selectedTab = 0
+    @State var navigateRequestView: Bool = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -123,26 +124,53 @@ struct AddRequestMessageView: View {
                             .padding(.leading)
                     }
                     
-                    NavigationLink {
-                        AddIndustryRequestSelectUniversityView()
-                            .environmentObject(viewModel)
-                            .environmentObject(authViewModel)
-                            .navigationBarBackButtonHidden()
-                    }label:{
-                        Text("İleri")
-                            .fontWeight(.semibold)
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color("logoBlue"))
-                            .cornerRadius(12)
-                            .padding(.horizontal)
+                    VStack {
+                        if viewModel.isOpenRequest {
+                            Button {
+                                viewModel.saveRequestData()
+                                viewModel.loadRequests()
+                                navigateRequestView = true
+                            } label: {
+                                Text("Kaydet")
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.white)
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color("logoBlue"))
+                                    .cornerRadius(12)
+                                    .padding(.horizontal)
+                            }
+                            .padding(.top, 20)
+
+                        }else{
+                            NavigationLink {
+                                AddIndustryRequestSelectUniversityView()
+                                    .environmentObject(viewModel)
+                                    .environmentObject(authViewModel)
+                                    .navigationBarBackButtonHidden()
+                            }label:{
+                                Text("İleri")
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.white)
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color("logoBlue"))
+                                    .cornerRadius(12)
+                                    .padding(.horizontal)
+                            }
+                            .padding(.top, 20)
+                        }
                     }
-                    .padding(.top, 20)
                 }
                 .padding(.top)
             }
             .background(Color(.systemGroupedBackground))
+        }
+        .navigationDestination(isPresented: $navigateRequestView) {
+            IndustryTabView(selectedTab: 0)
+                .environmentObject(authViewModel)
+                .environmentObject(viewModel)
+                .navigationBarBackButtonHidden()
         }
 
     }
