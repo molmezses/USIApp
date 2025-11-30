@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseFirestore
+import FirebaseAuth
 
 class IndustryFirestoreService {
     
@@ -132,13 +133,20 @@ class IndustryFirestoreService {
     }
 
     
-    func saveRequest(selectedCategories: [String] , requestTitle: String , requestMessage: String, requestType: Bool ,  completion: @escaping (Error?) -> Void){
+    func saveRequest(selectedCategories: [String] , requestTitle: String , requestMessage: String, requestType: Bool , documentNames: [String], completion: @escaping (Error?) -> Void){
         
         let requsterID = IndustryAuthService.shared.getCurrentUser()?.id ?? "id yok"
         
         IndustryFirestoreService.shared.fetchIndustryProfileData { result in
             switch result {
             case .success(let info):
+                
+                
+                var statusMap: [String : String] = [:]
+                
+                for name in documentNames {
+                    statusMap[name] = "pending"
+                }
                 
                 
                 let document: [String: Any] = [
@@ -150,12 +158,14 @@ class IndustryFirestoreService {
                     "requestTitle" : requestTitle,
                     "requestMessage" : requestMessage,
                     "createdDate" : self.getCurrentDateAsString(),
-                    "status" : "pending",
                     "requesterAddress" : info.adres,
                     "requesterImage" : info.requesterImage,
                     "requesterType" : "industry",
                     "requesterPhone": info.tel,
                     "requestType" : requestType,
+                    "status" : statusMap
+                   
+                    
                 ]
                 
                 Firestore.firestore()
@@ -286,85 +296,194 @@ class IndustryFirestoreService {
     
     func fetchAllRequests(completion: @escaping (Result<[RequestModel], Error>) -> Void) {
         
-        guard (IndustryAuthService.shared.getCurrentUser()?.id) != nil else {
-            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Kullanıcı ID bulunamadı"])))
-            return
-        }
         
-        
-        let docRef = Firestore.firestore()
-                .collection("Requests")
-                .whereField("status", isEqualTo: "pending")
-        
-        docRef.getDocuments { snapshot, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            guard let documents = snapshot?.documents else {
-                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Belge bulunamadı"])))
-                return
-            }
-            
-            let requests: [RequestModel] = documents.compactMap { doc in
+        let email = Auth.auth().currentUser?.email ?? ""
+        guard let domain = email.split(separator: "@").last else { return }
+        let domainStr = String(domain)
+
+        Firestore.firestore().collection("Authorities").getDocuments { snap, err in
+            guard let docs = snap?.documents else { return }
+
+            var matchedAuthorityIDs: [String] = []
+
+            for doc in docs {
                 let data = doc.data()
-                
-                let title = data["requestTitle"] as? String ?? ""
-                let description = data["requestMessage"] as? String ?? ""
-                let date = data["createdDate"] as? String ?? ""
-                let selectedCategories = data["selectedCategories"] as? [String] ?? []
-                let status = data["status"] as? String ?? ""
-                let requesterID = data["requesterID"] as? String ?? ""
-                let requesterName = data["requesterName"] as? String ?? ""
-                let requesterCategories = data["requesterCategories"] as? String ?? ""
-                let requesterEmail = data["requesterEmail"] as? String ?? ""
-                let requesterPhone = data["requesterPhone"] as? String ?? ""
-                let adminMessage = data["adminMessage"] as? String ?? ""
-                let requesterAddress = data["requesterAddress"] as? String ?? ""
-                let requesterImage = data["requesterImage"] as? String ?? ""
-                let requesterType = data["requesterType"] as? String ?? ""
-                let requestCategory = data["requestCategory"] as? String ?? ""
-                let createdDate = data["createdDate"] as? String ?? ""
-                let requestType = data["requestType"] as? Bool ?? false
-
 
                 
-
-
-
-
-
-
-                
-                
-                return RequestModel(
-                    id: doc.documentID,
-                    title: title,
-                    description: description,
-                    date: date,
-                    selectedCategories: selectedCategories,
-                    status: self.stringToRequestStatus(string: status),
-                    requesterID: requesterID,
-                    requesterCategories: requesterCategories,
-                    requesterName: requesterName,
-                    requesterAddress: requesterAddress,
-                    requesterEmail: requesterEmail,
-                    requesterPhone: requesterPhone,
-                    adminMessage : adminMessage,
-                    requesterImage: requesterImage,
-                    requesterType: requesterType,
-                    requestCategory: requestCategory,
-                    createdDate: createdDate,
-                    requestType: requestType,
-
-                    
-                )
+                for (_, value) in data {
+                    if let valueStr = value as? String, valueStr.contains(domainStr) {
+                        matchedAuthorityIDs.append(doc.documentID)  // eşleşme bulundu 🎯
+                        break
+                    }
+                    // Eğer field array ise içinde ara
+                    if let arr = value as? [String], arr.contains(domainStr) {
+                        matchedAuthorityIDs.append(doc.documentID)
+                        break
+                    }
+                }
             }
+
+            print("📌 Eşleşen Authority ID'leri:", matchedAuthorityIDs)
+
             
-            completion(.success(requests))
+            let ref = Firestore.firestore().collection("Requests")
+
+            for id in matchedAuthorityIDs {
+                ref.whereField("status.\(id)", isEqualTo: "pending")
+                    .getDocuments { snap, err in
+                        guard let docs = snap?.documents else { return }
+                        
+                        print("📩 \(id) için pending talepler:", docs.count)
+                        docs.forEach { print("➡ \(id) : \($0.documentID)") }
+                        
+                        let requests: [RequestModel] = docs.compactMap { doc in
+                            let data = doc.data()
+                            
+                            let title = data["requestTitle"] as? String ?? ""
+                            let description = data["requestMessage"] as? String ?? ""
+                            let date = data["createdDate"] as? String ?? ""
+                            let selectedCategories = data["selectedCategories"] as? [String] ?? []
+                            let status = data["status.\(id)"] as? String ?? ""
+                            let requesterID = data["requesterID"] as? String ?? ""
+                            let requesterName = data["requesterName"] as? String ?? ""
+                            let requesterCategories = data["requesterCategories"] as? String ?? ""
+                            let requesterEmail = data["requesterEmail"] as? String ?? ""
+                            let requesterPhone = data["requesterPhone"] as? String ?? ""
+                            let adminMessage = data["adminMessage"] as? String ?? ""
+                            let requesterAddress = data["requesterAddress"] as? String ?? ""
+                            let requesterImage = data["requesterImage"] as? String ?? ""
+                            let requesterType = data["requesterType"] as? String ?? ""
+                            let requestCategory = data["requestCategory"] as? String ?? ""
+                            let createdDate = data["createdDate"] as? String ?? ""
+                            let requestType = data["requestType"] as? Bool ?? false
+
+
+                            
+
+
+
+
+
+
+                            
+                            
+                            return RequestModel(
+                                id: doc.documentID,
+                                title: title,
+                                description: description,
+                                date: date,
+                                selectedCategories: selectedCategories,
+                                status: self.stringToRequestStatus(string: status),
+                                requesterID: requesterID,
+                                requesterCategories: requesterCategories,
+                                requesterName: requesterName,
+                                requesterAddress: requesterAddress,
+                                requesterEmail: requesterEmail,
+                                requesterPhone: requesterPhone,
+                                adminMessage : adminMessage,
+                                requesterImage: requesterImage,
+                                requesterType: requesterType,
+                                requestCategory: requestCategory,
+                                createdDate: createdDate,
+                                requestType: requestType,
+
+                                
+                            )
+                        }
+                        
+                        completion(.success(requests))
+                    }
+            }
         }
+
+        
     }
+    
+    
+
+
+    
+//    func fetchAllRequests(completion: @escaping (Result<[RequestModel], Error>) -> Void) {
+//        
+////        guard (IndustryAuthService.shared.getCurrentUser()?.id) != nil else {
+////            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Kullanıcı ID bulunamadı"])))
+////            return
+////        }
+//        
+//        
+//        let docRef = Firestore.firestore()
+//                .collection("Requests")
+//                .whereField("status", isEqualTo: "pending")
+//        
+//        docRef.getDocuments { snapshot, error in
+//            if let error = error {
+//                completion(.failure(error))
+//                return
+//            }
+//            
+//            guard let documents = snapshot?.documents else {
+//                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Belge bulunamadı"])))
+//                return
+//            }
+//            
+//            let requests: [RequestModel] = documents.compactMap { doc in
+//                let data = doc.data()
+//                
+//                let title = data["requestTitle"] as? String ?? ""
+//                let description = data["requestMessage"] as? String ?? ""
+//                let date = data["createdDate"] as? String ?? ""
+//                let selectedCategories = data["selectedCategories"] as? [String] ?? []
+//                let status = data["status"] as? String ?? ""
+//                let requesterID = data["requesterID"] as? String ?? ""
+//                let requesterName = data["requesterName"] as? String ?? ""
+//                let requesterCategories = data["requesterCategories"] as? String ?? ""
+//                let requesterEmail = data["requesterEmail"] as? String ?? ""
+//                let requesterPhone = data["requesterPhone"] as? String ?? ""
+//                let adminMessage = data["adminMessage"] as? String ?? ""
+//                let requesterAddress = data["requesterAddress"] as? String ?? ""
+//                let requesterImage = data["requesterImage"] as? String ?? ""
+//                let requesterType = data["requesterType"] as? String ?? ""
+//                let requestCategory = data["requestCategory"] as? String ?? ""
+//                let createdDate = data["createdDate"] as? String ?? ""
+//                let requestType = data["requestType"] as? Bool ?? false
+//
+//
+//                
+//
+//
+//
+//
+//
+//
+//                
+//                
+//                return RequestModel(
+//                    id: doc.documentID,
+//                    title: title,
+//                    description: description,
+//                    date: date,
+//                    selectedCategories: selectedCategories,
+//                    status: self.stringToRequestStatus(string: status),
+//                    requesterID: requesterID,
+//                    requesterCategories: requesterCategories,
+//                    requesterName: requesterName,
+//                    requesterAddress: requesterAddress,
+//                    requesterEmail: requesterEmail,
+//                    requesterPhone: requesterPhone,
+//                    adminMessage : adminMessage,
+//                    requesterImage: requesterImage,
+//                    requesterType: requesterType,
+//                    requestCategory: requestCategory,
+//                    createdDate: createdDate,
+//                    requestType: requestType,
+//
+//                    
+//                )
+//            }
+//            
+//            completion(.success(requests))
+//        }
+//    }
     
     func fetchOldRequests(completion: @escaping (Result<[RequestModel], Error>) -> Void) {
         

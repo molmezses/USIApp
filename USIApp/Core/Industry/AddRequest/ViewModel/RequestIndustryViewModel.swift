@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import FirebaseFirestore
 class RequestIndustryViewModel: ObservableObject {
     
     @Published var requests: [RequestModel] = []
@@ -24,6 +24,9 @@ class RequestIndustryViewModel: ObservableObject {
     @Published var alertMessage : String = ""
     
     @Published var isOpenRequest: Bool = false
+    @Published var universities: [String] = []
+    @Published var selectedUniversities: [String] = []
+    @Published var searchText: String = ""
     
     let categories: [String] = [
         "Yapay Zeka",
@@ -77,8 +80,65 @@ class RequestIndustryViewModel: ObservableObject {
         "Sosyal Sorumluluk Projeleri"
     ]
     
+   
+    
     init() {
         loadRequests()
+        fetchUniversities()
+    }
+    
+   
+
+
+    func fetchUniversities() {
+        let db = Firestore.firestore()
+    
+        
+        db.collection("Authorities").getDocuments { snapshot, error in
+            
+            if let error = error {
+                print("❌ Firestore Hatası →", error.localizedDescription)
+                return
+            }
+            
+            guard let docs = snapshot?.documents else {
+                print("❌ Snapshot boş")
+                return
+            }
+
+            print("📩 Gelen döküman sayısı:", docs.count)
+
+            self.universities = docs.compactMap { doc in
+                let data = doc.data()
+                print("🔍 Dökmen verisi:", data) // BANA GÖNDER 👇
+
+                return data["universityName"] as? String
+            }
+
+            print("📚 Yüklenen Üniversiteler:", self.universities)
+        }
+    }
+
+    
+    var filteredList: [String] {
+        searchText.isEmpty ? universities :
+        universities.filter { $0.localizedCaseInsensitiveContains(searchText) }
+    }
+
+    func toggleSelect(_ name: String) {
+        if selectedUniversities.contains(name) {
+            selectedUniversities.removeAll { $0 == name }
+        } else {
+            selectedUniversities.append(name)
+        }
+    }
+
+    func selectAll() {
+        selectedUniversities = universities
+    }
+
+    func deselectAll() {
+        selectedUniversities.removeAll()
     }
     
 
@@ -98,12 +158,43 @@ class RequestIndustryViewModel: ObservableObject {
         self.isOpenRequest = false
     }
     
-    func saveRequestData(){
-        IndustryFirestoreService.shared.saveRequest(selectedCategories: selectedCategories, requestTitle: requestTitle, requestMessage: requestMessage, requestType: isOpenRequest) { error in
+    func fetchMatchingAuthorityDocs(from list: [String], completion: @escaping ([String]) -> Void) {
+        let db = Firestore.firestore()
+        var matchedDocuments: [String] = []
+        
+        db.collection("Authorities").getDocuments { snapshot, error in
             if let error = error {
-                print("Hataaaaaa: \(error.localizedDescription)")
-            } else {
-                print("Başarılı : Document added successfully!")
+                print("Firestore hata:", error.localizedDescription)
+                completion([])
+                return
+            }
+            
+            guard let docs = snapshot?.documents else {
+                completion([])
+                return
+            }
+            
+            for doc in docs {
+                if let uniName = doc.get("universityName") as? String {
+                    
+                    if list.contains(uniName) {
+                        matchedDocuments.append(doc.documentID)
+                    }
+                }
+            }
+            
+            completion(matchedDocuments)
+        }
+    }
+    
+    func saveRequestData(){
+        self.fetchMatchingAuthorityDocs(from: selectedUniversities) { ids in
+            IndustryFirestoreService.shared.saveRequest(selectedCategories: self.selectedCategories, requestTitle: self.requestTitle, requestMessage: self.requestMessage, requestType: self.isOpenRequest , documentNames:ids) { error in
+                if let error = error {
+                    print("Hataaaaaa: \(error.localizedDescription)")
+                } else {
+                    print("Başarılı : Document added successfully!")
+                }
             }
         }
         self.clearFields()

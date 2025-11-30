@@ -12,7 +12,6 @@ struct AddRequestMessageView: View {
     @EnvironmentObject var viewModel: RequestIndustryViewModel
     @EnvironmentObject var authViewModel : AuthViewModel
     @Environment(\.dismiss) var dismiss
-    @State var navigateRequestView: Bool = false
     @State var selectedTab = 0
 
     var body: some View {
@@ -124,12 +123,12 @@ struct AddRequestMessageView: View {
                             .padding(.leading)
                     }
                     
-                    Button(action: {
-                        viewModel.saveRequestData()
-                        viewModel.loadRequests()
-                        navigateRequestView = true
-                        viewModel.clearFields()
-                    }) {
+                    NavigationLink {
+                        AddIndustryRequestSelectUniversityView()
+                            .environmentObject(viewModel)
+                            .environmentObject(authViewModel)
+                            .navigationBarBackButtonHidden()
+                    }label:{
                         Text("İleri")
                             .fontWeight(.semibold)
                             .foregroundColor(.white)
@@ -145,12 +144,7 @@ struct AddRequestMessageView: View {
             }
             .background(Color(.systemGroupedBackground))
         }
-        .navigationDestination(isPresented: $navigateRequestView) {
-            IndustryTabView(selectedTab: 0)
-                .environmentObject(authViewModel)
-                .environmentObject(viewModel)
-                .navigationBarBackButtonHidden()
-        }
+
     }
 }
 

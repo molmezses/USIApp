@@ -23,11 +23,11 @@ struct ContentView: View {
                 let domain = UserDomainService.shared.domainFromEmail(email)
                 
                 switch domain {
-                case "ahievran.edu.tr":
+                case "ahievran.edu.tr" , "nisantasi.edu.tr":
                     AcademicianTabView(selectedTab: 1)
                         .environmentObject(authViewModel)
                         .transition(.move(edge: .trailing).combined(with: .opacity))
-                case "ogr.ahievran.edu.tr":
+                case "ogr.ahievran.edu.tr" , "ogr.nisantasi.edu.tr":
                     StudentTabView(selectedTab: 0)
                         .environmentObject(authViewModel)
                         .transition(.move(edge: .trailing).combined(with: .opacity))
