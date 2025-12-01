@@ -273,7 +273,7 @@ struct RequestInfoAdminView: View {
                 }
                 .background(Color(.systemGroupedBackground))
             }
-            .navigationDestination(isPresented: $navigate, destination: {
+            .navigationDestination(isPresented: $viewModel.navigate, destination: {
                 PendingRequestView()
                     .navigationBarBackButtonHidden()
             })
@@ -281,7 +281,7 @@ struct RequestInfoAdminView: View {
                 
                 Button("tamam", role: .cancel) {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.15){
-                        self.navigate = true
+                        viewModel.navigate = true
                     }
                 }
             } message: {

@@ -9,6 +9,7 @@ import Foundation
 import Firebase
 import FirebaseFirestore
 import SwiftUI
+import FirebaseAuth
 
 
 class AdminUserFirestoreService{
@@ -21,60 +22,138 @@ class AdminUserFirestoreService{
     
     func approvRequest(documentId: String , adminMessage: String, selectedAcademians: [AcademicianInfo] , completion: @escaping (Result<Void, Error>) -> Void){
         
-        let academiciansIdArray = selectedAcademians.map{ $0.id}
         
-        
-        db.document(documentId).updateData([
-            "status": "approved",
-            "adminMessage": adminMessage,
-            "selectedAcademiciansId" : academiciansIdArray
-        ]) { error in
-            if let error = error {
-                print("Error updating document: \(error)")
-                completion(.failure(error))
-            } else {
-                print("Document successfully updated")
-                completion(.success(()))
+        self.fetchAuthorityDocForCurrentUser { authorityDocId in
+            guard let authorityDocId = authorityDocId else{
+                print("AuthorityDocID bulunamadı!")
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Authority bulunamadı"])))
+                return
             }
+            
+            let academiciansIdArray = selectedAcademians.map{ $0.id}
+            
+            
+            self.db.document(documentId).updateData([
+                "status.\(authorityDocId)": "approved",
+                "adminMessage": adminMessage,
+                "selectedAcademiciansId" : academiciansIdArray
+            ]) { error in
+                if let error = error {
+                    print("Error updating document: \(error)")
+                    completion(.failure(error))
+                } else {
+                    print("Document successfully updated")
+                    completion(.success(()))
+                }
+            }
+            
         }
+        
+        
         
     }
     
+
+    
+    
+    func fetchAuthorityDocForCurrentUser(completion: @escaping (String?) -> Void) {
+        let db = Firestore.firestore()
+
+        guard let email = Auth.auth().currentUser?.email else {
+            print(" Kullanıcı email bulunamadı")
+            completion(nil)
+            return
+        }
+
+        let domain = email.components(separatedBy: "@").last ?? ""
+        print(" Aranan domain:", domain)
+
+        db.collection("Authorities").getDocuments { snapshot, error in
+            if let error = error {
+                print("Firestore Hata:", error.localizedDescription)
+                completion(nil)
+                return
+            }
+
+            guard let documents = snapshot?.documents else {
+                completion(nil)
+                return
+            }
+
+            for doc in documents {
+                let data = doc.data()
+
+                let student = data["student"] as? String
+                let academician = data["academician"] as? String
+                let universityName = data["universityName"] as? String
+
+                if student == domain || academician == domain || universityName == domain {
+                    print("Eşleşen bulundu:", doc.documentID)
+                    completion(doc.documentID)
+                    return
+                }
+            }
+
+            print(" Hiçbir field eşleşmedi — domain sistemde yok")
+            completion(nil)
+        }
+    }
+
     func approvOpenRequest(documentId: String , adminMessage: String  , completion: @escaping (Result<Void, Error>) -> Void){
         
-        
-        
-        db.document(documentId).updateData([
-            "status": "approved",
-            "adminMessage": adminMessage,
-        ]) { error in
-            if let error = error {
-                print("Error updating document: \(error)")
-                completion(.failure(error))
-            } else {
-                print("Document successfully updated")
-                completion(.success(()))
+        self.fetchAuthorityDocForCurrentUser { authorityDocId in
+            guard let authorityDocId = authorityDocId else{
+                print("AuthorityDocID bulunamadı!")
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Authority bulunamadı"])))
+                return
+            }
+            
+            self.db.document(documentId).updateData([
+                "status.\(authorityDocId)": "approved",
+                "adminMessage": adminMessage
+            ]) { error in
+                if let error = error {
+                    print("Error updating document: \(error)")
+                    completion(.failure(error))
+                } else {
+                    print("Document successfully updated")
+                    completion(.success(()))
+                }
             }
         }
         
+       
+        
     }
-    
+
+
     
     func rejectRequest(documentId: String , adminMessage: String, completion: @escaping (Result<Void, Error>) -> Void){
         
-        db.document(documentId).updateData([
-            "status": "rejected",
-            "adminMessage": adminMessage
-        ]) { error in
-            if let error = error {
-                print("Error updating document: \(error)")
-                completion(.failure(error))
-            } else {
-                print("Document successfully updated")
-                completion(.success(()))
+        
+        
+        self.fetchAuthorityDocForCurrentUser { authorityDocId in
+            
+            guard let authorityDocId = authorityDocId else {
+                       print("AuthorityDocID bulunamadı!")
+                       completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Authority bulunamadı"])))
+                       return
+                   }
+            
+            self.db.document(documentId).updateData([
+                "status.\(authorityDocId)": "rejected",
+                "adminMessage": adminMessage
+            ]) { error in
+                if let error = error {
+                    print("Error updating document: \(error)")
+                    completion(.failure(error))
+                } else {
+                    print("Document successfully updated")
+                    completion(.success(()))
+                }
             }
         }
-        
+
     }
     
     
