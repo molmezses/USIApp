@@ -107,7 +107,6 @@ struct AddIndustryRequestSelectUniversityView: View {
                 viewModel.saveRequestData()
                 viewModel.loadRequests()
                 navigateRequestView = true
-                viewModel.clearFields()
             } label: {
                 Text("Kaydet")
                     .foregroundColor(.white)

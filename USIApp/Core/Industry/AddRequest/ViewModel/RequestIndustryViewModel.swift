@@ -197,8 +197,9 @@ class RequestIndustryViewModel: ObservableObject {
                 }
             }
         }
-        self.clearFields()
-        self.loadRequests()
+        DispatchQueue.main.async {
+            self.loadRequests()
+        }
     }
     
     func loadRequests() {
@@ -215,8 +216,6 @@ class RequestIndustryViewModel: ObservableObject {
                     }
                     return date1 > date2
                 })
-
-                print("Başarılı: Talepler tarih sırasına göre sıralandı!")
 
             case .failure(let failure):
                 print("Hata: \(failure.localizedDescription)")
