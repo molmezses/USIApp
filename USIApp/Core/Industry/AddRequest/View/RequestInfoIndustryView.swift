@@ -41,13 +41,13 @@ struct RequestInfoIndustryView: View {
                         Text("Talep Durumu")
                             .font(.subheadline.bold())
                         
-                        if request.requesterType == "industry"{
+                        if request.requesterType == "industry" && !(request.requestType){
                             VStack(alignment: .leading, spacing: 10) {
-                                Label("Değerlendirme Durumu", systemImage: "clock")
+                                Label("Değerlendiriliyor", systemImage: "clock")
                                     .foregroundColor(Color("logoBlue"))
                                 
                                 
-                                Text("")
+                                
                                 
                                 Divider()
                                     .padding(.vertical , 2)

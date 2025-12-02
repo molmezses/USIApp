@@ -588,7 +588,7 @@ class FirestoreService{
                             description: data["requestMessage"] as? String ?? "",
                             date: data["createdDate"] as? String ?? "",
                             selectedCategories: [""],
-                            status: self.stringToRequestStatus(string: statusString),  // <-- doğru değer artık burada
+                            status: self.stringToRequestStatus(string: statusString),
                             requesterID: data["requesterID"] as? String ?? "",
                             requesterCategories: "",
                             requesterName : data["requesterName"] as? String ?? "",
