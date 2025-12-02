@@ -20,24 +20,35 @@ class AdminUserFirestoreService{
     
     let db = Firestore.firestore().collection("Requests")
     
-    func approvRequest(documentId: String , adminMessage: String, selectedAcademians: [AcademicianInfo] , completion: @escaping (Result<Void, Error>) -> Void){
-        
+    func approvRequest(documentId: String,
+                       adminMessage: String,
+                       selectedAcademians: [AcademicianInfo],
+                       completion: @escaping (Result<Void, Error>) -> Void) {
         
         self.fetchAuthorityDocForCurrentUser { authorityDocId in
-            guard let authorityDocId = authorityDocId else{
+            
+            guard let authorityDocId = authorityDocId else {
                 print("AuthorityDocID bulunamadı!")
-                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Authority bulunamadı"])))
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [
+                    NSLocalizedDescriptionKey: "Authority bulunamadı"
+                ])))
                 return
             }
             
-            let academiciansIdArray = selectedAcademians.map{ $0.id}
+            let academiciansIdArray = selectedAcademians.map { $0.id }
             
+            var updateData: [String: Any] = [
+                "status.\(authorityDocId)" : "approved",
+                "adminMessage"            : adminMessage,
+                "selectedAcademiciansId"  : FieldValue.arrayUnion(academiciansIdArray)
+            ]
             
-            self.db.document(documentId).updateData([
-                "status.\(authorityDocId)": "approved",
-                "adminMessage": adminMessage,
-                "selectedAcademiciansId" : academiciansIdArray
-            ]) { error in
+            for id in academiciansIdArray {
+                updateData["academicianResponses.\(id)"] = "pending"
+            }
+            
+            self.db.document(documentId).updateData(updateData) { error in
+                
                 if let error = error {
                     print("Error updating document: \(error)")
                     completion(.failure(error))
@@ -46,12 +57,9 @@ class AdminUserFirestoreService{
                     completion(.success(()))
                 }
             }
-            
         }
-        
-        
-        
     }
+
     
 
     

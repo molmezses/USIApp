@@ -338,39 +338,7 @@ class FirestoreService{
     }
     
 
-    func fetchMatchingOldRequestDocumentIDs(completion: @escaping (Result<[String], Error>) -> Void) {
-        let db = Firestore.firestore()
-        
-        if let userId = Auth.auth().currentUser?.uid{
-            db.collection("OldRequests").getDocuments { snapshot, error in
-                if let error = error {
-                    completion(.failure(error))
-                    return
-                }
-                
-                guard let documents = snapshot?.documents else {
-                    completion(.failure(
-                        NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey  :"Hata"])
-                    ))
-                    return
-                }
-                
-                var matchingDocumentIDs: [String] = []
-                
-                        
-                        for document in documents {
-                            let data = document.data()
-                            
-                            if let selectedIds = data["selectedAcademiciansId"] as? [String],
-                               selectedIds.contains(userId) {
-                                matchingDocumentIDs.append(document.documentID)
-                            }
-                        }
-                        
-                        completion(.success(matchingDocumentIDs))
-            }
-        }
-    }
+  
     
     func stringToRequestStatus(string stringData: String) -> RequestStatus {
         
@@ -388,91 +356,88 @@ class FirestoreService{
     }
     
     func fetchAcademicianPendingRequests(completion: @escaping (Result<[RequestModel], Error>) -> Void) {
-        fetchMatchingOldRequestDocumentIDs { result in
-            switch result {
-            case .success(let matchingDocumentIDs):
-                var fetchedRequests: [RequestModel] = []
-                let group = DispatchGroup()
-                let docRef = Firestore.firestore().collection("OldRequests")
+        
+        guard let currentAcademicianID = Auth.auth().currentUser?.uid else {
+            completion(.failure(NSError(domain: "", code: -1, userInfo: [
+                NSLocalizedDescriptionKey : "Oturum açmış akademisyen bulunamadı"
+            ])))
+            return
+        }
+        
+        let db = Firestore.firestore().collection("Requests")
 
-                for documentId in matchingDocumentIDs {
-                    group.enter()
-
-                    docRef.document(documentId).getDocument { snapshot, error in
-                        defer { group.leave() }
-
-                        if let error = error {
-                            print("Hata: \(error.localizedDescription)")
-                            return
-                        }
-
-                        guard let snapshot = snapshot, let data = snapshot.data() else {
-                            print("Veri yok: \(documentId)")
-                            return
-                        }
-
-                        let id = snapshot.documentID
-                        let title = data["requestTitle"] as? String ?? ""
-                        let description = data["requestMessage"] as? String ?? ""
-                        let date = data["createdDate"] as? String ?? ""
-                        let selectedCategories = data["selectedCategories"] as? [String] ?? []
-                        let statusString = data["status"] as? String ?? "pending"
-                        let status =  self.stringToRequestStatus(string: statusString)
-                        let requesterID = data["requesterID"] as? String ?? ""
-                        let requesterCategories = data["requesterCategories"] as? String ?? ""
-                        let requesterName = data["requesterName"] as? String ?? ""
-                        let requesterEmail = data["requesterEmail"] as? String ?? ""
-                        let requesterPhone = data["requesterPhone"] as? String ?? ""
-                        let adminMessage = data["adminMessage"] as? String ?? ""
-                        let requesterAddress = data["requesterAddress"] as? String ?? ""
-                        let requesterImage = data["requesterImage"] as? String ?? ""
-                        let requesterType = data["requesterType"] as? String ?? ""
-                        let requestCategory = data["requestCategory"] as? String ?? "Kategori bulunamadı"
-                        let createdDate = data["createdDate"] as? String ?? ""
-                        let requestType = data["requestType"] as? Bool ?? false
-
-
-
-                        let request = RequestModel(
-                            id: id,
-                            title: title,
-                            description: description,
-                            date: date,
-                            selectedCategories: selectedCategories,
-                            status: status,
-                            requesterID: requesterID,
-                            requesterCategories: requesterCategories,
-                            requesterName: requesterName,
-                            requesterAddress: requesterAddress,
-                            requesterEmail: requesterEmail,
-                            requesterPhone: requesterPhone,
-                            adminMessage: adminMessage,
-                            requesterImage: requesterImage,
-                            requesterType: requesterType,
-                            requestCategory:requestCategory,
-                            createdDate: createdDate,
-                            requestType: requestType
-                        )
-
-                        fetchedRequests.append(request)
-                    }
-                }
-
-                group.notify(queue: .main) {
-                    completion(.success(fetchedRequests))
-                }
-
-            case .failure(let error):
-                print("ID'leri çekerken hata: \(error.localizedDescription)")
+        db.getDocuments { snapshot, error in
+            
+            if let error = error {
                 completion(.failure(error))
+                return
+            }
+            
+            guard let documents = snapshot?.documents else {
+                completion(.success([]))
+                return
+            }
+            
+            var fetchedRequests: [RequestModel] = []
+            let group = DispatchGroup() // 🔥 ASENKRON BEKLETMEK İÇİN
+            
+            for doc in documents {
+                let data = doc.data()
+                
+                let academicians = data["selectedAcademiciansId"] as? [String] ?? []
+                
+           
+                guard academicians.contains(currentAcademicianID) else { continue }
+                
+                group.enter()
+                
+                AdminUserFirestoreService.shared.fetchAuthorityDocForCurrentUser { authorityDocId in
+                    
+                    let statusString = (authorityDocId != nil) ?
+                        data["status.\(authorityDocId!)"] as? String ?? "pending" :
+                        "pending"
+                    
+                    let status = self.stringToRequestStatus(string: statusString)
+                    
+                    fetchedRequests.append(
+                        RequestModel(
+                            id: doc.documentID,
+                            title: data["requestTitle"] as? String ?? "",
+                            description: data["requestMessage"] as? String ?? "",
+                            date: data["createdDate"] as? String ?? "",
+                            selectedCategories: data["selectedCategories"] as? [String] ?? [],
+                            status: status,
+                            requesterID: data["requesterID"] as? String ?? "",
+                            requesterCategories: data["requesterCategories"] as? String ?? "",
+                            requesterName: data["requesterName"] as? String ?? "",
+                            requesterAddress: data["requesterAddress"] as? String ?? "",
+                            requesterEmail: data["requesterEmail"] as? String ?? "",
+                            requesterPhone: data["requesterPhone"] as? String ?? "",
+                            adminMessage: data["adminMessage"] as? String ?? "",
+                            requesterImage: data["requesterImage"] as? String ?? "",
+                            requesterType: data["requesterType"] as? String ?? "",
+                            requestCategory: data["requestCategory"] as? String ?? "",
+                            createdDate: data["createdDate"] as? String ?? "",
+                            requestType: data["requestType"] as? Bool ?? false
+                        )
+                    )
+                    
+                    group.leave() // ⬅ async işlem bitti
+                }
+            }
+            
+            group.notify(queue: .main) {
+                completion(.success(fetchedRequests))
             }
         }
     }
+
+
     
 
     func getAcademicianResponse(for documentID: String, completion: @escaping (String?) -> Void) {
         let db = Firestore.firestore()
-        let docRef = db.collection("OldRequests").document(documentID)
+        let docRef = db.collection("Requests").document(documentID)
 
         docRef.getDocument { (document, error) in
             if let error = error {
@@ -498,7 +463,7 @@ class FirestoreService{
 
     func updateAcademicianResponse(documentID: String, newStatus: String, completion: @escaping (Error?) -> Void) {
         let db = Firestore.firestore()
-        let docRef = db.collection("OldRequests").document(documentID)
+        let docRef = db.collection("Requests").document(documentID)
         
         
                 
@@ -600,53 +565,51 @@ class FirestoreService{
                     return
                 }
                 
-                let requests: [RequestModel] = documents.compactMap { doc in
-                    let data = doc.data()
+                AdminUserFirestoreService.shared.fetchAuthorityDocForCurrentUser { authorityDocId in
+                    guard let authorityDocId = authorityDocId else {
+                        print("AuthorityDocID bulunamadı!")
+                        completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Authority bulunamadı"])))
+                        return
+                    }
                     
-                    let title = data["requestTitle"] as? String ?? ""
-                    let description = data["requestMessage"] as? String ?? ""
-                    let date = data["createdDate"] as? String ?? ""
-//                        let selectedCategories = data["selectedCategories"] as? [String] ?? []
-                    let status = data["status"] as? String ?? ""
-                    let requesterID = data["requesterID"] as? String ?? ""
-                    let requesterName = data["requesterName"] as? String ?? ""
-                    let requesterEmail = data["requesterEmail"] as? String ?? ""
-                    let requesterPhone = data["requesterPhone"] as? String ?? ""
-                    let adminMessage = data["adminMessage"] as? String ?? ""
-//                        let requesterAddress = data["requesterAddress"] as? String ?? ""
-                    let requesterImage = data["requesterImage"] as? String ?? ""
-                    let requesterType = data["requesterType"] as? String ?? ""
-                    let requestCategory = data["requestCategory"] as? String ?? ""
-                    let createdDate = data["createdDate"] as? String ?? ""
-                    let requestType = data["requestType"] as? Bool ?? false
+                    let requests: [RequestModel] = documents.compactMap { doc in
+                        let data = doc.data()
 
+                        let statusMap = data["status"] as? [String: Any]
+                        let statusString = statusMap?[authorityDocId] as? String ?? "yok"
 
+                        print("📍 AuthorityDocID =", authorityDocId)
+                        print("📍 Status Map =", statusMap ?? [:])
+                        print("📍 Seçilen Status =", statusString)
+
+                        return RequestModel(
+                            id: doc.documentID,
+                            title: data["requestTitle"] as? String ?? "",
+                            description: data["requestMessage"] as? String ?? "",
+                            date: data["createdDate"] as? String ?? "",
+                            selectedCategories: [""],
+                            status: self.stringToRequestStatus(string: statusString),  // <-- doğru değer artık burada
+                            requesterID: data["requesterID"] as? String ?? "",
+                            requesterCategories: "",
+                            requesterName : data["requesterName"] as? String ?? "",
+                            requesterAddress: "",
+                            requesterEmail: data["requesterEmail"] as? String ?? "",
+                            requesterPhone: data["requesterPhone"] as? String ?? "",
+                            adminMessage : data["adminMessage"] as? String ?? "",
+                            requesterImage: data["requesterImage"] as? String ?? "",
+                            requesterType: data["requesterType"] as? String ?? "",
+                            requestCategory: data["requestCategory"] as? String ?? "",
+                            createdDate: data["createdDate"] as? String ?? "",
+                            requestType: data["requestType"] as? Bool ?? false
+                        )
+                    }
 
                     
-                    
-                    return RequestModel(
-                        id: doc.documentID,
-                        title: title,
-                        description: description,
-                        date: date,
-                        selectedCategories: [""],
-                        status: self.stringToRequestStatus(string: status),
-                        requesterID: requesterID,
-                        requesterCategories: "",
-                        requesterName : requesterName,
-                        requesterAddress: "",
-                        requesterEmail: requesterEmail,
-                        requesterPhone: requesterPhone,
-                        adminMessage : adminMessage,
-                        requesterImage: requesterImage,
-                        requesterType: requesterType,
-                        requestCategory: requestCategory,
-                        createdDate: createdDate,
-                        requestType: requestType,
-                    )
+                    completion(.success(requests))
+
                 }
                 
-                completion(.success(requests))
+                
             }
         }
 
