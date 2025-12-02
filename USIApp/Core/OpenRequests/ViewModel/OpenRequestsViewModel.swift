@@ -63,10 +63,10 @@ class OpenRequestsViewModel: ObservableObject {
         if Auth.auth().currentUser != nil{
             
             if let user = Auth.auth().currentUser?.email{
-                if user.hasSuffix("@ahievran.edu.tr"){
+                if user.hasSuffix("@ahievran.edu.tr") || user.hasSuffix("@nisantasi.edu.tr") {
                     return "Academician"
                 }
-                if user.hasSuffix("@ogr.ahievran.edu.tr"){
+                if user.hasSuffix("@ogr.ahievran.edu.tr") || user.hasSuffix("@ogr.nisantasi.edu.tr"){
                     return "Students"
                 }else{
                     return "Industry"
@@ -81,11 +81,11 @@ class OpenRequestsViewModel: ObservableObject {
 //
 //    func fetchUserId(completion: @escaping (String?) -> Void) {
 //        if fetchUserDomain() == "AcademicianInfo" {
-//            
+//
 //            if let userId = Auth.auth().currentUser?.uid{
-//                
+//
 //            }
-//            
+//
 //            FirestoreService.shared.fetchAcademicianDocumentById(byEmail: Auth.auth().currentUser?.email ?? "") { result in
 //                switch result {
 //                case .success(let userId):
@@ -242,4 +242,3 @@ class OpenRequestsViewModel: ObservableObject {
     
     
 }
-

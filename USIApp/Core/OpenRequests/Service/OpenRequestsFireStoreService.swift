@@ -14,14 +14,12 @@ class OpenRequestsFireStoreService {
     
     static let shared = OpenRequestsFireStoreService()
     
-    func fetchOpenRequests(excluding blockedIds: [String] = [] , completion: @escaping (Result<[RequestModel], Error>) -> Void) {
-        
-        
+    func fetchOpenRequests(excluding blockedIds: [String] = [], completion: @escaping (Result<[RequestModel], Error>) -> Void) {
         
         let docRef = Firestore.firestore()
-                .collection("Requests")
+            .collection("Requests")
             .whereField("requestType", isEqualTo: true)
-            .whereField( "status", isEqualTo: "approved")
+            
         
         docRef.getDocuments { snapshot, error in
             if let error = error {
@@ -30,64 +28,61 @@ class OpenRequestsFireStoreService {
             }
             
             guard let documents = snapshot?.documents else {
-                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Belge bulunamadı"])))
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [
+                    NSLocalizedDescriptionKey: "Belge bulunamadı"
+                ])))
+                print("Belge bulunamadı")
                 return
             }
             
             let requests: [RequestModel] = documents.compactMap { doc in
                 let data = doc.data()
                 
-                let title = data["requestTitle"] as? String ?? ""
-                let description = data["requestMessage"] as? String ?? ""
-                let date = data["createdDate"] as? String ?? ""
-                let selectedCategories = data["selectedCategories"] as? [String] ?? []
-                let status = data["status"] as? String ?? ""
-                let requesterID = data["requesterID"] as? String ?? ""
-                let requesterName = data["requesterName"] as? String ?? ""
-                let requesterCategories = data["requesterCategories"] as? String ?? ""
-                let requesterEmail = data["requesterEmail"] as? String ?? ""
-                let requesterPhone = data["requesterPhone"] as? String ?? ""
-                let adminMessage = data["adminMessage"] as? String ?? ""
-                let requesterAddress = data["requesterAddress"] as? String ?? ""
-                let requesterImage = data["requesterImage"] as? String ?? ""
-                let requesterType = data["requesterType"] as? String ?? ""
-                let createdDate = data["createdDate"] as? String ?? ""
-                let requestType = data["requestType"] as? Bool == false
-                let requestCategory = data["requestCategory"] as? String ?? "hatali"
-                
-                if blockedIds.contains(requesterID){
+                if let statusDict = data["status"] as? [String: String] {
+
+                    let hasApproved = statusDict.values.contains("approved")
+                    
+                    if hasApproved == false {
+                        print("hiçbir üniversite bu talebi onaylamamış → gösterme")
+                        return nil
+                    }
+                } else {
+                    print("status yoksa bu belgeyi atla")
                     return nil
                 }
 
-
-                
+                if let requesterID = data["requesterID"] as? String,
+                   blockedIds.contains(requesterID) {
+                    return nil
+                }
                 
                 return RequestModel(
                     id: doc.documentID,
-                    title: title,
-                    description: description,
-                    date: date,
-                    selectedCategories: selectedCategories,
-                    status: self.stringToRequestStatus(string: status),
-                    requesterID: requesterID,
-                    requesterCategories: requesterCategories,
-                    requesterName : requesterName,
-                    requesterAddress: requesterAddress,
-                    requesterEmail: requesterEmail,
-                    requesterPhone: requesterPhone,
-                    adminMessage : adminMessage,
-                    requesterImage: requesterImage,
-                    requesterType: requesterType,
-                    requestCategory: requestCategory,
-                    createdDate: createdDate,
-                    requestType: requestType,
-
+                    title: data["requestTitle"] as? String ?? "",
+                    description: data["requestMessage"] as? String ?? "",
+                    date: data["createdDate"] as? String ?? "",
+                    selectedCategories: data["selectedCategories"] as? [String] ?? [],
+                    status: .approved, 
+                    requesterID: data["requesterID"] as? String ?? "",
+                    requesterCategories: data["requesterCategories"] as? String ?? "",
+                    requesterName: data["requesterName"] as? String ?? "",
+                    requesterAddress: data["requesterAddress"] as? String ?? "",
+                    requesterEmail: data["requesterEmail"] as? String ?? "",
+                    requesterPhone: data["requesterPhone"] as? String ?? "",
+                    adminMessage: data["adminMessage"] as? String ?? "",
+                    requesterImage: data["requesterImage"] as? String ?? "",
+                    requesterType: data["requesterType"] as? String ?? "",
+                    requestCategory: data["requestCategory"] as? String ?? "",
+                    createdDate: data["createdDate"] as? String ?? "",
+                    requestType: data["requestType"] as? Bool == false
                 )
             }
             
             completion(.success(requests))
         }
     }
+
+
     
     func stringToRequestStatus(string stringData: String) -> RequestStatus {
         
@@ -173,57 +168,72 @@ class OpenRequestsFireStoreService {
         }
     }
     
-    func blockUser(requesterID: String ,completion: @escaping (Result<Void, Error>) -> Void){
-        
-        let docRef = Firestore.firestore()
-        
-        var userType: String = ""
-        var currentUserId: String = ""
-        
-        guard (Auth.auth().currentUser?.email) != nil else{
-            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey : "Engelleyebilmeniz için oturum açmanız gereklidir"])));
-            return
-        }
-
-        if let userEmail = Auth.auth().currentUser?.email {
-            if userEmail.hasSuffix("@ahievran.edu.tr"){
-                userType = "Academician"
-            }else if userEmail.hasSuffix("@ogr.ahievran.edu.tr"){
-                userType = "Students"
-            }else{
-                userType = "Industry"
+    func fetchUserDomain() -> String{
+        if Auth.auth().currentUser != nil{
+            
+            if let user = Auth.auth().currentUser?.email{
+                if user.hasSuffix("@ahievran.edu.tr") || user.hasSuffix("@nisantasi.edu.tr") {
+                    return "Academician"
+                }
+                if user.hasSuffix("@ogr.ahievran.edu.tr") || user.hasSuffix("@ogr.nisantasi.edu.tr"){
+                    return "Students"
+                }else{
+                    return "Industry"
+                }
             }
             
         }
         
-        if userType == "Academician" {
+        return "Industry"
+    }
+    
+    func blockUser(requesterID: String ,completion: @escaping (Result<Void, Error>) -> Void){
+        
+        let docRef = Firestore.firestore()
+        
+        let userType: String = self.fetchUserDomain()
+        
+        if let currentUserId = Auth.auth().currentUser?.uid{
             
-            if let userId = Auth.auth().currentUser?.uid{
+            guard (Auth.auth().currentUser?.email) != nil else{
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey : "Engelleyebilmeniz için oturum açmanız gereklidir"])));
+                return
+            }
+
+            
+            
+            if userType == "Academician" {
                 
-                currentUserId = userId
+                    
+                    let userRef = docRef.collection(userType).document(currentUserId)
+                   
+                   userRef.updateData(["blockedUsers" : FieldValue.arrayUnion([requesterID])])
+                    
+                    completion(.success(()))
+                    
+                
+                
+                
+                
+                        
+            }else {
                 let userRef = docRef.collection(userType).document(currentUserId)
                
                userRef.updateData(["blockedUsers" : FieldValue.arrayUnion([requesterID])])
                 
                 completion(.success(()))
-                
-            
             }
             
             
-                    
-        }else {
-            currentUserId = Auth.auth().currentUser?.uid ?? ""
-            let userRef = docRef.collection(userType).document(currentUserId)
-           
-           userRef.updateData(["blockedUsers" : FieldValue.arrayUnion([requesterID])])
             
-            completion(.success(()))
+            print("\(AuthService.shared.getCurrentUser()?.email == "") mailli kullanıcı \(requesterID) id li kullanıcıyı eengelledi")
+            
+            
+        
+        
         }
         
         
-        
-        print("\(AuthService.shared.getCurrentUser()?.email == "") mailli kullanıcı \(requesterID) id li kullanıcıyı eengelledi")
         
         
         
