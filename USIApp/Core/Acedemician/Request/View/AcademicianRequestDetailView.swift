@@ -204,6 +204,18 @@ struct AcademicianRequestDetailView: View {
                         
                         Divider()
                         
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Talep Açıklaması")
+                                .font(.subheadline)
+                                .bold()
+                            
+                            Text(request.title)
+                                .font(.body)
+                                .padding()
+                                .background(Color.gray.opacity(0.1))
+                                .cornerRadius(8)
+                        }
+                        
                         // Açıklama
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Talep Açıklaması")

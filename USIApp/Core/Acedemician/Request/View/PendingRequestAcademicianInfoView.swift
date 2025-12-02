@@ -37,12 +37,10 @@ struct PendingRequestAcademicianInfoView: View {
                 .padding(.top , 6)
             }
             .refreshable {
-                viewModel.fetchMatchingOldRequestDocumentIDs()
                 viewModel.fetchAcademicianPendingRequests()
             }
         }
         .onAppear {
-            viewModel.fetchMatchingOldRequestDocumentIDs()
             viewModel.fetchAcademicianPendingRequests()
         }
     }

@@ -226,6 +226,9 @@ class IndustryFirestoreService {
         
     }
     
+
+
+    
     func fetchIndustryRequests(completion: @escaping (Result<[RequestModel], Error>) -> Void) {
         
         guard let requesterId = IndustryAuthService.shared.getCurrentUser()?.id else {

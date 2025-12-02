@@ -41,19 +41,13 @@ struct RequestInfoIndustryView: View {
                         Text("Talep Durumu")
                             .font(.subheadline.bold())
                         
-                        switch request.status {
-                        case .pending:
-                            HStack {
-                                ProgressView()
-                                Label("Gönderildi – Cevap Bekleniyor", systemImage: "clock")
-                                    .foregroundColor(.orange)
-                                    .frame(maxWidth: .infinity , alignment:.leading)
-                                
-                            }
-                        case .approved:
+                        if request.requesterType == "industry" && !(request.requestType){
                             VStack(alignment: .leading, spacing: 10) {
-                                Label("Talep Onaylandı", systemImage: "checkmark.seal")
-                                    .foregroundColor(.green)
+                                Label("Değerlendiriliyor", systemImage: "clock")
+                                    .foregroundColor(Color("logoBlue"))
+                                
+                                
+                                
                                 
                                 Divider()
                                     .padding(.vertical , 2)
@@ -94,29 +88,41 @@ struct RequestInfoIndustryView: View {
                                     }
                                 }
                             }
-                        case .rejected:
-                            VStack(alignment: .leading, spacing: 10) {
-                                Label("Talep Reddedildi", systemImage: "xmark.octagon.fill")
-                                    .foregroundColor(.red)
-                                
-                                Divider()
-                                    .padding(.vertical , 2)
-                                
-                                VStack(spacing:4){
-                                    Text("Reddedilme nedeni: ")
-                                        .font(.body)
-                                        .foregroundColor(.black)
+                        }else{
+                            switch request.status {
+                            case .pending:
+                                HStack {
+                                    ProgressView()
+                                    Label("Gönderildi – Cevap Bekleniyor", systemImage: "clock")
+                                        .foregroundColor(.orange)
                                         .frame(maxWidth: .infinity , alignment:.leading)
-                                    Text(request.adminMessage)
-                                        .font(.body)
-                                        .foregroundColor(.secondary)
-                                        .frame(maxWidth: .infinity , alignment:.leading)
+                                    
                                 }
-                                Divider()
-                                    .padding(.vertical , 2)
-                                
-                                VStack {
+                            case .approved:
+                                VStack(alignment: .leading, spacing: 10) {
+                                    Label("Talep Onaylandı", systemImage: "checkmark.seal")
+                                        .foregroundColor(.green)
+                                    
+                                    Divider()
+                                        .padding(.vertical , 2)
+                                    
+                                    VStack(spacing:4){
+                                        Text("Mesaj : ")
+                                            .font(.body)
+                                            .foregroundColor(.black)
+                                            .frame(maxWidth: .infinity , alignment:.leading)
+                                        
+                                        Text(request.adminMessage)
+                                            .font(.body)
+                                            .foregroundColor(.secondary)
+                                            .frame(maxWidth: .infinity , alignment:.leading)
+                                    }
+                                    
+                                    Divider()
+                                        .padding(.vertical , 2)
+                                    
                                     HStack(alignment: .top, spacing: 12) {
+                                        
                                         Image("ünilogo")
                                             .resizable()
                                             .frame(width: 40, height: 40)
@@ -134,10 +140,53 @@ struct RequestInfoIndustryView: View {
                                                 .font(.caption)
                                                 .foregroundColor(.secondary)
                                         }
+                                    }
+                                }
+                            case .rejected:
+                                VStack(alignment: .leading, spacing: 10) {
+                                    Label("Talep Reddedildi", systemImage: "xmark.octagon.fill")
+                                        .foregroundColor(.red)
+                                    
+                                    Divider()
+                                        .padding(.vertical , 2)
+                                    
+                                    VStack(spacing:4){
+                                        Text("Reddedilme nedeni: ")
+                                            .font(.body)
+                                            .foregroundColor(.black)
+                                            .frame(maxWidth: .infinity , alignment:.leading)
+                                        Text(request.adminMessage)
+                                            .font(.body)
+                                            .foregroundColor(.secondary)
+                                            .frame(maxWidth: .infinity , alignment:.leading)
+                                    }
+                                    Divider()
+                                        .padding(.vertical , 2)
+                                    
+                                    VStack {
+                                        HStack(alignment: .top, spacing: 12) {
+                                            Image("ünilogo")
+                                                .resizable()
+                                                .frame(width: 40, height: 40)
+                                                .foregroundColor(.blue)
+                                            
+                                            VStack(alignment: .leading, spacing: 4) {
+                                                Text("Üniversite Sanayi İşbirliği")
+                                                    .font(.subheadline.bold())
+                                                Text("Talep Değerlendirme Kurulu ")
+                                                    .font(.subheadline)
+                                                Text("Mail: tto@ahievran.edu.tr")
+                                                    .font(.caption)
+                                                    .foregroundColor(.secondary)
+                                                Text("Tel: 0850-441-02-44")
+                                                    .font(.caption)
+                                                    .foregroundColor(.secondary)
+                                            }
+                                            
+                                        }
+                                        
                                         
                                     }
-                                    
-                                    
                                 }
                             }
                         }
