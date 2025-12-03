@@ -494,7 +494,7 @@ class IndustryFirestoreService {
 //    }
     
     func fetchOldRequests(completion: @escaping (Result<[RequestModel], Error>) -> Void) {
-        guard let currentUserID = IndustryAuthService.shared.getCurrentUser()?.id else {
+        guard (IndustryAuthService.shared.getCurrentUser()?.id) != nil else {
             completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Kullanıcı ID bulunamadı"])))
             return
         }

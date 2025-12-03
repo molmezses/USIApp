@@ -142,7 +142,7 @@ class AdminUserFirestoreService{
         
         self.fetchAuthorityDocForCurrentUser { authorityDocId in
             
-            guard let authorityDocId = authorityDocId else {
+           guard let authorityDocId = authorityDocId else {
                        print("AuthorityDocID bulunamadı!")
                        completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Authority bulunamadı"])))
                        return
@@ -459,16 +459,27 @@ class AdminUserFirestoreService{
     
     
     func getPendingRequestCount(completion: @escaping (Int) -> Void) {
-        Firestore.firestore().collection("Requests")
-            .whereField("status", isEqualTo: "pending")
-            .getDocuments { snapshot, error in
-                if let documents = snapshot?.documents {
-                    print("çekilen Onaylanmış talep  sayısı :")
-                    completion(documents.count)
-                } else {
-                    completion(0)
-                }
+        
+        self.fetchAuthorityDocForCurrentUser { authorityDocId in
+            guard let authorityDocId = authorityDocId else {
+                print("AuthorityDocID bulunamadı!")
+                return
             }
+            
+            
+            Firestore.firestore().collection("Requests")
+                .whereField("status.\(authorityDocId)", isEqualTo: "pending")
+                .getDocuments { snapshot, error in
+                    if let documents = snapshot?.documents {
+                        print("çekilen Onaylanmış talep  sayısı :")
+                        completion(documents.count)
+                    } else {
+                        completion(0)
+                    }
+                }
+        }
+        
+        
     }
     
     func fetchAcademicianResponseCounts(completion: @escaping (Int) -> Void) {

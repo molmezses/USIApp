@@ -260,7 +260,18 @@ struct RequestInfoAdminView: View {
                             if request.status == .pending {
                                 RequestAnswer()
                             } else {
-                                SelectedAcademicianView()
+                                if request.requestType{
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("Başvuran kullanıcılar")
+                                            .font(.subheadline.bold())
+                                            .padding(.bottom)
+                                        ApplyUsersCardView(requestId: request.id)
+                                    }
+                                    
+                                }else{
+                                    SelectedAcademicianView()
+                                }
+                                
                             }
                         }
                         .padding()
