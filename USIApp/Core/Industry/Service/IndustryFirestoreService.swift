@@ -494,89 +494,88 @@ class IndustryFirestoreService {
 //    }
     
     func fetchOldRequests(completion: @escaping (Result<[RequestModel], Error>) -> Void) {
-        
         guard (IndustryAuthService.shared.getCurrentUser()?.id) != nil else {
             completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Kullanıcı ID bulunamadı"])))
             return
         }
-        
-        
-        let docRef = Firestore.firestore()
-                .collection("OldRequests")
-                .whereField("status", in: ["rejected", "approved"])
-        
-        docRef.getDocuments { snapshot, error in
+
+        // 1️⃣ Authorities koleksiyonundan key’leri al
+        Firestore.firestore().collection("Authorities").getDocuments { authoritySnapshot, error in
             if let error = error {
                 completion(.failure(error))
                 return
             }
             
-            guard let documents = snapshot?.documents else {
-                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Belge bulunamadı"])))
+            guard let authorityDocs = authoritySnapshot?.documents else {
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Authorities bulunamadı"])))
                 return
             }
             
-            let requests: [RequestModel] = documents.compactMap { doc in
-                let data = doc.data()
-                
-                let title = data["requestTitle"] as? String ?? ""
-                let description = data["requestMessage"] as? String ?? ""
-                let date = data["createdDate"] as? String ?? ""
-                let selectedCategories = data["selectedCategories"] as? [String] ?? []
-                let status = data["status"] as? String ?? ""
-                let requesterID = data["requesterID"] as? String ?? ""
-                let requesterName = data["requesterName"] as? String ?? ""
-                let requesterCategories = data["requesterCategories"] as? String ?? ""
-                let requesterEmail = data["requesterEmail"] as? String ?? ""
-                let requesterPhone = data["requesterPhone"] as? String ?? ""
-                let adminMessage = data["adminMessage"] as? String ?? ""
-                let approvedAcademicians = data["approvedAcademicians"] as? [String] ?? []
-                let rejectedAcademicians = data["rejectedAcademicians"] as? [String] ?? []
-                let requesterAddress = data["requesterAddress"] as? String ?? ""
-                let requesterImage = data["requesterImage"] as? String ?? ""
-                let requesterType = data["requesterType"] as? String ?? ""
-                let requestCategory = data["requestCategory"] as? String ?? ""
-                let createdDate = data["createdDate"] as? String ?? ""
-                let requestType = data["requestType"] as? Bool ?? false
-
-
-
-
-
-
-
-
-                
-                
-                return RequestModel(
-                    id: doc.documentID,
-                    title: title,
-                    description: description,
-                    date: date,
-                    selectedCategories: selectedCategories,
-                    status: self.stringToRequestStatus(string: status),
-                    requesterID: requesterID,
-                    requesterCategories: requesterCategories,
-                    requesterName: requesterName,
-                    requesterAddress: requesterAddress,
-                    requesterEmail: requesterEmail,
-                    requesterPhone: requesterPhone,
-                    adminMessage : adminMessage,
-                    approvedAcademicians: approvedAcademicians,
-                    rejectedAcademicians: rejectedAcademicians,
-                    requesterImage: requesterImage,
-                    requesterType: requesterType,
-                    requestCategory: requestCategory,
-                    createdDate: createdDate,
-                    requestType: requestType,
-
-                    
-                )
-            }
+            let statusKeys = authorityDocs.map { $0.documentID } // status map’inde bakacağımız key’ler
             
-            completion(.success(requests))
+            // 2️⃣ OldRequests koleksiyonunu çek
+            Firestore.firestore().collection("Requests").getDocuments { snapshot, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard let documents = snapshot?.documents else {
+                    completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Belge bulunamadı"])))
+                    return
+                }
+                
+                // 3️⃣ Status map’ine göre filtreleme ve stringToRequestStatus kullanımı
+                let filteredRequests: [RequestModel] = documents.compactMap { doc -> RequestModel? in
+                    let data = doc.data()
+                    
+                    guard let statusMap = data["status"] as? [String: String] else { return nil }
+
+                    // Map’te statusKeys’lerden herhangi biri approved veya rejected ise bu request geçerli
+                    let statusString: String = statusKeys.compactMap { key in
+                        if let value = statusMap[key], value == "approved" || value == "rejected" {
+                            return value
+                        }
+                        return nil
+                    }.first ?? "pending" // default değer "pending"
+
+                    let requestStatus = self.stringToRequestStatus(string: statusString)
+                    
+                    // Eğer hiç bir key approved/rejected değilse filtrele
+                    if requestStatus == .pending { return nil }
+                    
+                    // RequestModel oluştur
+                    return RequestModel(
+                        id: doc.documentID,
+                        title: data["requestTitle"] as? String ?? "",
+                        description: data["requestMessage"] as? String ?? "",
+                        date: data["createdDate"] as? String ?? "",
+                        selectedCategories: data["selectedCategories"] as? [String] ?? [],
+                        status: requestStatus,
+                        requesterID: data["requesterID"] as? String ?? "",
+                        requesterCategories: data["requesterCategories"] as? String ?? "",
+                        requesterName: data["requesterName"] as? String ?? "",
+                        requesterAddress: data["requesterAddress"] as? String ?? "",
+                        requesterEmail: data["requesterEmail"] as? String ?? "",
+                        requesterPhone: data["requesterPhone"] as? String ?? "",
+                        adminMessage: data["adminMessage"] as? String ?? "",
+                        approvedAcademicians: data["approvedAcademicians"] as? [String] ?? [],
+                        rejectedAcademicians: data["rejectedAcademicians"] as? [String] ?? [],
+                        requesterImage: data["requesterImage"] as? String ?? "",
+                        requesterType: data["requesterType"] as? String ?? "",
+                        requestCategory: data["requestCategory"] as? String ?? "",
+                        createdDate: data["createdDate"] as? String ?? "",
+                        requestType: data["requestType"] as? Bool ?? false
+                    )
+                }
+                
+                completion(.success(filteredRequests))
+            }
         }
     }
+
+
+
 
 
     
