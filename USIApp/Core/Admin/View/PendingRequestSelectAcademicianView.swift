@@ -61,8 +61,7 @@ struct PendingRequestSelectAcademicianView: View {
                 Button {
                     DispatchQueue.main.async {
                         viewModel.approveRequest(documentId: requestId)
-                        AdminUserFirestoreService.shared.moveOldRequests(from: "Requests", documentId: requestId, to: "OldRequests")
-                        viewModel.destinated = false
+
                     }
                 } label: {
                     Label("Akademisyeni Ata ve Onayla", systemImage: "checkmark.circle.fill")

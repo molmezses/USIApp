@@ -30,7 +30,7 @@ struct AddAminUserView: View {
 
                     Text("Admin Kullanıcı Ekle")
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
 
                     Spacer()
 
@@ -38,7 +38,7 @@ struct AddAminUserView: View {
                         .opacity(0)
                 }
                 .padding()
-                .background(Color("usi"))
+                .background(.white)
 
                 ScrollView {
                     VStack(spacing: 20) {
@@ -61,7 +61,7 @@ struct AddAminUserView: View {
                             Text("Kaydet")
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 50)
-                                .background(Color("usi"))
+                                .background(Color("logoBlue"))
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                                 .padding(.horizontal)
