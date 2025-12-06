@@ -411,87 +411,7 @@ class IndustryFirestoreService {
 
 
     
-//    func fetchAllRequests(completion: @escaping (Result<[RequestModel], Error>) -> Void) {
-//        
-////        guard (IndustryAuthService.shared.getCurrentUser()?.id) != nil else {
-////            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Kullanıcı ID bulunamadı"])))
-////            return
-////        }
-//        
-//        
-//        let docRef = Firestore.firestore()
-//                .collection("Requests")
-//                .whereField("status", isEqualTo: "pending")
-//        
-//        docRef.getDocuments { snapshot, error in
-//            if let error = error {
-//                completion(.failure(error))
-//                return
-//            }
-//            
-//            guard let documents = snapshot?.documents else {
-//                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Belge bulunamadı"])))
-//                return
-//            }
-//            
-//            let requests: [RequestModel] = documents.compactMap { doc in
-//                let data = doc.data()
-//                
-//                let title = data["requestTitle"] as? String ?? ""
-//                let description = data["requestMessage"] as? String ?? ""
-//                let date = data["createdDate"] as? String ?? ""
-//                let selectedCategories = data["selectedCategories"] as? [String] ?? []
-//                let status = data["status"] as? String ?? ""
-//                let requesterID = data["requesterID"] as? String ?? ""
-//                let requesterName = data["requesterName"] as? String ?? ""
-//                let requesterCategories = data["requesterCategories"] as? String ?? ""
-//                let requesterEmail = data["requesterEmail"] as? String ?? ""
-//                let requesterPhone = data["requesterPhone"] as? String ?? ""
-//                let adminMessage = data["adminMessage"] as? String ?? ""
-//                let requesterAddress = data["requesterAddress"] as? String ?? ""
-//                let requesterImage = data["requesterImage"] as? String ?? ""
-//                let requesterType = data["requesterType"] as? String ?? ""
-//                let requestCategory = data["requestCategory"] as? String ?? ""
-//                let createdDate = data["createdDate"] as? String ?? ""
-//                let requestType = data["requestType"] as? Bool ?? false
-//
-//
-//                
-//
-//
-//
-//
-//
-//
-//                
-//                
-//                return RequestModel(
-//                    id: doc.documentID,
-//                    title: title,
-//                    description: description,
-//                    date: date,
-//                    selectedCategories: selectedCategories,
-//                    status: self.stringToRequestStatus(string: status),
-//                    requesterID: requesterID,
-//                    requesterCategories: requesterCategories,
-//                    requesterName: requesterName,
-//                    requesterAddress: requesterAddress,
-//                    requesterEmail: requesterEmail,
-//                    requesterPhone: requesterPhone,
-//                    adminMessage : adminMessage,
-//                    requesterImage: requesterImage,
-//                    requesterType: requesterType,
-//                    requestCategory: requestCategory,
-//                    createdDate: createdDate,
-//                    requestType: requestType,
-//
-//                    
-//                )
-//            }
-//            
-//            completion(.success(requests))
-//        }
-//    }
+
     
     func fetchOldRequests(completion: @escaping (Result<[RequestModel], Error>) -> Void) {
         guard (IndustryAuthService.shared.getCurrentUser()?.id) != nil else {
@@ -499,52 +419,35 @@ class IndustryFirestoreService {
             return
         }
 
-        // 1️⃣ Authorities koleksiyonundan key’leri al
-        Firestore.firestore().collection("Authorities").getDocuments { authoritySnapshot, error in
-            if let error = error {
-                completion(.failure(error))
+        // 1️⃣ Önce oturum açmış kullanıcının Authority doküman ID'sini al
+        AdminUserFirestoreService.shared.fetchAuthorityDocForCurrentUser { authorityID in
+            guard let authorityID = authorityID else {
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Kullanıcının Authority ID bulunamadı"])))
                 return
             }
-            
-            guard let authorityDocs = authoritySnapshot?.documents else {
-                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Authorities bulunamadı"])))
-                return
-            }
-            
-            let statusKeys = authorityDocs.map { $0.documentID } // status map’inde bakacağımız key’ler
-            
-            // 2️⃣ OldRequests koleksiyonunu çek
+
+            // 2️⃣ Requests koleksiyonunu çek
             Firestore.firestore().collection("Requests").getDocuments { snapshot, error in
                 if let error = error {
                     completion(.failure(error))
                     return
                 }
-                
+
                 guard let documents = snapshot?.documents else {
                     completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Belge bulunamadı"])))
                     return
                 }
-                
-                // 3️⃣ Status map’ine göre filtreleme ve stringToRequestStatus kullanımı
+
+                // 3️⃣ Status map'ine göre filtreleme sadece kullanıcının authorityID'sine bak
                 let filteredRequests: [RequestModel] = documents.compactMap { doc -> RequestModel? in
                     let data = doc.data()
-                    
                     guard let statusMap = data["status"] as? [String: String] else { return nil }
 
-                    // Map’te statusKeys’lerden herhangi biri approved veya rejected ise bu request geçerli
-                    let statusString: String = statusKeys.compactMap { key in
-                        if let value = statusMap[key], value == "approved" || value == "rejected" {
-                            return value
-                        }
-                        return nil
-                    }.first ?? "pending" // default değer "pending"
-
+                    let statusString = statusMap[authorityID] ?? "pending"
                     let requestStatus = self.stringToRequestStatus(string: statusString)
-                    
-                    // Eğer hiç bir key approved/rejected değilse filtrele
+
                     if requestStatus == .pending { return nil }
-                    
-                    // RequestModel oluştur
+
                     return RequestModel(
                         id: doc.documentID,
                         title: data["requestTitle"] as? String ?? "",
@@ -568,11 +471,12 @@ class IndustryFirestoreService {
                         requestType: data["requestType"] as? Bool ?? false
                     )
                 }
-                
+
                 completion(.success(filteredRequests))
             }
         }
     }
+
 
 
 
