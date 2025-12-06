@@ -12,7 +12,7 @@ class AcademicianRowReadOnlyViewModel: ObservableObject {
     @Published var status: String = "loading"
 
     func loadAcademicianRequestStatus(requestId: String, academicianId: String) {
-        let docRef = Firestore.firestore().collection("OldRequests").document(requestId)
+        let docRef = Firestore.firestore().collection("Requests").document(requestId)
         docRef.getDocument { snapshot, error in
             guard let data = snapshot?.data(),
                   let responses = data["academicianResponses"] as? [String: String],

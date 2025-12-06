@@ -269,34 +269,7 @@ class AdminUserFirestoreService{
         }
     }
     
-    func moveOldRequestsReject(from oldCollection: String , documentId: String , to newCollection: String) {
-        
-        let oldDocRef = Firestore.firestore().collection(oldCollection).document(documentId)
-        let newDocRef = Firestore.firestore().collection(newCollection).document(documentId)
-        
-        oldDocRef.getDocument { documentSnapshot, error in
-            
-            if let error = error {
-                print("Hata: Doküman alınamadı \(error.localizedDescription)")
-                return
-            }
-            
-            guard let data = documentSnapshot?.data() else {
-                print("Doküman bulunamadı")
-                return
-            }
-            
-            newDocRef.setData(data) { error in
-                if let error = error {
-                    print("Yeni koleksiyona yazılamadı \(error.localizedDescription)")
-                    return
-                } else {
-                    print("Başarıyla kopyalandı.")
-                    
-                }
-            }
-        }
-    }
+
     
     func saveSelectedAcademicians(documentId: String ,selectedAcademians: [AcademicianInfo] , completion: @escaping (Result<Void, Error>) -> Void){
         
@@ -318,7 +291,7 @@ class AdminUserFirestoreService{
     
     func fetchSelectedAcademiciansIdArray(documentId: String, completion: @escaping (Result<[String], Error>) -> Void) {
         
-        let docRef = Firestore.firestore().collection("OldRequests").document(documentId)
+        let docRef = Firestore.firestore().collection("Requests").document(documentId)
         
         docRef.getDocument { snapshot, error in
             if let error = error {
@@ -356,7 +329,7 @@ class AdminUserFirestoreService{
     }
     
     func updateAcademicianRequestStatus(requestId: String, academicianId: String, newStatus: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        let docRef = Firestore.firestore().collection("OldRequests").document(requestId)
+        let docRef = Firestore.firestore().collection("Requests").document(requestId)
         
         let updateField = "academicianResponses.\(academicianId)"
         
@@ -484,7 +457,7 @@ class AdminUserFirestoreService{
     
     func fetchAcademicianResponseCounts(completion: @escaping (Int) -> Void) {
         let db = Firestore.firestore()
-        let collectionRef = db.collection("OldRequests")
+        let collectionRef = db.collection("Requests")
         
         var uniqueAcademicianIDs = Set<String>()
         
