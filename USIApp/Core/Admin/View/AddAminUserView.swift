@@ -23,7 +23,7 @@ struct AddAminUserView: View {
                     } label: {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 18, weight: .semibold))
-                            .foregroundColor(.white)
+                            .foregroundColor(.black)
                     }
 
                     Spacer()

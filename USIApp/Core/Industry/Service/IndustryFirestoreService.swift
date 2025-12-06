@@ -254,12 +254,11 @@ class IndustryFirestoreService {
             
             let requests: [RequestModel] = documents.compactMap { doc in
                 let data = doc.data()
-                
+
                 let title = data["requestTitle"] as? String ?? ""
                 let description = data["requestMessage"] as? String ?? ""
                 let date = data["createdDate"] as? String ?? ""
                 let selectedCategories = data["selectedCategories"] as? [String] ?? []
-                let status = data["status"] as? String ?? ""
                 let requesterID = data["requesterID"] as? String ?? ""
                 let requesterName = data["requesterName"] as? String ?? ""
                 let requesterCategories = data["requesterCategories"] as? String ?? ""
@@ -273,7 +272,8 @@ class IndustryFirestoreService {
                 let requestType = data["requestType"] as? Bool ?? false
 
 
-
+                let statusMap = data["status"] as? [String: Any] ?? [:]
+                let status = statusMap["ahievran"] as? String ?? ""
                 
                 
                 return RequestModel(
