@@ -29,9 +29,12 @@ struct ApplyUsersCardView: View {
                                     .frame(width: 40, height: 40)
                                     .clipShape(Circle())
                             } placeholder: {
-                                Circle()
-                                    .fill(Color.gray.opacity(0.3))
+                                Image("DefaultProfilePhoto")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
                                     .frame(width: 40, height: 40)
+                                    .clipShape(Circle())
+
                             }
                             
                             VStack(alignment: .leading, spacing: 2) {

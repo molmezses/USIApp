@@ -163,7 +163,7 @@ struct AdminView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
             
-            ScrollView(.horizontal){
+            ScrollView(.horizontal, showsIndicators: false){
                 HStack(spacing: 10) {
                     StatsProgressView(
                         title: "Akademisyen",

@@ -140,19 +140,36 @@ struct OldRequestView: View {
                 }
             }
             
-
-            // Kategoriler
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    Text(request.requestCategory ?? "Kategori bulunamadı")
-                        .font(.caption)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(Color("categoryBlue"))
-                        .foregroundColor(.black)
-                        .cornerRadius(6)
+            if request.requesterType == "industry"{
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(request.selectedCategories, id: \.self) { category in
+                            Text(category)
+                                .font(.caption)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 6)
+                                .background(Color("usi").opacity(0.1))
+                                .foregroundColor(.blue)
+                                .cornerRadius(8)
+                        }
+                    }
+                }
+            }else{
+                // Kategoriler
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        Text(request.requestCategory ?? "Kategori bulunamadı")
+                            .font(.caption)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Color("categoryBlue"))
+                            .foregroundColor(.black)
+                            .cornerRadius(6)
+                    }
                 }
             }
+
+            
             
             
         }
