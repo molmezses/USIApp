@@ -16,6 +16,7 @@ struct AcademicianRegisterProfileView: View {
     @State var showTerms: Bool = false
     
     var body: some View {
+        ZStack{
             ScrollView {
                 VStack {
                     HStack {
@@ -179,9 +180,38 @@ struct AcademicianRegisterProfileView: View {
                 
                 
             }
-            .onTapGesture {
-                focusedField = false
+            
+            // Yükleniyor ekranı
+            if viewModel.isLoading {
+                ZStack {
+                    // Blur arka plan
+                    Color.black.opacity(0.2)
+                        .ignoresSafeArea()
+                        .background(.ultraThinMaterial)
+                        .blur(radius: 10)
+
+                    VStack(spacing: 16) {
+                        ProgressView()
+                            .tint(Color("logoBlue"))
+                            .scaleEffect(1.4)
+
+                        Text("Giriş yapılıyor...")
+                            .font(.headline)
+                            .foregroundStyle(.primary)
+                    }
+                    .padding(.vertical, 24)
+                    .padding(.horizontal, 32)
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(20)
+                    .shadow(radius: 20)
+                }
+                .transition(.opacity)
+                .animation(.easeInOut(duration: 0.25), value: viewModel.isLoading)
             }
+        }
+        .onTapGesture {
+            focusedField = false
+        }
         
     }
 }

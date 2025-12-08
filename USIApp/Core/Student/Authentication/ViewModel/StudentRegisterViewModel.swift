@@ -29,7 +29,7 @@ class StudentRegisterViewModel: ObservableObject{
             return false
         }
         
-        if !email.hasSuffix("@ogr.nisantasi.edu.tr"){
+        if !email.hasSuffix("@ogr.ahievran.edu.tr"){
             self.errorMessage = "Lütfen @ogr.ahievran.edu.tr uzantılı bir mail ile kayıt olunuz."
             return false
         }
@@ -73,7 +73,8 @@ class StudentRegisterViewModel: ObservableObject{
                 case .failure(let failure):
                     self.errorMessage = failure.localizedDescription
                     self.showAlert = true
-                    
+                    self.isLoading = false
+
                 }
                 
             }
@@ -86,5 +87,6 @@ class StudentRegisterViewModel: ObservableObject{
         self.password = ""
         self.confirmPassword = ""
         self.showAlert = false
+         self.isLoading = false
     }
 }
