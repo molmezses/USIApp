@@ -165,58 +165,98 @@ class AdminUserFirestoreService{
     }
     
     
+    func getDomain(from email: String) -> String? {
+        guard let atIndex = email.firstIndex(of: "@") else { return nil }
+        let domainStart = email.index(after: atIndex)
+        return String(email[domainStart...])
+    }
+
+    
     func fetchAllAcademicians(completion: @escaping (Result<[AcademicianInfo], Error>) -> Void) {
-        Firestore.firestore().collection("Academician").getDocuments { snapshot, error in
-            if let error = error {
-                completion(.failure(error))
+        
+        self.fetchAuthorityDocForCurrentUser { authorityDocId in
+            
+            guard let authorityDocId = authorityDocId else{
+                print("AuthorityDocID bulunamadı!")
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Authority bulunamadı"])))
                 return
             }
             
-            guard let documents = snapshot?.documents else {
-                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Belge bulunamadı"])))
-                return
-            }
             
-            var academicians: [AcademicianInfo] = []
-            let dispatchGroup = DispatchGroup()
-            
-            for document in documents {
-                dispatchGroup.enter()
+            Firestore.firestore().collection("Academician").getDocuments { snapshot, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
                 
-                let data = document.data()
-                let documentId = document.documentID
+                guard let documents = snapshot?.documents else {
+                    completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Belge bulunamadı"])))
+                    return
+                }
                 
-                let academician = AcademicianInfo(
-                    id: documentId,
-                    email: data["email"] as? String ?? "",
-                    unvan: data["unvan"] as? String ?? "",
-                    program: data["program"] as? String ?? "",
-                    photo: data["photo"] as? String ?? "",
-                    bolum: data["bolum"] as? String ?? "",
-                    adSoyad: data["adSoyad"] as? String ?? "",
-                    personelTel: data["personelTel"] as? String ?? "",
-                    kurumsalTel: data["kurumsalTel"] as? String ?? "",
-                    il: data["il"] as? String ?? "",
-                    ilce: data["ilce"] as? String ?? "",
-                    webSite: data["web"] as? String ?? "",
-                    akademikGecmis: data["akademikGecmis"] as? String ?? "",
-                    ortakProjeTalep: data["ortakProjeTalep"] as? Bool ?? true,
-                    firmalar: [],
-                    uzmanlikAlani: data["uzmanlikAlanlari"] as? [String] ?? [""],
-                    verebilecegiDanismanlikKonuları: data["verebilecegiDanismanlikKonulari"] as? [String] ?? [""],
-                    dahaOncekiDanismanliklar: data["dahaOncekiDanismanliklar"] as? [String] ?? [""],
-                    verebilecegiEgitimler: data["verebilecegiEgitimler"] as? [String] ?? [""],
-                    dahaOncekiVerdigiEgitimler: data["dahaOnceVerdigiEgitimler"] as? [String] ?? [""]
-                )
+                var academicians: [AcademicianInfo] = []
+                let dispatchGroup = DispatchGroup()
                 
-                academicians.append(academician)
-                dispatchGroup.leave()
-            }
-            
-            dispatchGroup.notify(queue: .main) {
-                completion(.success(academicians))
+                for document in documents {
+                    dispatchGroup.enter()
+                    
+                    let data = document.data()
+                    let documentId = document.documentID
+                    
+                    
+                    
+                    let academician = AcademicianInfo(
+                        id: documentId,
+                        email: data["email"] as? String ?? "",
+                        unvan: data["unvan"] as? String ?? "",
+                        program: data["program"] as? String ?? "",
+                        photo: data["photo"] as? String ?? "",
+                        bolum: data["bolum"] as? String ?? "",
+                        adSoyad: data["adSoyad"] as? String ?? "",
+                        personelTel: data["personelTel"] as? String ?? "",
+                        kurumsalTel: data["kurumsalTel"] as? String ?? "",
+                        il: data["il"] as? String ?? "",
+                        ilce: data["ilce"] as? String ?? "",
+                        webSite: data["web"] as? String ?? "",
+                        akademikGecmis: data["akademikGecmis"] as? String ?? "",
+                        ortakProjeTalep: data["ortakProjeTalep"] as? Bool ?? true,
+                        firmalar: [],
+                        uzmanlikAlani: data["uzmanlikAlanlari"] as? [String] ?? [""],
+                        verebilecegiDanismanlikKonuları: data["verebilecegiDanismanlikKonulari"] as? [String] ?? [""],
+                        dahaOncekiDanismanliklar: data["dahaOncekiDanismanliklar"] as? [String] ?? [""],
+                        verebilecegiEgitimler: data["verebilecegiEgitimler"] as? [String] ?? [""],
+                        dahaOncekiVerdigiEgitimler: data["dahaOnceVerdigiEgitimler"] as? [String] ?? [""]
+                    )
+                    
+                    Firestore.firestore().collection("Authorities").document(authorityDocId).getDocument { snapshot, error in
+                        
+                        defer { dispatchGroup.leave() }  // ✔️ her durumda leave
+
+                        if let error = error {
+                            print("Hata: \(error.localizedDescription)")
+                            return
+                        }
+                        
+                        let value = snapshot?.data()?["academician"]
+                        
+                        if value as? String == self.getDomain(from: academician.email) {
+                            academicians.append(academician)
+                        }else{
+                            return
+                        }
+                    }
+                    
+                    
+                    
+                    
+                }
+                
+                dispatchGroup.notify(queue: .main) {
+                    completion(.success(academicians))
+                }
             }
         }
+        
     }
     
     

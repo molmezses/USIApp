@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import Firebase
 
-class RegisterViewModel: ObservableObject{
+@MainActor
+class RegisterViewModel: ObservableObject {
     @Published var email: String = ""
     @Published var password : String = ""
     @Published var nameAndSurName: String = ""
@@ -19,47 +21,85 @@ class RegisterViewModel: ObservableObject{
     @Published var navigateToVerificationView: Bool = false
     @Published var showAlert: Bool = false
     
-    func validateEmailPassword() -> Bool {
-        if !(confirmPassword == password){
+    func getDomain(from email: String) -> String {
+        guard let atIndex = email.firstIndex(of: "@") else { return "" }
+        let start = email.index(after: atIndex)
+        return String(email[start...])
+    }
+    
+    func fetchAllowedDomains() async throws -> [String] {
+        try await withCheckedThrowingContinuation { continuation in
+            Firestore.firestore().collection("Authorities").getDocuments { snapshot, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                let domains = snapshot?.documents.compactMap { $0["academician"] as? String } ?? []
+                continuation.resume(returning: domains)
+            }
+        }
+    }
+    
+    func validateEmailPassword() async -> Bool {
+        // Şifre eşleşme kontrolü
+        guard confirmPassword == password else {
             self.errorMessage = "Şifreler birbirleri ile uyuşmuyor"
             self.showAlert = true
             return false
         }
         
-        guard email.hasSuffix("@ahievran.edu.tr")  else {
-            self.errorMessage = "Sadece @ahievran.edu.tr uzantılı e-posta adresleri ile kayıt olabilirsiniz."
+        let emailDomain = getDomain(from: email)
+        
+        do {
+            let allowedDomains = try await fetchAllowedDomains()
+            
+            guard allowedDomains.contains(emailDomain) else {
+                self.errorMessage = "Bu e-posta uzantısı ile kayıt olamazsınız."
+                self.showAlert = true
+                return false
+            }
+            
+            return true
+        } catch {
+            self.errorMessage = "Domain kontrolü sırasında hata oluştu: \(error.localizedDescription)"
             self.showAlert = true
             return false
         }
-        return true
     }
     
-    func register(authViewModel: AuthViewModel){
+    func register(authViewModel: AuthViewModel) {
         self.isLoading = true
-        guard validateEmailPassword() else {
-            self.isLoading = false
-            return
-        }
         
-        AuthService.shared.register(email: email, password: password , faculty: faculty , nameAndSurname: nameAndSurName , department: department) { result in
-            
-            DispatchQueue.main.async {
-                
+        Task {
+            let isValid = await validateEmailPassword()
+            if !isValid {
                 self.isLoading = false
-                
-                switch result{
-                case .success(_):
-                    self.clearFields()
-                case .failure(let error):
-                    self.errorMessage = error.localizedDescription
-                    self.showAlert  = true
-                }
+                return
             }
             
+            AuthService.shared.register(
+                email: email,
+                password: password,
+                faculty: faculty,
+                nameAndSurname: nameAndSurName,
+                department: department
+            ) { result in
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    switch result {
+                    case .success(_):
+                        self.clearFields()
+                        self.navigateToVerificationView = true
+                    case .failure(let error):
+                        self.errorMessage = error.localizedDescription
+                        self.showAlert  = true
+                    }
+                }
+            }
         }
     }
     
-    func clearFields(){
+    func clearFields() {
         self.email = ""
         self.password = ""
         self.confirmPassword = ""
@@ -69,8 +109,5 @@ class RegisterViewModel: ObservableObject{
         self.nameAndSurName = ""
         self.isLoading = false
     }
-    
-    
-    
-    
 }
+

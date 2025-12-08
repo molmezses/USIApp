@@ -63,6 +63,21 @@ final class AuthService{
         }
     }
     
+    func fetchAllowedDomainsAsync() async throws -> [String] {
+        try await withCheckedThrowingContinuation { continuation in
+            Firestore.firestore().collection("Authorities").getDocuments { snapshot, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                let domains = snapshot?.documents.compactMap { $0["academician"] as? String } ?? []
+                continuation.resume(returning: domains)
+            }
+        }
+    }
+
+
+    
     
     func logOut() throws{
         do {

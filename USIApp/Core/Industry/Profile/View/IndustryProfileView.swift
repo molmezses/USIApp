@@ -82,8 +82,11 @@ struct IndustryProfileView: View {
                                              .frame(width: 140, height: 140)
                                              .clipShape(Circle())
                                     } placeholder: {
-                                        ProgressView()
+                                        Image("DefaultProfilePhoto")
+                                            .resizable()
+                                            .scaledToFill()
                                             .frame(width: 140, height: 140)
+                                            .clipShape(Circle())
                                     }
                                 } else {
                                     Image("DefaultProfilePhoto")

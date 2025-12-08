@@ -49,40 +49,59 @@ struct RequestInfoAdminView: View {
                                 .font(.headline)
                                 .padding(.bottom, 4)
                             
-                            
-                            HStack(alignment: .top, spacing: 12) {
-                                
-                                if let url = URL(string: requesterImage) {
-                                    AsyncImage(url: url) { image in
-                                        image.resizable()
+                            NavigationLink {
+                                switch request.requesterType{
+                                case "academician":
+                                    AcademicianView(userId: request.requesterID)
+                                        .navigationBarBackButtonHidden()
+                                case "industry":
+                                    IndustryPreview(userId: request.requesterID)
+                                        .navigationBarBackButtonHidden()
+                                case "student":
+                                    StudentPreview(userId: request.requesterID)
+                                        .navigationBarBackButtonHidden()
+                                default:
+                                    EmptyView()
+                                }
+                            } label: {
+                                HStack(alignment: .top, spacing: 12) {
+                                    
+                                    if let url = URL(string: requesterImage) {
+                                        AsyncImage(url: url) { image in
+                                            image.resizable()
+                                                .scaledToFill()
+                                                .frame(width: 40, height: 40)
+                                                .clipShape(Circle())
+                                        } placeholder: {
+                                            ProgressView()
+                                                .frame(width: 40, height: 40)
+                                        }
+                                    } else {
+                                        Image("DefaultProfilePhoto")
+                                            .resizable()
                                             .scaledToFill()
                                             .frame(width: 40, height: 40)
                                             .clipShape(Circle())
-                                    } placeholder: {
-                                        ProgressView()
-                                            .frame(width: 40, height: 40)
                                     }
-                                } else {
-                                    Image("DefaultProfilePhoto")
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: 40, height: 40)
-                                        .clipShape(Circle())
+                                    
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(request.requesterName)
+                                            .font(.subheadline.bold())
+                                        Text(request.requesterType == "industry" ? "Sanayi" : request.requesterType == "student" ? "Öğrenci" : "Akademisyen")
+                                            .font(.subheadline)
+                                        Text("Mail: \(request.requesterEmail)")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                        Text("Tel: \(request.requesterPhone == "" ? "Bilinmiyor" : request.requesterPhone)")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
                                 }
-                                
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(request.requesterName)
-                                        .font(.subheadline.bold())
-                                    Text(request.requesterType == "industry" ? "Sanayi" : request.requesterType == "student" ? "Öğrenci" : "Akademisyen")
-                                        .font(.subheadline)
-                                    Text("Mail: \(request.requesterEmail)")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                    Text("Tel: \(request.requesterPhone == "" ? "Bilinmiyor" : request.requesterPhone)")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
+                                .foregroundStyle(.black)
                             }
+
+                            
+                            
                             
                         }
                         .padding()
@@ -418,9 +437,10 @@ struct AcademicianRowReadOnly: View {
 
     var body: some View {
         NavigationLink {
-            AcademicianDetailView(academician: academician)
-                .foregroundStyle(.black)
-                .navigationBarBackButtonHidden()
+            
+            AcademicianView(userId: academician.id)
+                            .foregroundStyle(.black)
+                            .navigationBarBackButtonHidden()
         } label: {
 
             VStack {

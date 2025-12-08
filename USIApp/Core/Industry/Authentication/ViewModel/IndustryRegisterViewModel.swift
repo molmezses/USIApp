@@ -31,6 +31,13 @@ class IndustryRegisterViewModel: ObservableObject {
             return
         }
         
+        if email.lowercased().hasSuffix("edu.tr") {
+               self.errorMessage = "Okul mail adresleri ile kayıt olamazsınız."
+               self.showAlert = true
+               self.isLoading = false
+               return
+           }
+        
         IndustryAuthService.shared.register(email: email, password: password) { result in
             DispatchQueue.main.async {
                 self.isLoading = false

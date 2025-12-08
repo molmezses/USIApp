@@ -28,9 +28,9 @@ class AcademicianViewModel: ObservableObject {
     
     
     
-    func loadAcademicianInfo(){
+    func loadAcademicianInfo(userId: String){
         
-        if let userId = Auth.auth().currentUser?.uid {
+        if (Auth.auth().currentUser?.uid) != nil{
             FirestoreService.shared.fetchAcademicianInfo(byId: userId) { result in
                 
                 switch result {
@@ -59,11 +59,7 @@ class AcademicianViewModel: ObservableObject {
                 }
                 
             }
-            
-            
         }
-        
-        
     }
     
     

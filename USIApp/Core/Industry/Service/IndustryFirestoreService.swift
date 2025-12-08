@@ -510,6 +510,42 @@ class IndustryFirestoreService {
         }
         
     }
+    
+    func fetchIndustryInfo(byId id: String , completion: @escaping (Result<IndustryInfo,Error>) -> Void){
+        
+        let docRef = Firestore.firestore()
+            .collection("Industry")
+            .document(id)
+        
+        docRef.getDocument { (document, error) in
+            if let error = error{
+                completion(.failure(error))
+                print("Hata : fetchIndıstruONfo")
+            }
+            
+            guard let document = document , document.exists , let data = document.data() else{
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey : "Belge bulunamadı"])))
+                return
+            }
+            
+            let info  = IndustryInfo(
+                id: id,
+                firmaAdi: data["firmaAdi"] as? String ?? "",
+                calismaAlani: data["calismaAlanlari"] as? String ?? "",
+                adres: data["adres"] as? String ?? "",
+                tel: data["telefon"] as? String ?? "",
+                email: data["email"] as? String ?? "",
+                web: data["firmaWebSite"] as? String ?? "",
+                calisanAd: data["calisanAd"] as? String ?? "",
+                calisanPozisyon: data["calisanPozisyon"] as? String ?? "",
+                requesterImage: data["requesterImage"] as? String ?? ""
+            )
+            
+            completion(.success(info))
+            
+        }
+        
+    }
 
 
     

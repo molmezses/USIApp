@@ -241,6 +241,42 @@ class StudentFirestoreService {
         }
     }
     
+    func fetchStudentInfo(byId id: String , completion: @escaping (Result<StudentInfo,Error>) -> Void){
+        
+        let docRef = Firestore.firestore()
+            .collection("Students")
+            .document(id)
+        
+        docRef.getDocument { (document, error) in
+            if let error = error{
+                completion(.failure(error))
+                print("Hata : fetchStudentInfo")
+            }
+            
+            guard let document = document , document.exists , let data = document.data() else{
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey : "Belge bulunamadı"])))
+                return
+            }
+            
+            let info  = StudentInfo(
+                id: id,
+                classNumber: data["classNumber"] as? String ?? "",
+                departmentName: data["departmentName"] as? String ?? "",
+                studentEmail: data["studentEmail"] as? String ?? "",
+                studentImage: data["studentImage"] as? String ?? "",
+                studentName: data["studentName"] as? String ?? "",
+                studentPhone: data["studentPhone"] as? String ?? "",
+                universityName: data["universityName"] as? String ?? ""
+            )
+            
+            completion(.success(info))
+            
+        }
+        
+    }
+    
+
+    
     
  
 

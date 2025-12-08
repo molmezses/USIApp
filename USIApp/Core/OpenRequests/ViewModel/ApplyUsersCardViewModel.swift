@@ -24,6 +24,9 @@ class ApplyUsersCardViewModel: ObservableObject {
     private let db = Firestore.firestore()
     
     func fetchApplyUsers(requestId: String) {
+        
+        self.applyUsers.removeAll()
+        
         db.collection("Requests").document(requestId).getDocument { [weak self] snapshot, error in
             guard let self = self, let data = snapshot?.data(), error == nil else { return }
             

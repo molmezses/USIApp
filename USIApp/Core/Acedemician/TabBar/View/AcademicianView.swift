@@ -10,12 +10,10 @@ struct AcademicianView: View {
     
     @Environment(\.dismiss) var dismiss
     @StateObject var viewModel = AcademicianViewModel()
-    
+    var userId: String
 
     
     var body: some View {
-        
-        NavigationStack {
             VStack(spacing: 0) {
                 HStack {
                     Button { dismiss() } label: {
@@ -25,7 +23,7 @@ struct AcademicianView: View {
                             .padding(.leading)
                     }
                     Spacer()
-                    Text("Önizleme")
+                    Text("\(viewModel.adSoyad)")
                         .font(.headline)
                         .fontWeight(.semibold)
                         .padding()
@@ -355,23 +353,18 @@ struct AcademicianView: View {
                         }
                         .scrollIndicators(.hidden)
                         .refreshable {
-                            viewModel.loadAcademicianInfo()
+                            viewModel.loadAcademicianInfo(userId: userId)
                         }
                     }
                     .padding(.horizontal)
                 }
             }
-        }
-        .onAppear{
-            viewModel.loadAcademicianInfo()
-        }
+            .onAppear{
+                viewModel.loadAcademicianInfo(userId: userId)
+            }
     }
 }
 
-
-#Preview {
-    AcademicianView()
-}
 
 
 

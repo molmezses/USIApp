@@ -9,6 +9,7 @@ import Foundation
 import Firebase
 import FirebaseFirestore
 
+@MainActor
 class StudentRegisterViewModel: ObservableObject{
     
     @Published var email: String = ""
@@ -19,74 +20,103 @@ class StudentRegisterViewModel: ObservableObject{
     @Published var navigateToStudentTabView: Bool = false
     @Published var showAlert: Bool = false
     
-    
     let db = Firestore.firestore().collection("Students")
-
     
-    func validateEmailPassword() -> Bool {
-        if !(confirmPassword == password){
-            self.errorMessage = "Şifreler birbirleri ile uyuşmuyor"
-            return false
-        }
-        
-        if !email.hasSuffix("@ogr.ahievran.edu.tr"){
-            self.errorMessage = "Lütfen @ogr.ahievran.edu.tr uzantılı bir mail ile kayıt olunuz."
-            return false
-        }
-        
-        print("email doğru yazım tamamlandı")
-        return true
+    func getDomain(from email: String) -> String {
+        guard let atIndex = email.firstIndex(of: "@") else { return "" }
+        let start = email.index(after: atIndex)
+        return String(email[start...])
     }
     
-    func register(authViewModel: AuthViewModel){
-        self.isLoading = true
-        guard validateEmailPassword() else {
-            self.showAlert = true
-            return
-        }
-        
-        StudentAuthService.shared.register(email: email, password: password) { result in
-            DispatchQueue.main.async {
-                self.isLoading = false
-                
-                switch result {
-                case .success(let session):
-                    authViewModel.userSession = session
-                    self.db.document(authViewModel.userSession?.id ?? "id bulunamadı").setData(
-                        ["studentEmail":authViewModel.userSession?.email ?? "email bulunamadı"]
-                    )
-                    
-                    let domain = self.email.components(separatedBy: "@").last ?? "unknown"
-                    let data: [String: Any] = [
-                        "email": self.email,
-                        "domain": domain,
-                        "id": session.id
-                    ]
-                    
-                    Firestore.firestore().collection("UserDomains").document(session.id).setData(data)
-                    
-                    
-                    self.navigateToStudentTabView = true
-                    print("session başarılı")
-                    self.clearFields()
-                    
-                case .failure(let failure):
-                    self.errorMessage = failure.localizedDescription
-                    self.showAlert = true
-                    self.isLoading = false
-
+    func fetchAllowedStudentDomains() async throws -> [String] {
+        try await withCheckedThrowingContinuation { continuation in
+            Firestore.firestore().collection("Authorities").getDocuments { snapshot, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                    return
                 }
                 
+                // Her belge içindeki "student" field'ını alıyoruz
+                let domains = snapshot?.documents.compactMap { $0["student"] as? String } ?? []
+                continuation.resume(returning: domains)
             }
         }
-        
     }
     
-     func clearFields(){
+    func validateEmailPassword() async -> Bool {
+        // Şifre eşleşme kontrolü
+        guard confirmPassword == password else {
+            self.errorMessage = "Şifreler birbirleri ile uyuşmuyor"
+            self.showAlert = true
+            return false
+        }
+        
+        let emailDomain = getDomain(from: email)
+        
+        do {
+            let allowedDomains = try await fetchAllowedStudentDomains()
+            
+            guard allowedDomains.contains(emailDomain) else {
+                self.errorMessage = "Bu e-posta uzantısı ile kayıt olamazsınız."
+                self.showAlert = true
+                return false
+            }
+            
+            return true
+        } catch {
+            self.errorMessage = "Domain kontrolü sırasında hata oluştu: \(error.localizedDescription)"
+            self.showAlert = true
+            return false
+        }
+    }
+    
+    func register(authViewModel: AuthViewModel) {
+        self.isLoading = true
+        
+        Task {
+            let isValid = await validateEmailPassword()
+            if !isValid {
+                self.isLoading = false
+                return
+            }
+            
+            StudentAuthService.shared.register(email: email, password: password) { result in
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    
+                    switch result {
+                    case .success(let session):
+                        authViewModel.userSession = session
+                        self.db.document(session.id).setData([
+                            "studentEmail": session.email
+                        ])
+                        
+                        let domain = self.getDomain(from: self.email)
+                        let data: [String: Any] = [
+                            "email": self.email,
+                            "domain": domain,
+                            "id": session.id
+                        ]
+                        
+                        Firestore.firestore().collection("UserDomains").document(session.id).setData(data)
+                        
+                        self.navigateToStudentTabView = true
+                        self.clearFields()
+                        
+                    case .failure(let error):
+                        self.errorMessage = error.localizedDescription
+                        self.showAlert = true
+                    }
+                }
+            }
+        }
+    }
+    
+    func clearFields(){
         self.email = ""
         self.password = ""
         self.confirmPassword = ""
         self.showAlert = false
-         self.isLoading = false
+        self.isLoading = false
     }
 }

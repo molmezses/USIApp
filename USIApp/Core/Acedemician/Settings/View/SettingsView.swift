@@ -55,7 +55,7 @@ struct SettingsView: View {
                                     .padding(.top)
                                 VStack{
                                     NavigationLink {
-                                        AcademicianView()
+                                        AcademicianView(userId: authViewModel.userSession?.id ?? "")
                                             .navigationBarBackButtonHidden()
                                     } label: {
                                         HStack {
