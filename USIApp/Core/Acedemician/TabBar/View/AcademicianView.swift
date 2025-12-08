@@ -14,8 +14,6 @@ struct AcademicianView: View {
 
     
     var body: some View {
-        
-        NavigationStack {
             VStack(spacing: 0) {
                 HStack {
                     Button { dismiss() } label: {
@@ -361,10 +359,9 @@ struct AcademicianView: View {
                     .padding(.horizontal)
                 }
             }
-        }
-        .onAppear{
-            viewModel.loadAcademicianInfo(userId: userId)
-        }
+            .onAppear{
+                viewModel.loadAcademicianInfo(userId: userId)
+            }
     }
 }
 
