@@ -22,16 +22,20 @@ class IndustryLoginViewModel: ObservableObject {
 
     
     
-    func login(authViewModel : AuthViewModel){
+    func login(authViewModel : AuthViewModel) {
         isLoading = true
+        
         IndustryAuthService.shared.login(email: email, password: password) { result in
-            DispatchQueue.main.async {
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                 self.isLoading = false
+                
                 switch result {
                 case .success(let session):
                     authViewModel.userSession = session
                     self.email = ""
                     self.password = ""
+                    
                 case .failure(let error):
                     if let nsError = error as NSError? {
                         self.errorMessage = self.translateFirebaseError(nsError)
@@ -41,6 +45,7 @@ class IndustryLoginViewModel: ObservableObject {
             }
         }
     }
+
     
     func translateFirebaseError(_ error: NSError) -> String {
         

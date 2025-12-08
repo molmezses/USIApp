@@ -37,19 +37,25 @@ class RegisterViewModel: ObservableObject{
     func register(authViewModel: AuthViewModel){
         self.isLoading = true
         guard validateEmailPassword() else {
+            self.isLoading = false
             return
         }
         
         AuthService.shared.register(email: email, password: password , faculty: faculty , nameAndSurname: nameAndSurName , department: department) { result in
-            switch result{
-            case .success(_):
+            
+            DispatchQueue.main.async {
                 
+                self.isLoading = false
                 
-                self.clearFields()
-            case .failure(let error):
-                self.errorMessage = error.localizedDescription
-                self.showAlert  = true
+                switch result{
+                case .success(_):
+                    self.clearFields()
+                case .failure(let error):
+                    self.errorMessage = error.localizedDescription
+                    self.showAlert  = true
+                }
             }
+            
         }
     }
     
@@ -61,6 +67,7 @@ class RegisterViewModel: ObservableObject{
         self.faculty = ""
         self.department = ""
         self.nameAndSurName = ""
+        self.isLoading = false
     }
     
     

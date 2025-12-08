@@ -69,12 +69,15 @@ struct AcademicianRegisterEmailView: View {
                 .padding(.bottom)
                 
                 VStack {
-                    Button {
+                    NavigationLink {
                         
-                        sendCode()
+                        AcademicianRegisterPasswordView()
+                            .navigationBarBackButtonHidden()
+                            .environmentObject(viewModel)
+                            .environmentObject(authViewModel)
                         
                     } label: {
-                        Text("Doğrulama Kodu Gönder")
+                        Text("Devam")
                             .font(.headline)
                             .frame(maxWidth: .infinity)
                             .foregroundColor(.white)
@@ -148,12 +151,12 @@ struct AcademicianRegisterEmailView: View {
                 
                 
             }
-            .navigationDestination(isPresented: $navigateToOTP, destination: {
-                OTPVerifyView(email: viewModel.email)
-                    .navigationBarBackButtonHidden()
-                    .environmentObject(authViewModel)
-                    .environmentObject(viewModel)
-            })
+//            .navigationDestination(isPresented: $navigateToOTP, destination: {
+//                OTPVerifyView(email: viewModel.email)
+//                    .navigationBarBackButtonHidden()
+//                    .environmentObject(authViewModel)
+//                    .environmentObject(viewModel)
+//            })
             .onTapGesture {
                 self.focusedField = false
             }
@@ -161,19 +164,19 @@ struct AcademicianRegisterEmailView: View {
         }
     }
     
-    func sendCode() {
-        isSending = true
-        
-        otpManager.sendOTP(to: viewModel.email) { success in
-            DispatchQueue.main.async {
-                isSending = false
-                if success {
-                    navigateToOTP = true
-                } else {
-                    // Hata mesajı verebilirsin
-                }
-            }
-        }
-    }
+//    func sendCode() {
+//        isSending = true
+//        
+//        otpManager.sendOTP(to: viewModel.email) { success in
+//            DispatchQueue.main.async {
+//                isSending = false
+//                if success {
+//                    navigateToOTP = true
+//                } else {
+//                    // Hata mesajı verebilirsin
+//                }
+//            }
+//        }
+//    }
 }
 
