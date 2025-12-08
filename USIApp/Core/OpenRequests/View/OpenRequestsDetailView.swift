@@ -55,45 +55,70 @@ struct OpenRequestsDetailView: View {
                             .padding(.bottom, 4)
                         
                         
-                        HStack(alignment: .top, spacing: 12) {
-                            
-                            VStack {
-                                Spacer()
-                                if let urlString = request.requesterImage,
-                                          let url = URL(string: urlString) {
-                                    AsyncImage(url: url) { image in
-                                        image.resizable()
-                                             .scaledToFill()
-                                             .frame(width: 40, height: 40)
-                                             .clipShape(Circle())
-                                    } placeholder: {
-                                        ProgressView()
-                                            .frame(width: 40, height: 40)
+                        NavigationLink {
+                            switch request.requesterType{
+                            case "academician":
+                                AcademicianView(userId: request.requesterID)
+                                    .navigationBarBackButtonHidden()
+                                    .foregroundStyle(.black)
+                                
+                            case "student":
+                                StudentPreview(userId: request.requesterID)
+                                    .navigationBarBackButtonHidden()
+                                    .foregroundStyle(.black)
+                                
+                            case "industry":
+                                IndustryPreview(userId: request.requesterID)
+                                    .navigationBarBackButtonHidden()
+                                    .foregroundStyle(.black)
+                            default:
+                                EmptyView()
+                            }
+                        } label: {
+                            HStack(alignment: .top, spacing: 12) {
+                                
+                                VStack {
+                                    Spacer()
+                                    if let urlString = request.requesterImage,
+                                              let url = URL(string: urlString) {
+                                        AsyncImage(url: url) { image in
+                                            image.resizable()
+                                                 .scaledToFill()
+                                                 .frame(width: 40, height: 40)
+                                                 .clipShape(Circle())
+                                        } placeholder: {
+                                            ProgressView()
+                                                .frame(width: 40, height: 40)
+                                        }
+                                    } else {
+                                        Image("DefaultProfilePhoto")
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: 50, height: 50)
+                                            .clipShape(Circle())
                                     }
-                                } else {
-                                    Image("DefaultProfilePhoto")
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: 50, height: 50)
-                                        .clipShape(Circle())
+                                    Spacer()
+                                    Spacer()
                                 }
-                                Spacer()
-                                Spacer()
+                                
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("\(request.requesterName)")
+                                        .font(.subheadline.bold())
+                                    Text("\(request.requesterType)")
+                                        .font(.subheadline)
+                                    Text("Email: \(request.requesterEmail)")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                    Text("Tel: 0850-441-02-44")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                .multilineTextAlignment(.leading)
                             }
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("\(request.requesterName)")
-                                    .font(.subheadline.bold())
-                                Text("\(request.requesterType)")
-                                    .font(.subheadline)
-                                Text("Email: \(request.requesterEmail)")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                Text("Tel: 0850-441-02-44")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
+                            .foregroundStyle(.black)
+
                         }
+
                         
                     }
                     .padding()

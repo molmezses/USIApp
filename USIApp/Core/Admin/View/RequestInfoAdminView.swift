@@ -421,6 +421,9 @@ struct AcademicianRowReadOnly: View {
             AcademicianDetailView(academician: academician)
                 .foregroundStyle(.black)
                 .navigationBarBackButtonHidden()
+            AcademicianView(userId: academician.id)
+                            .foregroundStyle(.black)
+                            .navigationBarBackButtonHidden()
         } label: {
 
             VStack {

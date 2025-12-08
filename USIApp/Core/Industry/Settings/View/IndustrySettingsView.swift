@@ -51,6 +51,28 @@ struct IndustrySettingsView: View {
                                 
                                 
                                 NavigationLink(destination: {
+                                    IndustryPreview(userId: authViewModel.userSession?.id ?? "")
+                                        .navigationBarBackButtonHidden()
+                                }, label: {
+                                    HStack {
+                                        Image(systemName: "eye.square.fill")
+                                            .resizable()
+                                            .foregroundStyle(.black)
+                                            .frame(width: 28, height: 28)
+                                        Text("Profil Önizlemesini Gör")
+                                            .foregroundStyle(.black)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                        
+                                    }
+                                    .foregroundStyle(.black)
+                                    .padding(2)
+                                })
+                                
+                                Divider()
+                                    .padding(.vertical , 4)
+                                
+                                NavigationLink(destination: {
                                     ForgotPasswordView()
                                         .navigationBarBackButtonHidden()
                                 }, label: {

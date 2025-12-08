@@ -10,7 +10,7 @@ struct AcademicianView: View {
     
     @Environment(\.dismiss) var dismiss
     @StateObject var viewModel = AcademicianViewModel()
-    
+    var userId: String
 
     
     var body: some View {
@@ -355,7 +355,7 @@ struct AcademicianView: View {
                         }
                         .scrollIndicators(.hidden)
                         .refreshable {
-                            viewModel.loadAcademicianInfo()
+                            viewModel.loadAcademicianInfo(userId: userId)
                         }
                     }
                     .padding(.horizontal)
@@ -363,15 +363,11 @@ struct AcademicianView: View {
             }
         }
         .onAppear{
-            viewModel.loadAcademicianInfo()
+            viewModel.loadAcademicianInfo(userId: userId)
         }
     }
 }
 
-
-#Preview {
-    AcademicianView()
-}
 
 
 
