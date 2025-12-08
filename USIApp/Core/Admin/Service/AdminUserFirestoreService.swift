@@ -59,54 +59,54 @@ class AdminUserFirestoreService{
             }
         }
     }
-
     
-
+    
+    
     
     
     func fetchAuthorityDocForCurrentUser(completion: @escaping (String?) -> Void) {
         let db = Firestore.firestore()
-
+        
         guard let email = Auth.auth().currentUser?.email else {
             print(" Kullanıcı email bulunamadı")
             completion(nil)
             return
         }
-
+        
         let domain = email.components(separatedBy: "@").last ?? ""
         print(" Aranan domain:", domain)
-
+        
         db.collection("Authorities").getDocuments { snapshot, error in
             if let error = error {
                 print("Firestore Hata:", error.localizedDescription)
                 completion(nil)
                 return
             }
-
+            
             guard let documents = snapshot?.documents else {
                 completion(nil)
                 return
             }
-
+            
             for doc in documents {
                 let data = doc.data()
-
+                
                 let student = data["student"] as? String
                 let academician = data["academician"] as? String
                 let universityName = data["universityName"] as? String
-
+                
                 if student == domain || academician == domain || universityName == domain {
                     print("Eşleşen bulundu:", doc.documentID)
                     completion(doc.documentID)
                     return
                 }
             }
-
+            
             print(" Hiçbir field eşleşmedi — domain sistemde yok")
             completion(nil)
         }
     }
-
+    
     func approvOpenRequest(documentId: String , adminMessage: String  , completion: @escaping (Result<Void, Error>) -> Void){
         
         self.fetchAuthorityDocForCurrentUser { authorityDocId in
@@ -130,11 +130,11 @@ class AdminUserFirestoreService{
             }
         }
         
-       
+        
         
     }
-
-
+    
+    
     
     func rejectRequest(documentId: String , adminMessage: String, completion: @escaping (Result<Void, Error>) -> Void){
         
@@ -142,11 +142,11 @@ class AdminUserFirestoreService{
         
         self.fetchAuthorityDocForCurrentUser { authorityDocId in
             
-           guard let authorityDocId = authorityDocId else {
-                       print("AuthorityDocID bulunamadı!")
-                       completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Authority bulunamadı"])))
-                       return
-                   }
+            guard let authorityDocId = authorityDocId else {
+                print("AuthorityDocID bulunamadı!")
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Authority bulunamadı"])))
+                return
+            }
             
             self.db.document(documentId).updateData([
                 "status.\(authorityDocId)": "rejected",
@@ -161,7 +161,7 @@ class AdminUserFirestoreService{
                 }
             }
         }
-
+        
     }
     
     
@@ -220,56 +220,9 @@ class AdminUserFirestoreService{
     }
     
     
-    func moveOldRequests(from oldCollection: String , documentId: String , to newCollection: String) {
-        
-        let oldDocRef = Firestore.firestore().collection(oldCollection).document(documentId)
-        let newDocRef = Firestore.firestore().collection(newCollection).document(documentId)
-        
-        oldDocRef.getDocument { documentSnapshot, error in
-            
-            if let error = error {
-                print("Hata: Doküman alınamadı \(error.localizedDescription)")
-                return
-            }
-            
-            guard let data = documentSnapshot?.data() else {
-                print("Doküman bulunamadı")
-                return
-            }
-            
-            newDocRef.setData(data) { error in
-                if let error = error {
-                    print("Yeni koleksiyona yazılamadı \(error.localizedDescription)")
-                    return
-                } else {
-                    print("Başarıyla kopyalandı.")
-                    
-                    if let selectedIds = data["selectedAcademiciansId"] as? [String] {
-                        var responseDict: [String: String] = [:]
-                        for id in selectedIds {
-                            responseDict[id] = "pending"
-                        }
-                        
-                        let updateData: [String: Any] = [
-                            "academicianResponses": responseDict
-                        ]
-                        
-                        newDocRef.updateData(updateData) { error in
-                            if let error = error {
-                                print("Akademisyen cevapları eklenemedi: \(error.localizedDescription)")
-                            } else {
-                                print("Akademisyen cevapları başarıyla güncellendi.")
-                            }
-                        }
-                    } else {
-                        print("selectedAcademiciansId alanı bulunamadı veya formatı hatalı.")
-                    }
-                }
-            }
-        }
-    }
     
-
+    
+    
     
     func saveSelectedAcademicians(documentId: String ,selectedAcademians: [AcademicianInfo] , completion: @escaping (Result<Void, Error>) -> Void){
         
@@ -362,7 +315,7 @@ class AdminUserFirestoreService{
         }
     }
     
-
+    
     
     func getUserCountAcademician(completion: @escaping (Int) -> Void) {
         Firestore.firestore().collection("Academician")
@@ -403,31 +356,91 @@ class AdminUserFirestoreService{
             }
     }
     
-
+    
     
     func getRequestCount(completion: @escaping (Int) -> Void) {
-        Firestore.firestore().collection("Requests")
-            .getDocuments { snapshot, error in
-                if let documents = snapshot?.documents {
-                    print("çekilen talep sayısı :")
-                    completion(documents.count)
-                } else {
-                    completion(0)
-                }
+        
+        self.fetchAuthorityDocForCurrentUser { authorityDocId in
+            
+            guard let authorityDocId = authorityDocId else {
+                print("AuthorityDocID bulunamadı!")
+                completion(0)
+                return
             }
+            
+            Firestore.firestore().collection("Requests")
+                .getDocuments { snapshot, error in
+                    if let error = error {
+                        print("Hata : ", error.localizedDescription)
+                        completion(0)
+                        return
+                    }
+                    
+                    guard let documents = snapshot?.documents else {
+                        completion(0)
+                        return
+                    }
+                    
+                    var count = 0
+                    
+                    for doc in documents {
+                        let data = doc.data()
+                        
+                        if let status = data["status"] as? [String:Any] {
+                            if status[authorityDocId] != nil {
+                                count += 1
+                            }
+                        }
+                    }
+                    
+                    completion(count)
+                }
+        }
     }
+
     
     func getApprovedRequestCount(completion: @escaping (Int) -> Void) {
-        Firestore.firestore().collection("Requests")
-            .whereField("status", isEqualTo: "approved")
-            .getDocuments { snapshot, error in
-                if let documents = snapshot?.documents {
-                    print("çekilen Onaylanmış talep  sayısı :")
-                    completion(documents.count)
-                } else {
-                    completion(0)
-                }
+        
+        self.fetchAuthorityDocForCurrentUser { authorityDocId in
+            guard let authorityDocId = authorityDocId else {
+                print("AuthorityDocID bulunamadı!")
+                completion(0)
+                return
             }
+            
+            Firestore.firestore().collection("Requests")
+                .getDocuments { snapshot, error in
+                    
+                    if let error = error {
+                        print("Hata : ", error.localizedDescription)
+                        completion(0)
+                        return
+                    }
+                    
+                    guard let documents = snapshot?.documents else {
+                        completion(0)
+                        return
+                    }
+                    
+                    var count = 0
+                    
+                    for doc in documents {
+                        let data = doc.data()
+                        
+                        if let status = data["status"] as? [String:Any] ,
+                           let value = status[authorityDocId] as? String , value == "approved"{
+                            count += 1
+                        }
+                        
+                    }
+                    
+                    completion(count)
+                    
+                    
+                }
+            
+        }
+        
     }
     
     
@@ -603,7 +616,7 @@ class AdminUserFirestoreService{
                 completion(.failure(error))
             }else{
                 completion(.success(()))
-            }  
+            }
         }
     }
     

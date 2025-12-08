@@ -182,7 +182,8 @@ struct AdminView: View {
                         color: Color("sari"),
                         icon: "building.2.fill",
                         height: cardHeight,
-                        isTotal: true                    )
+                        isTotal: true
+                    )
                     
                     StatsProgressView(
                         title: "Öğrenci",
@@ -191,7 +192,8 @@ struct AdminView: View {
                         color: .yellow,
                         icon: "person.2.fill",
                         height: cardHeight,
-                        isTotal: true                    )
+                        isTotal: true
+                    )
                 }
                 .padding(.horizontal)
             }
