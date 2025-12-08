@@ -23,7 +23,7 @@ struct AcademicianView: View {
                             .padding(.leading)
                     }
                     Spacer()
-                    Text("Önizleme")
+                    Text("\(viewModel.adSoyad)")
                         .font(.headline)
                         .fontWeight(.semibold)
                         .padding()
