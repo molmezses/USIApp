@@ -92,6 +92,7 @@ struct RequestInfoAdminView: View {
                                         Text("Mail: \(request.requesterEmail)")
                                             .font(.caption)
                                             .foregroundColor(.secondary)
+                                            .multilineTextAlignment(.leading)
                                         Text("Tel: \(request.requesterPhone == "" ? "Bilinmiyor" : request.requesterPhone)")
                                             .font(.caption)
                                             .foregroundColor(.secondary)
