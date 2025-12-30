@@ -77,34 +77,7 @@ class OpenRequestsViewModel: ObservableObject {
         
         return "Industry"
     }
-    
-//
-//    func fetchUserId(completion: @escaping (String?) -> Void) {
-//        if fetchUserDomain() == "AcademicianInfo" {
-//
-//            if let userId = Auth.auth().currentUser?.uid{
-//
-//            }
-//
-//            FirestoreService.shared.fetchAcademicianDocumentById(byEmail: Auth.auth().currentUser?.email ?? "") { result in
-//                switch result {
-//                case .success(let userId):
-//                    completion(userId)
-//                case .failure:
-//                    print("Academician ID çekilemedi")
-//                    completion(nil)
-//                }
-//            }
-//        } else {
-//            if Auth.auth().currentUser?.uid == "" || Auth.auth().currentUser?.uid == nil{
-//                completion("Anonoymos User")
-//            }
-//            completion(Auth.auth().currentUser?.uid ?? "Anonim")
-//        }
-//    }
-    
-    
-    
+
     
     func loadRequests() {
         
@@ -216,16 +189,37 @@ class OpenRequestsViewModel: ObservableObject {
             if !(applyMessage == ""){
                 if isAcademicianEmail(email: Auth.auth().currentUser?.email ?? ""){
                     if let userId = Auth.auth().currentUser?.uid{
+                        
+                        if request.requesterID == userId{
+                            self.alertMessage = "Kendi talebinize başvuru yapamazsınız."
+                            self.showAlert = true
+                            return
+                        }
+                        
                         OpenRequestsFireStoreService.shared.addApplyUser(requestId: request.id, userId: userId, value: self.applyMessage)
                         self.alertMessage = "Başvurunuz başarıyla gönderildi. Talep sahibi tarafından değerlendirilmeye alınacaktır."
                         self.showAlert = true
                     }
      
                 }else {
-                    OpenRequestsFireStoreService.shared.addApplyUser(requestId: request.id, userId: Auth.auth().currentUser?.uid ?? "hata", value: self.applyMessage)
                     
-                    self.alertMessage = "Başvurunuz başarıyla gönderildi. Talep sahibi tarafından değerlendirilmeye alınacaktır."
-                    self.showAlert = true
+                    if let userId = Auth.auth().currentUser?.uid{
+                        
+                        
+                        if request.requesterID == userId{
+                            self.alertMessage = "Kendi talebinize başvuru yapamazsınız."
+                            self.showAlert = true
+                            return
+                        }
+                        
+                        OpenRequestsFireStoreService.shared.addApplyUser(requestId: request.id, userId: Auth.auth().currentUser?.uid ?? "hata", value: self.applyMessage)
+                        
+                        self.alertMessage = "Başvurunuz başarıyla gönderildi. Talep sahibi tarafından değerlendirilmeye alınacaktır."
+                        self.showAlert = true
+                        
+                        
+                    }
+                    
                 }
             }else{
                 self.alertMessage = "Lütfen başvuru mesajınızı boş geçmeyiniz."

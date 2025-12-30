@@ -100,7 +100,7 @@ class OpenRequestsFireStoreService {
     }
     
 
-    func addApplyUser(requestId: String, userId: String, value: String) {
+    func addApplyUser(requestId: String,  userId: String, value: String) {
         let db = Firestore.firestore()
         let ref = db.collection("Requests").document(requestId)
         
@@ -109,6 +109,8 @@ class OpenRequestsFireStoreService {
                 print(" Belge alınamadı: \(error.localizedDescription)")
                 return
             }
+            
+            
             
             var updatedApplyUsers: [String: Any] = [:]
             
