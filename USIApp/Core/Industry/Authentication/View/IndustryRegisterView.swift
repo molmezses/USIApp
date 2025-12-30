@@ -36,7 +36,7 @@ struct IndustryRegisterView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 140, height: 140)
-                    Text("Sanayi").font(.title2).bold()
+                    Text("Sanayi / Girişimci").font(.title2).bold()
                     
                     VStack {
                         Text("Kayıt Ol").font(.headline)

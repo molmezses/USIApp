@@ -99,7 +99,7 @@ struct OldRequestView: View {
                         .bold()
                         .foregroundStyle(.black)
 
-                    Text(request.requesterType == "industry" ? "Sanayi" : request.requesterType == "academician" ? "Akademisyen" : "Öğrenci")
+                    Text(request.requesterType == "industry" ? "Sanayi / Girişimci" : request.requesterType == "academician" ? "Akademisyen" : "Öğrenci")
                         .font(.footnote)
                         .foregroundColor(.gray)
                         .padding(2)

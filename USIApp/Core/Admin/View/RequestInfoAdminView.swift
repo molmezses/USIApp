@@ -87,7 +87,7 @@ struct RequestInfoAdminView: View {
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text(request.requesterName)
                                             .font(.subheadline.bold())
-                                        Text(request.requesterType == "industry" ? "Sanayi" : request.requesterType == "student" ? "Öğrenci" : "Akademisyen")
+                                        Text(request.requesterType == "industry" ? "Sanayi / Girişimci" : request.requesterType == "student" ? "Öğrenci" : "Akademisyen")
                                             .font(.subheadline)
                                         Text("Mail: \(request.requesterEmail)")
                                             .font(.caption)
@@ -127,7 +127,7 @@ struct RequestInfoAdminView: View {
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
                                 Spacer()
-                                Text(request.requesterType == "industry" ? "Sanayi" : request.requesterType == "student" ? "Öğrenci" : "Akademisyen")
+                                Text(request.requesterType == "industry" ? "Sanayi / Girişimci" : request.requesterType == "student" ? "Öğrenci" : "Akademisyen")
                                     .font(.subheadline)
                                     .bold()
                             }

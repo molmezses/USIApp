@@ -66,7 +66,7 @@ struct OpenRequestCard: View {
                             
                         }
                         HStack {
-                            Text(request.requesterType == "academician" ? "Akademisyen" : request.requesterType == "student" ? "Öğrenci" : "Sanayi")
+                            Text(request.requesterType == "academician" ? "Akademisyen" : request.requesterType == "student" ? "Öğrenci" : "Sanayi / Girişimci")
                                 .font(.subheadline)
                                 .multilineTextAlignment(.leading)
                                 .foregroundColor(.black)

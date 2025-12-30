@@ -49,7 +49,7 @@ struct LoginView: View {
                             .environmentObject(authViewModel)
                             .navigationBarBackButtonHidden()
                     }
-                    AnimatedButton(title: "Sanayi", delay: 0.7) {
+                    AnimatedButton(title: "Sanayi / Girişimci", delay: 0.7) {
                         IndustryLoginView()
                             .environmentObject(authViewModel)
                             .navigationBarBackButtonHidden()
