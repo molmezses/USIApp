@@ -69,13 +69,10 @@ struct AcademicianRegisterEmailView: View {
                 .padding(.bottom)
                 
                 VStack {
-                    NavigationLink {
-                        
-                        AcademicianRegisterPasswordView()
-                            .navigationBarBackButtonHidden()
-                            .environmentObject(viewModel)
-                            .environmentObject(authViewModel)
-                        
+                    Button {
+                        Task{
+                            await viewModel.valideEmail()
+                        }
                     } label: {
                         Text("Devam")
                             .font(.headline)
@@ -151,32 +148,24 @@ struct AcademicianRegisterEmailView: View {
                 
                 
             }
-//            .navigationDestination(isPresented: $navigateToOTP, destination: {
-//                OTPVerifyView(email: viewModel.email)
-//                    .navigationBarBackButtonHidden()
-//                    .environmentObject(authViewModel)
-//                    .environmentObject(viewModel)
-//            })
+            
+            .navigationDestination(isPresented: $viewModel.navigateToPasswordView, destination: {
+                AcademicianRegisterPasswordView()
+                    .navigationBarBackButtonHidden()
+                    .environmentObject(viewModel)
+                    .environmentObject(authViewModel)
+            })
             .onTapGesture {
                 self.focusedField = false
+            }
+            .alert("Uyarı", isPresented: $viewModel.showAlert) {
+                Button("Tamam", role: .cancel) { }
+            } message: {
+                Text("\(viewModel.errorMessage)")
             }
             
         }
     }
-    
-//    func sendCode() {
-//        isSending = true
-//        
-//        otpManager.sendOTP(to: viewModel.email) { success in
-//            DispatchQueue.main.async {
-//                isSending = false
-//                if success {
-//                    navigateToOTP = true
-//                } else {
-//                    // Hata mesajı verebilirsin
-//                }
-//            }
-//        }
-//    }
+
 }
 

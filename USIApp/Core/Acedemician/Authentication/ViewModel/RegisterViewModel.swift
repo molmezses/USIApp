@@ -9,7 +9,7 @@ import Foundation
 import Firebase
 
 @MainActor
-class RegisterViewModel: ObservableObject {
+final class RegisterViewModel: ObservableObject {
     @Published var email: String = ""
     @Published var password : String = ""
     @Published var nameAndSurName: String = ""
@@ -18,7 +18,8 @@ class RegisterViewModel: ObservableObject {
     @Published var confirmPassword : String = ""
     @Published var errorMessage: String = ""
     @Published var isLoading: Bool = false
-    @Published var navigateToVerificationView: Bool = false
+    @Published var navigateToPasswordView: Bool = false
+    @Published var navigateToProfilInfoView: Bool = false
     @Published var showAlert: Bool = false
     
     func getDomain(from email: String) -> String {
@@ -48,6 +49,12 @@ class RegisterViewModel: ObservableObject {
             return false
         }
         
+        guard !nameAndSurName.isEmpty , !faculty.isEmpty , !department.isEmpty else {
+            self.errorMessage = "Lütfen tüm alanları doldurunuz."
+            self.showAlert = true
+            return false
+        }
+        
         let emailDomain = getDomain(from: email)
         
         do {
@@ -65,6 +72,47 @@ class RegisterViewModel: ObservableObject {
             self.showAlert = true
             return false
         }
+    }
+    
+    func validatePassword() {
+        guard password == confirmPassword else {
+            self.errorMessage = "Şifreler uyuşmuyor"
+            self.showAlert = true
+            return
+        }
+        
+        guard password.count >= 6 else {
+            self.errorMessage = "Daha güçlü bir şifre oluşturunuz."
+            self.showAlert = true
+            return
+        }
+        
+        self.navigateToProfilInfoView = true
+    }
+    
+    func valideEmail() async {
+        isLoading = true
+        
+        let emailDomain = getDomain(from: email)
+        
+        do{
+            let allowedDomains = try await fetchAllowedDomains()
+            
+            guard allowedDomains.contains(emailDomain) else {
+                self.errorMessage = "Bu e-posta uzantısı ile kayıt olamazsınız."
+                self.showAlert = true
+                isLoading = false
+                return
+            }
+            
+            self.navigateToPasswordView = true
+            isLoading = false
+            
+        }catch {
+           self.errorMessage = "Domain kontrolü sırasında hata oluştu: \(error.localizedDescription)"
+           self.showAlert = true
+           isLoading = false
+       }
     }
     
     func register(authViewModel: AuthViewModel) {
@@ -89,7 +137,6 @@ class RegisterViewModel: ObservableObject {
                     switch result {
                     case .success(_):
                         self.clearFields()
-                        self.navigateToVerificationView = true
                     case .failure(let error):
                         self.errorMessage = error.localizedDescription
                         self.showAlert  = true
@@ -108,6 +155,8 @@ class RegisterViewModel: ObservableObject {
         self.department = ""
         self.nameAndSurName = ""
         self.isLoading = false
+        self.navigateToPasswordView = false
+        self.navigateToProfilInfoView = false
     }
 }
 

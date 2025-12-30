@@ -79,11 +79,8 @@ struct AcademicianRegisterPasswordView: View {
                     .padding(.bottom)
                     
                     
-                    NavigationLink {
-                        AcademicianRegisterProfileView()
-                            .environmentObject(authViewModel)
-                            .environmentObject(viewModel)
-                            .navigationBarBackButtonHidden()
+                    Button {
+                        viewModel.validatePassword()
                     } label: {
                         Text("Devam")
                             .font(.headline)
@@ -160,6 +157,12 @@ struct AcademicianRegisterPasswordView: View {
                     
                     
                 }
+                .navigationDestination(isPresented: $viewModel.navigateToProfilInfoView, destination: {
+                    AcademicianRegisterProfileView()
+                        .environmentObject(authViewModel)
+                        .environmentObject(viewModel)
+                        .navigationBarBackButtonHidden()
+                })
                 .alert("Uyarı", isPresented: $viewModel.showAlert) {
                     Button("Tamam", role: .cancel) { }
                 } message: {
