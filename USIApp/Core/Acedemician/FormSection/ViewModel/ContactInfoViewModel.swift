@@ -117,6 +117,70 @@ class ContactInfoViewModel: ObservableObject{
         "Zonguldak": ["Merkez", "Alaplı", "Çaycuma", "Devrek", "Ereğli", "Gökçebey"],
     ]
     
+    @Published var phoneCountry: [String] = [
+        
+        "+90",   // Türkiye
+        "+1",    // ABD / Kanada
+        "+7",    // Rusya / Kazakistan
+        "+20",   // Mısır
+        "+27",   // Güney Afrika
+        "+30",   // Yunanistan
+        "+31",   // Hollanda
+        "+32",   // Belçika
+        "+33",   // Fransa
+        "+34",   // İspanya
+        "+36",   // Macaristan
+        "+39",   // İtalya
+        "+40",   // Romanya
+        "+41",   // İsviçre
+        "+43",   // Avusturya
+        "+44",   // İngiltere
+        "+45",   // Danimarka
+        "+46",   // İsveç
+        "+47",   // Norveç
+        "+48",   // Polonya
+        "+49",   // Almanya
+        "+52",   // Meksika
+        "+55",   // Brezilya
+        "+61",   // Avustralya
+        "+62",   // Endonezya
+        "+63",   // Filipinler
+        "+64",   // Yeni Zelanda
+        "+65",   // Singapur
+        "+66",   // Tayland
+        "+81",   // Japonya
+        "+82",   // Güney Kore
+        "+84",   // Vietnam
+        "+86",   // Çin
+        "+91",   // Hindistan
+        "+92",   // Pakistan
+        "+94",   // Sri Lanka
+        "+98",   // İran
+        "+212",  // Fas
+        "+213",  // Cezayir
+        "+216",  // Tunus
+        "+218",  // Libya
+        "+351",  // Portekiz
+        "+352",  // Lüksemburg
+        "+353",  // İrlanda
+        "+354",  // İzlanda
+        "+358",  // Finlandiya
+        "+370",  // Litvanya
+        "+371",  // Letonya
+        "+372",  // Estonya
+        "+380",  // Ukrayna
+        "+385",  // Hırvatistan
+        "+386",  // Slovenya
+        "+420",  // Çekya
+        "+421",  // Slovakya
+        "+852",  // Hong Kong
+        "+971"   // BAE
+    ]
+    @Published var selectedPhoneCountry: String = "+90"
+    
+    
+    
+    
     @Published  var selectedCity: String = "İl"
     @Published  var selectedDistrict: String = ""
     @Published var personelTel: String = ""
@@ -131,6 +195,8 @@ class ContactInfoViewModel: ObservableObject{
     
     
     func updateContactInfo(){
+        
+        personelTel = (selectedPhoneCountry + " " + personelTel)
         
         if let userId = Auth.auth().currentUser?.uid{
             let data: [String: String] = [
@@ -166,9 +232,11 @@ class ContactInfoViewModel: ObservableObject{
                 switch result {
                 case .success(let info):
                     
+                    let parts = info.personelTel.split(separator: " " , maxSplits: 1)
+                    self.selectedPhoneCountry = String(parts.first ?? "")
                     self.selectedCity = info.il
                     self.selectedDistrict = info.ilce
-                    self.personelTel = info.personelTel
+                    self.personelTel = parts.count > 1 ?  String(parts[1]) : ""
                     self.kurumsalTel = info.kurumsalTel
                     self.website = info.webSite
                     

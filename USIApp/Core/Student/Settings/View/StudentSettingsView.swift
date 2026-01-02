@@ -186,23 +186,7 @@ struct StudentSettingsView: View {
                                 Divider()
                                     .padding(.vertical , 4)
                                 
-                                NavigationLink(destination: {
-                                    
-                                }, label: {
-                                    HStack {
-                                        Image(systemName: "person.badge.key.fill")
-                                            .resizable()
-                                            .foregroundStyle(.black)
-                                            .frame(width: 28, height: 28)
-                                        Text("Şifremi Unuttum")
-                                            .foregroundStyle(.black)
-                                        Spacer()
-                                        Image(systemName: "chevron.right")
-                                        
-                                    }
-                                    .foregroundStyle(.black)
-                                    .padding(2)
-                                })
+                               
                             }
                             .padding()
                             .background(Color("backgroundBlue"))

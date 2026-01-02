@@ -62,17 +62,42 @@ struct ContactInfoView: View {
                             .frame(maxWidth: .infinity , alignment: .leading)
                             .padding(.horizontal)
                         
-                        // Telefon
-                        TextField("Telefon Numaranız", text: $viewModel.personelTel)
+                        HStack {
+                            
+                            Picker("Alan Adı", selection: $viewModel.selectedPhoneCountry) {
+                                ForEach(viewModel.phoneCountry, id: \.self) { area in
+                                    Text(area)
+                                        .tag(area)
+                                }
+                            }
+                            .pickerStyle(.menu)     
+                            .tint(.black)
                             .frame(height: 55)
                             .padding(.horizontal)
-                            .background(Color(.white))
+                            .background(.white)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
-                            .multilineTextAlignment(.leading)
-                            .keyboardType(.phonePad)
+                            .padding(.leading)
+
+                            
+                            
+                            
+                            // Telefon
+                            TextField("Telefon Numaranız", text: $viewModel.personelTel)
+                                .frame(height: 55)
+                                .padding(.horizontal)
+                                .background(Color(.white))
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .multilineTextAlignment(.leading)
+                                .keyboardType(.phonePad)
+                                .padding(.horizontal)
+                                .keyboardType(.numberPad)
+                                .focused($focusedField, equals: .telNo)
+                        }
+                        
+                        Text("Telefon numaranızı lütfen başında 0 olmadan giriniz.")
+                            .font(.footnote)
+                            .foregroundStyle(.gray)
                             .padding(.horizontal)
-                            .keyboardType(.numberPad)
-                            .focused($focusedField, equals: .telNo)
                         
                         // Telefon
                         TextField("Kurumsal Telefon Numaranız", text: $viewModel.kurumsalTel)
@@ -178,6 +203,10 @@ struct ContactInfoView: View {
         }
         .onAppear{
             viewModel.loadContactInfo()
+            
+            if !viewModel.phoneCountry.contains(viewModel.selectedPhoneCountry) {
+                    viewModel.selectedPhoneCountry = "+90"
+                }
         }
     }
 }
