@@ -51,7 +51,12 @@ class StudentRequestViewModel: ObservableObject{
             return "Ögrenci / Asistan Talepleri"
         case .teknikAltyapiIhtiyaclari:
             return "Teknik Altyapı İhtiyacları"
+        case .egitimDanismanlik:
+            return "Eğitim / Danışmanlık"
+        case .diger:
+            return "Diğer"
         }
+        
     }
     
     func saveRequestData(){

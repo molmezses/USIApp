@@ -17,6 +17,8 @@ enum AcademicianRequestCategoryEnum {
     case yayinMakaleDestegi
     case ogrenciAsistanTalepleri
     case teknikAltyapiIhtiyaclari
+    case egitimDanismanlik
+    case diger
 }
 
 class AcademicianRequestViewModel: ObservableObject{
@@ -64,7 +66,12 @@ class AcademicianRequestViewModel: ObservableObject{
             return "Ögrenci / Asistan Talepleri"
         case .teknikAltyapiIhtiyaclari:
             return "Teknik Altyapı İhtiyacları"
+        case .egitimDanismanlik:
+            return "Eğitim / Danışmanlık"
+        case .diger:
+            return "Diğer"
         }
+        
     }
     
     func saveRequestData(){
