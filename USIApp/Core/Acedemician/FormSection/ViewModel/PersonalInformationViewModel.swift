@@ -22,7 +22,7 @@ class PersonalInformationViewModel: ObservableObject {
     @Published var surName: String = ""
     @Published var unvan: String = ""
     @Published var showTitleSheet: Bool = false
-    @Published var unvanList = ["Prof.  Dr.", "Dr.", "Doç.  Dr.", "Arş.  Gör.", "Öğr.  Gör."]
+    @Published var unvanList = ["Prof.  Dr.", "Dr.", "Doç.  Dr.", "Arş.  Gör.", "Öğr.  Gör." , "Dr. Öğr. Üyesi"]
     @Published var academicianInfo: AcademicianInfo?
     
     
