@@ -28,20 +28,20 @@ class StudentRegisterViewModel: ObservableObject{
         return String(email[start...])
     }
     
-    func fetchAllowedStudentDomains() async throws -> [String] {
-        try await withCheckedThrowingContinuation { continuation in
-            Firestore.firestore().collection("Authorities").getDocuments { snapshot, error in
-                if let error = error {
-                    continuation.resume(throwing: error)
-                    return
-                }
-                
-                // Her belge içindeki "student" field'ını alıyoruz
-                let domains = snapshot?.documents.compactMap { $0["student"] as? String } ?? []
-                continuation.resume(returning: domains)
-            }
-        }
-    }
+//    func fetchAllowedStudentDomains() async throws -> [String] {
+//        try await withCheckedThrowingContinuation { continuation in
+//            Firestore.firestore().collection("Authorities").getDocuments { snapshot, error in
+//                if let error = error {
+//                    continuation.resume(throwing: error)
+//                    return
+//                }
+//                
+//                // Her belge içindeki "student" field'ını alıyoruz
+//                let domains = snapshot?.documents.compactMap { $0["student"] as? String } ?? []
+//                continuation.resume(returning: domains)
+//            }
+//        }
+//    }
     
     func validateEmailPassword() async -> Bool {
         // Şifre eşleşme kontrolü
@@ -50,24 +50,7 @@ class StudentRegisterViewModel: ObservableObject{
             self.showAlert = true
             return false
         }
-        
-        let emailDomain = getDomain(from: email)
-        
-        do {
-            let allowedDomains = try await fetchAllowedStudentDomains()
-            
-            guard allowedDomains.contains(emailDomain) else {
-                self.errorMessage = "Bu e-posta uzantısı ile kayıt olamazsınız."
-                self.showAlert = true
-                return false
-            }
-            
-            return true
-        } catch {
-            self.errorMessage = "Domain kontrolü sırasında hata oluştu: \(error.localizedDescription)"
-            self.showAlert = true
-            return false
-        }
+        return true
     }
     
     func register(authViewModel: AuthViewModel) {
@@ -90,15 +73,6 @@ class StudentRegisterViewModel: ObservableObject{
                         self.db.document(session.id).setData([
                             "studentEmail": session.email
                         ])
-                        
-                        let domain = self.getDomain(from: self.email)
-                        let data: [String: Any] = [
-                            "email": self.email,
-                            "domain": domain,
-                            "id": session.id
-                        ]
-                        
-                        Firestore.firestore().collection("UserDomains").document(session.id).setData(data)
                         
                         self.navigateToStudentTabView = true
                         self.clearFields()
