@@ -76,7 +76,7 @@ struct AcademicianRegisterProfileView: View {
                             .autocorrectionDisabled()
                             .textInputAutocapitalization(.never)
                         
-                        TextField("Bölümünüz", text: $viewModel.department)
+                        TextField("Biriminiz", text: $viewModel.department)
                             .padding()
                             .background(
                                 RoundedRectangle(cornerRadius: 8)

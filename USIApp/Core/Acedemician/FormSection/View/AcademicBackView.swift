@@ -56,9 +56,9 @@ struct AcademicBackView: View {
                         Spacer()
                         HStack {
                             VStack {
-                                Text("Akedemik geçmişinizi giriniz.")
+                                Text("Akademik geçmişinizi giriniz.")
                                     .font(.headline)
-                                Text("Lütfen verileri tek bir şekilde girip ekle butonuna basınız.")
+                                Text("Lütfen Akademik geçmişinizi detaylı ve açık bir şekilde yazınız.")
                                     .font(.footnote)
                                     .foregroundStyle(Color(.gray))
                                     .padding(.leading)
