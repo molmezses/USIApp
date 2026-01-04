@@ -36,5 +36,137 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3FB3C789-5F47-409E-AF59-C594D91DB6D8"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "USIApp/Core/Acedemician/Authentication/ViewModel/AuthViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "9"
+            endingLineNumber = "9"
+            landmarkName = "unknown"
+            landmarkType = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "734558EF-53F0-4E1E-9087-3425BC2A4C75"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "USIApp/Core/Acedemician/Authentication/ViewModel/AuthViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "14"
+            endingLineNumber = "14"
+            landmarkName = "AuthViewModel"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  uuid = "734558EF-53F0-4E1E-9087-3425BC2A4C75 - dfe47aa2e60d2b02"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "property wrapper backing initializer of USIApp.AuthViewModel.isLoadind : Swift.Bool"
+                  moduleName = "USIApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mustafaolmezses/Desktop/Projects/USIApp/USIApp/Core/Acedemician/Authentication/ViewModel/AuthViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "734558EF-53F0-4E1E-9087-3425BC2A4C75 - be948a3d778a1d68"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "USIApp.AuthViewModel.isLoadind.getter : Swift.Bool"
+                  moduleName = "USIApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mustafaolmezses/Desktop/Projects/USIApp/USIApp/Core/Acedemician/Authentication/ViewModel/AuthViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "734558EF-53F0-4E1E-9087-3425BC2A4C75 - 52dc35d4dc69757c"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "USIApp.AuthViewModel.isLoadind.setter : Swift.Bool"
+                  moduleName = "USIApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mustafaolmezses/Desktop/Projects/USIApp/USIApp/Core/Acedemician/Authentication/ViewModel/AuthViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "734558EF-53F0-4E1E-9087-3425BC2A4C75 - 313155e5bf5e715d"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "USIApp.AuthViewModel.isLoadind.modify : Swift.Bool"
+                  moduleName = "USIApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mustafaolmezses/Desktop/Projects/USIApp/USIApp/Core/Acedemician/Authentication/ViewModel/AuthViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "14"
+                  endingLineNumber = "14">
+               </Location>
+               <Location
+                  uuid = "734558EF-53F0-4E1E-9087-3425BC2A4C75 - 6491e60bc1d5bc55"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "USIApp.AuthViewModel.$isLoadind.getter : Combine.Published&lt;Swift.Bool&gt;.Publisher"
+                  moduleName = "USIApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mustafaolmezses/Desktop/Projects/USIApp/USIApp/Core/Acedemician/Authentication/ViewModel/AuthViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "734558EF-53F0-4E1E-9087-3425BC2A4C75 - 7777dc8614cdd82d"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "USIApp.AuthViewModel.$isLoadind.setter : Combine.Published&lt;Swift.Bool&gt;.Publisher"
+                  moduleName = "USIApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mustafaolmezses/Desktop/Projects/USIApp/%3Cstdin%3E"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "734558EF-53F0-4E1E-9087-3425BC2A4C75 - 2bf780c82da03f48"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "USIApp.AuthViewModel.$isLoadind.modify : Combine.Published&lt;Swift.Bool&gt;.Publisher"
+                  moduleName = "USIApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mustafaolmezses/Desktop/Projects/USIApp/USIApp/Core/Acedemician/Authentication/ViewModel/AuthViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

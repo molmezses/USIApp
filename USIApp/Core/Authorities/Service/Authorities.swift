@@ -9,7 +9,7 @@ import Foundation
 import FirebaseAuth
 import FirebaseFirestore
 
-class Authorities{
+final class Authorities{
     
     static let shared = Authorities()
     
@@ -59,6 +59,18 @@ class Authorities{
 
             completion(nil) 
         }
+    }
+    
+    func fetchUniversities() async throws -> [String] {
+        let snapshot = try await Firestore.firestore()
+            .collection("Authorities")
+            .getDocuments()
+        
+        let universities = snapshot.documents.compactMap {
+            $0["universityName"] as? String
+        }
+        
+        return universities.sorted()
     }
     
 }

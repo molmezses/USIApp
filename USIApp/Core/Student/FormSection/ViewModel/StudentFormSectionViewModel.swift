@@ -39,6 +39,24 @@ class StudenFormSectionViewModel: ObservableObject {
         self.loadStudentProfileData()
     }
     
+    func saveStudentUniversityName(){
+        guard !universityName.isEmpty else {
+            errorMessage = "Lütfen üniversitenizi seçiniz"
+            return
+        }
+        
+        let universityData: [String : Any] = ["universityName" : universityName]
+        
+        StudentFirestoreService.shared.saveStudentData(studentData: universityData) { error in
+            if let error = error{
+                self.errorMessage = error.localizedDescription
+            }else{
+                print("Veriler başarıyla güncellendi -> StudentFirmInformation")
+                self.errorMessage = ""
+            }
+        }
+    }
+    
     
     func saveStudentProfileData() {
         

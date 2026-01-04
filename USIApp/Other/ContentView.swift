@@ -34,7 +34,7 @@ struct ContentView: View {
                 }
 
             } else {
-                ProgressView() // rol 
+                ProgressView() // rol
             }
         }
         .animation(.easeInOut(duration: 0.35), value: authViewModel.userSession)
