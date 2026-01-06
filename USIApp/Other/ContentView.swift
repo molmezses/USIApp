@@ -14,7 +14,15 @@ struct ContentView: View {
     
     var body: some View {
         ZStack{
-            if authViewModel.userSession == nil {
+            
+            if !authViewModel.isAuthChecked {
+                SplashView()
+            }
+            else if authViewModel.isLoadind{
+                SplashView()
+            }
+            
+            else if authViewModel.userSession == nil {
                 LoginView()
             }else if let session = authViewModel.userSession{
                 

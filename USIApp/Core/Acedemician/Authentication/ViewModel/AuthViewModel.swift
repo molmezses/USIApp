@@ -10,10 +10,12 @@ import FirebaseAuth
 import FirebaseFirestore
 
 final class AuthViewModel : ObservableObject{
+    
     @Published var userSession : UserSession? = nil
     @Published var errorMessage : String? = nil
     @Published var isLoadind : Bool = false
-    
+    @Published var isAuthChecked: Bool = false
+
     private var authStateListener: AuthStateDidChangeListenerHandle?
 
     
@@ -27,7 +29,10 @@ final class AuthViewModel : ObservableObject{
     func addAuthListener(){
         authStateListener = Auth.auth().addStateDidChangeListener { _, user in
             guard let user = user else {
-                self.userSession = nil
+                DispatchQueue.main.async {
+                    self.userSession = nil
+                    self.isAuthChecked = true
+                }
                 return
             }
             
@@ -59,6 +64,7 @@ final class AuthViewModel : ObservableObject{
         }
         
         isLoadind = false
+        isAuthChecked = true
         
     }
     
@@ -113,6 +119,7 @@ final class AuthViewModel : ObservableObject{
     func logOut(){
         try? Auth.auth().signOut()
         self.userSession = nil
+        isAuthChecked = false
     }
     
     
