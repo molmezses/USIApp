@@ -113,13 +113,13 @@ struct OpenRequestsView: View {
                     .padding(.top)
                 }
                 .refreshable {
-                    viewModel.loadRequests()
+                    viewModel.loadRequests(authViewModel: authViewModel)
                 }
                 
                 
             }
             .onAppear(perform: {
-                viewModel.loadRequests()
+                viewModel.loadRequests(authViewModel: authViewModel)
             })
             .navigationDestination(isPresented: $showNewRequestSheet) {
                 AddRequestCategoryView()

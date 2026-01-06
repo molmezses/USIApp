@@ -10,6 +10,7 @@ import SwiftUI
 struct OpenRequestCard: View {
     
     @StateObject var viewModel = OpenRequestCardViewModel()
+    @EnvironmentObject var authViewModel: AuthViewModel
     
     var request: RequestModel
     
@@ -51,7 +52,10 @@ struct OpenRequestCard: View {
                                         Label("Şikayet Et", systemImage: "exclamationmark.triangle")
                                     }
                                 Button(role: .destructive) {
-                                    viewModel.blockUser(requesterId: request.requesterID)
+                                    viewModel.blockUser(
+                                            requesterId: request.requesterID,
+                                            userType: authViewModel.userSession?.role ?? .unkown
+                                        )
                                 } label: {
                                     Label("Engelle", systemImage: "xmark")
                                 }
