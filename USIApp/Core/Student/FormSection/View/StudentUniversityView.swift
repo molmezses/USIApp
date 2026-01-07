@@ -76,7 +76,7 @@ struct StudentUniversityView: View {
                                     .foregroundColor(.gray)
                             }
                             .padding()
-                            .background(.gray.opacity(0.4))
+                            .background(.white)
                             .cornerRadius(10)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 10)

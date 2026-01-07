@@ -30,6 +30,8 @@ final class Authorities{
             completion(nil)
             return
         }
+        
+         let  universityNameDomain = "Ahi Evran Üniversitesi"
 
         let db = Firestore.firestore()
 
@@ -50,8 +52,9 @@ final class Authorities{
 
                 let student = data["student"] as? String
                 let academician = data["academician"] as? String
+                let universityName = data["universityName"] as? String
 
-                if student == domain || academician == domain {
+                if student == domain || academician == domain || universityName == universityNameDomain{
                     completion(doc.documentID)
                     return
                 }

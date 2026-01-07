@@ -93,9 +93,48 @@ class AdminUserFirestoreService{
                 
                 let student = data["student"] as? String
                 let academician = data["academician"] as? String
+                
+                if student == domain || academician == domain {
+                    print("Eşleşen bulundu:", doc.documentID)
+                    completion(doc.documentID)
+                    return
+                }
+            }
+            
+            print(" Hiçbir field eşleşmedi — domain sistemde yok")
+            completion(nil)
+        }
+    }
+    
+    func fetchAuthorityDocForStudentUser(studentUniversityName: String, completion: @escaping (String?) -> Void) {
+        let db = Firestore.firestore()
+        
+        guard let _ = Auth.auth().currentUser?.email else {
+            print(" Kullanıcı email bulunamadı")
+            completion(nil)
+            return
+        }
+ 
+        
+        db.collection("Authorities").getDocuments { snapshot, error in
+            if let error = error {
+                print("Firestore Hata:", error.localizedDescription)
+                completion(nil)
+                return
+            }
+            
+            guard let documents = snapshot?.documents else {
+                completion(nil)
+                return
+            }
+            
+            for doc in documents {
+                let data = doc.data()
+                
                 let universityName = data["universityName"] as? String
                 
-                if student == domain || academician == domain || universityName == domain {
+                
+                if universityName == studentUniversityName {
                     print("Eşleşen bulundu:", doc.documentID)
                     completion(doc.documentID)
                     return
