@@ -40,6 +40,7 @@ struct UniversityPickerSheet: View {
                         } label: {
                             HStack {
                                 Text(uni)
+                                    .foregroundStyle(.black)
                                 Spacer()
                                 if selectedUniversity == uni {
                                     Image(systemName: "checkmark")

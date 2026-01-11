@@ -1,18 +1,20 @@
 //
-//  IndustryRegisterEmailView.swift
+//  StudentRegisterNameAndUniversityView.swift
 //  USIApp
 //
-//  Created by Mustafa Ölmezses on 2.10.2025.
+//  Created by mustafaolmezses on 8.01.2026.
 //
 
 import SwiftUI
 
-struct StudentRegisterEmailView: View {
+struct StudentRegisterNameAndUniversityView: View {
     
-    @EnvironmentObject var viewModel : StudentRegisterViewModel
+    @StateObject var viewModel = StudentRegisterViewModel()
     @EnvironmentObject var authViewModel  : AuthViewModel
     @Environment(\.dismiss) var dismiss
     @FocusState private var focusedField: Bool
+    @State private var showUniversitySheet = false
+
 
 
     
@@ -47,14 +49,19 @@ struct StudentRegisterEmailView: View {
                 VStack {
                     Text("Kayıt Ol")
                         .font(.headline)
-                    Text("Kayıt olmak için lütfen E-Mail hesabınızı giriniz")
+                    Text("Kayıt olmak için lütfen hesab bilgilerinizi giriniz")
                         .font(.subheadline)
                         
                 }
                 .padding(.bottom, 20)
                 
                 VStack(spacing: 12){
-                    TextField("E-Mail", text: $viewModel.email)
+                    
+                    Text("Adınız ve Soyadınız")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading)
+                    
+                    TextField("Adınız ve Soyadınız", text: $viewModel.studentName)
                         .padding()
                         .background(
                             RoundedRectangle(cornerRadius: 8)
@@ -64,15 +71,53 @@ struct StudentRegisterEmailView: View {
                         .focused($focusedField)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.never)
+                    
+                    VStack(spacing: 6) {
+                        Text("Üniversite Bilgisi")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.leading)
+
+                        Button {
+                            showUniversitySheet = true
+                        } label: {
+                            HStack {
+                                Text(
+                                    viewModel.universityName.isEmpty
+                                    ? "Üniversite Seçiniz"
+                                    : viewModel.universityName
+                                )
+                                .foregroundColor(
+                                    viewModel.universityName.isEmpty ? .gray : .primary
+                                )
+
+                                Spacer()
+
+                                Image(systemName: "chevron.down")
+                                    .foregroundColor(.gray)
+                            }
+                            .padding()
+                            .background(.white)
+                            .cornerRadius(10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color.gray.opacity(0.3))
+                            )
+                            .padding(.horizontal)
+                        }
+                    }
+                    .sheet(isPresented: $showUniversitySheet) {
+                        UniversityPickerSheet(
+                            selectedUniversity: $viewModel.universityName
+                        )
+                    }
+                    
+                    
                 }
                 .padding(.bottom)
                 
                 VStack {
-                    NavigationLink {
-                        StudentRegisterView()
-                            .navigationBarBackButtonHidden()
-                            .environmentObject(authViewModel)
-                            .environmentObject(viewModel)
+                    Button {
+                        viewModel.validateStudentNameAndUniversity()
                     } label: {
                         Text("Devam")
                             .font(.headline)
@@ -148,6 +193,19 @@ struct StudentRegisterEmailView: View {
                     
                     
             }
+            .alert("Uyarı" , isPresented: $viewModel.showAlert) {
+                Button("Tamam" , role: .cancel) {
+                    viewModel.isLoading = false
+                }
+            } message : {
+                Text("\(viewModel.errorMessage ?? "Lütfen tüm alanları doldurunuzi")")
+            }
+            .navigationDestination(isPresented: $viewModel.navigateToEmailView, destination: {
+                StudentRegisterEmailView()
+                    .navigationBarBackButtonHidden()
+                    .environmentObject(authViewModel)
+                    .environmentObject(viewModel)
+            })
             .onTapGesture {
                 self.focusedField = false
             }
@@ -156,3 +214,6 @@ struct StudentRegisterEmailView: View {
     }
 }
 
+#Preview {
+    StudentRegisterNameAndUniversityView()
+}

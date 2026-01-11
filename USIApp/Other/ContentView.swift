@@ -35,7 +35,7 @@ struct ContentView: View {
                 case .student:
                     StudentTabView(selectedTab: 0)
                 case .unkown:
-                    ProgressView("Lütfen bekleyiniz..")
+                    LoginView()
                 }
                 
             }

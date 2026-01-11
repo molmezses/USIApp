@@ -19,6 +19,10 @@ class StudentRegisterViewModel: ObservableObject{
     @Published var isLoading: Bool = false
     @Published var navigateToStudentTabView: Bool = false
     @Published var showAlert: Bool = false
+    @Published var studentName: String = ""
+    @Published var universityName: String = ""
+    @Published var navigateToEmailView: Bool = false
+
     
     let db = Firestore.firestore().collection("Students")
     
@@ -53,6 +57,18 @@ class StudentRegisterViewModel: ObservableObject{
         return true
     }
     
+    func validateStudentNameAndUniversity() {
+        
+        if !studentName.isEmpty, !universityName.isEmpty{
+            self.navigateToEmailView = true
+        } else {
+            errorMessage = "Lütfen tüm alanları doldurun"
+            showAlert = true
+            self.navigateToEmailView = false
+        }
+        
+    }
+    
     func register(authViewModel: AuthViewModel) {
         self.isLoading = true
         
@@ -71,7 +87,9 @@ class StudentRegisterViewModel: ObservableObject{
                     case .success(let session):
                         authViewModel.userSession = session
                         self.db.document(session.id).setData([
-                            "studentEmail": session.email
+                            "studentEmail": session.email,
+                            "studentName": self.studentName,
+                            "universityName": self.universityName
                         ])
                         
                         self.navigateToStudentTabView = true
