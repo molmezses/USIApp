@@ -11,6 +11,8 @@ struct StudentUniversityView: View {
     
     @Environment(\.dismiss) var dismiss
     @StateObject var viewModel = StudenFormSectionViewModel()
+    @State private var showUniversitySheet = false
+
     
 
     var body: some View {
@@ -54,20 +56,41 @@ struct StudentUniversityView: View {
                         Text("Üniversite Bilgisi")
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.leading)
-                        TextField("Üniversite Bilgisi", text: $viewModel.universityName)
+
+                        Button {
+                            showUniversitySheet = true
+                        } label: {
+                            HStack {
+                                Text(
+                                    viewModel.universityName.isEmpty
+                                    ? "Üniversite Seçiniz"
+                                    : viewModel.universityName
+                                )
+                                .foregroundColor(
+                                    viewModel.universityName.isEmpty ? .gray : .primary
+                                )
+
+                                Spacer()
+
+                                Image(systemName: "chevron.down")
+                                    .foregroundColor(.gray)
+                            }
                             .padding()
-                            .background(.gray.opacity(0.4))
+                            .background(.white)
                             .cornerRadius(10)
                             .overlay(
-                                RoundedRectangle(cornerRadius: 10).stroke(
-                                    Color.gray.opacity(0.3)
-                                )
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color.gray.opacity(0.3))
                             )
                             .padding(.horizontal)
-                            .autocorrectionDisabled()
-                            .textInputAutocapitalization(.never)
-                            .disabled(true)
+                        }
                     }
+                    .sheet(isPresented: $showUniversitySheet) {
+                        UniversityPickerSheet(
+                            selectedUniversity: $viewModel.universityName
+                        )
+                    }
+
                     
                     
 
@@ -93,7 +116,7 @@ struct StudentUniversityView: View {
         }
         .background(Color(.systemGroupedBackground).ignoresSafeArea())
         .onAppear {
-            viewModel.loadStudentProfileData()
+//            viewModel.loadStudentProfileData()
         }
         .alert(isPresented: $viewModel.showAlert){
             Alert(title: Text("Hata"),

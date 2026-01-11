@@ -27,7 +27,7 @@ final class AuthService{
                 return completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey : "User not found"])))
             }
             
-            let session = UserSession(id: user.uid, email: user.email ?? "")
+            let session = UserSession(id: user.uid, email: user.email ?? "", role: .academician)
             completion(.success(session))
         }
     }
@@ -42,7 +42,7 @@ final class AuthService{
                 return completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey : "User not found"])))
             }
             
-            let session = UserSession(id: user.uid, email: user.email ?? "noEmail")
+            let session = UserSession(id: user.uid, email: user.email ?? "noEmail", role: .academician)
             
             let docRef = Firestore.firestore().collection("Academician").document(user.uid)
             
@@ -90,7 +90,7 @@ final class AuthService{
     
     func getCurrentUser() -> UserSession? {
         guard let user = Auth.auth().currentUser else {return nil}
-        return UserSession(id: user.uid, email: user.email ?? "Mail yok")
+        return UserSession(id: user.uid, email: user.email ?? "Mail yok", role: .academician)
     }
     
     

@@ -47,8 +47,8 @@ class OpenRequestCardViewModel: ObservableObject{
         navToReport = true
     }
     
-    func blockUser(requesterId: String){
-        OpenRequestsFireStoreService.shared.blockUser(requesterID: requesterId) { result in
+    func blockUser(requesterId: String , userType: UserRole){
+        OpenRequestsFireStoreService.shared.blockUser(requesterID: requesterId, userType: userType) { result in
             switch result {
             case .success():
                 self.alertMessage = "Kullanıcıyı başarılı bir şekilde engellediniz. Artık kullanıcıdan herhangi bir içerik görmeyeceksiniz."

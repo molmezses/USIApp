@@ -10,45 +10,38 @@ struct ContentView: View {
     
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var requestVm: RequestIndustryViewModel
-    
-    @State private var academDomains: [String] = []
-    @State private var studentDomains: [String] = []
+  
     
     var body: some View {
-        ZStack {
-            if authViewModel.userSession == nil {
-                LoginView()
-                    .environmentObject(authViewModel)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
-            } else {
-                let email = authViewModel.userSession?.email ?? ""
-                let domain = UserDomainService.shared.domainFromEmail(email)
-                
-                if academDomains.contains(domain) {
-                    AcademicianTabView(selectedTab: 1)
-                        .environmentObject(authViewModel)
-                        .transition(.move(edge: .trailing).combined(with: .opacity))
-                } else if studentDomains.contains(domain) {
-                    StudentTabView(selectedTab: 0)
-                        .environmentObject(authViewModel)
-                        .transition(.move(edge: .trailing).combined(with: .opacity))
-                } else {
-                    IndustryTabView(selectedTab: 0)
-                        .environmentObject(authViewModel)
-                        .environmentObject(requestVm)
-                        .transition(.move(edge: .trailing).combined(with: .opacity))
-                }
+        ZStack{
+            
+            if !authViewModel.isAuthChecked {
+                SplashView()
             }
-        }
-        .animation(.easeInOut(duration: 0.35), value: authViewModel.userSession)
-        .task {
-            do {
-                academDomains = try await UserDomainServiceContent.shared.fetchAcademicianDomains()
-                studentDomains = try await UserDomainServiceContent.shared.fetchStudentDomains()
-            } catch {
-                print("Domainleri çekerken hata: \(error.localizedDescription)")
+            else if authViewModel.isLoadind{
+                SplashView()
+            }
+            
+            else if authViewModel.userSession == nil {
+                LoginView()
+            }else if let session = authViewModel.userSession{
+                
+                switch session.role {
+                case .industry:
+                    IndustryTabView(selectedTab: 0)
+                        .environmentObject(requestVm)
+                case .academician:
+                    AcademicianTabView(selectedTab: 1)
+                case .student:
+                    StudentTabView(selectedTab: 0)
+                case .unkown:
+                    LoginView()
+                }
+                
             }
         }
     }
+    
+    
 }
 

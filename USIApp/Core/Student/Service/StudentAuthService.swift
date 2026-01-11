@@ -26,7 +26,7 @@ final class StudentAuthService{
                 return completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey : "User not found"])))
             }
             
-            let session = UserSession(id: user.uid, email: user.email ?? "")
+            let session = UserSession(id: user.uid, email: user.email ?? "", role: .student)
             completion(.success(session))
         }
     }
@@ -45,7 +45,7 @@ final class StudentAuthService{
                 return completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey : "User not found"])))
             }
             
-            let session = UserSession(id: user.uid, email: user.email ?? "")
+            let session = UserSession(id: user.uid, email: user.email ?? "", role: .student)
             completion(.success(session))
             
             

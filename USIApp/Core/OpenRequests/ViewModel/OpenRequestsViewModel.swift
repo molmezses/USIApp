@@ -29,7 +29,7 @@ class OpenRequestsViewModel: ObservableObject {
     
     
     init() {
-        loadRequests()
+        loadRequests(authViewModel: AuthViewModel())
     }
     
     func clearFields(){
@@ -59,27 +59,9 @@ class OpenRequestsViewModel: ObservableObject {
         }
     }
     
-    func fetchUserDomain() -> String{
-        if Auth.auth().currentUser != nil{
-            
-            if let user = Auth.auth().currentUser?.email{
-                if user.hasSuffix("@ahievran.edu.tr") || user.hasSuffix("@nisantasi.edu.tr") {
-                    return "Academician"
-                }
-                if user.hasSuffix("@ogr.ahievran.edu.tr") || user.hasSuffix("@ogr.nisantasi.edu.tr"){
-                    return "Students"
-                }else{
-                    return "Industry"
-                }
-            }
-            
-        }
-        
-        return "Industry"
-    }
 
     
-    func loadRequests() {
+    func loadRequests(authViewModel: AuthViewModel) {
         
         
         
@@ -107,63 +89,67 @@ class OpenRequestsViewModel: ObservableObject {
         }else{
             
             if let userId = Auth.auth().currentUser?.uid{
-                let docRef = Firestore.firestore().collection(self.fetchUserDomain()).document(userId)
                 
-                docRef.getDocument { snapshot , error in
-                    if let error = error {
-                        print("Belge alınamadı: \(error.localizedDescription)")
-                        return
-                    }
+                if let userType = authViewModel.userSession?.role{
+                    let docRef = Firestore.firestore().collection(self.getRoleString(userRole: userType)).document(userId)
                     
-                    guard let data = snapshot?.data() else {
-                        print("Veri bulunamadı")
-                        return
-                    }
-                    
-                    if let blockedUsers = data["blockedUsers"] as? [String] {
-                        OpenRequestsFireStoreService.shared.fetchOpenRequests(excluding: blockedUsers) { result in
-                            switch result {
-                            case .success(let requests):
-                                let dateFormatter = DateFormatter()
-                                dateFormatter.dateFormat = "dd.MM.yyyy"
-                                
-                                self.requests = requests.sorted(by: { (req1, req2) in
-                                    guard let date1 = dateFormatter.date(from: req1.createdDate),
-                                          let date2 = dateFormatter.date(from: req2.createdDate) else {
-                                        return false
-                                    }
-                                    return date1 > date2
-                                })
-                                
-                                print("Başarılı: Talepler tarih sırasına göre sıralandı!")
-                                
-                            case .failure(let failure):
-                                print("Hata: \(failure.localizedDescription)")
-                            }
+                    docRef.getDocument { snapshot , error in
+                        if let error = error {
+                            print("Belge alınamadı: \(error.localizedDescription)")
+                            return
                         }
-                    }else{
-                        OpenRequestsFireStoreService.shared.fetchOpenRequests() { result in
-                            switch result {
-                            case .success(let requests):
-                                let dateFormatter = DateFormatter()
-                                dateFormatter.dateFormat = "dd.MM.yyyy"
-                                
-                                self.requests = requests.sorted(by: { (req1, req2) in
-                                    guard let date1 = dateFormatter.date(from: req1.createdDate),
-                                          let date2 = dateFormatter.date(from: req2.createdDate) else {
-                                        return false
-                                    }
-                                    return date1 > date2
-                                })
-                                
-                                print("Başarılı: Talepler tarih sırasına göre sıralandı!")
-                                
-                            case .failure(let failure):
-                                print("Hata: \(failure.localizedDescription)")
+                        
+                        guard let data = snapshot?.data() else {
+                            print("Veri bulunamadı")
+                            return
+                        }
+                        
+                        if let blockedUsers = data["blockedUsers"] as? [String] {
+                            OpenRequestsFireStoreService.shared.fetchOpenRequests(excluding: blockedUsers) { result in
+                                switch result {
+                                case .success(let requests):
+                                    let dateFormatter = DateFormatter()
+                                    dateFormatter.dateFormat = "dd.MM.yyyy"
+                                    
+                                    self.requests = requests.sorted(by: { (req1, req2) in
+                                        guard let date1 = dateFormatter.date(from: req1.createdDate),
+                                              let date2 = dateFormatter.date(from: req2.createdDate) else {
+                                            return false
+                                        }
+                                        return date1 > date2
+                                    })
+                                    
+                                    print("Başarılı: Talepler tarih sırasına göre sıralandı!")
+                                    
+                                case .failure(let failure):
+                                    print("Hata: \(failure.localizedDescription)")
+                                }
+                            }
+                        }else{
+                            OpenRequestsFireStoreService.shared.fetchOpenRequests() { result in
+                                switch result {
+                                case .success(let requests):
+                                    let dateFormatter = DateFormatter()
+                                    dateFormatter.dateFormat = "dd.MM.yyyy"
+                                    
+                                    self.requests = requests.sorted(by: { (req1, req2) in
+                                        guard let date1 = dateFormatter.date(from: req1.createdDate),
+                                              let date2 = dateFormatter.date(from: req2.createdDate) else {
+                                            return false
+                                        }
+                                        return date1 > date2
+                                    })
+                                    
+                                    print("Başarılı: Talepler tarih sırasına göre sıralandı!")
+                                    
+                                case .failure(let failure):
+                                    print("Hata: \(failure.localizedDescription)")
+                                }
                             }
                         }
                     }
                 }
+                
             
            
             }
@@ -175,11 +161,20 @@ class OpenRequestsViewModel: ObservableObject {
         
     }
     
-    
-    func isAcademicianEmail(email: String) -> Bool {
-        guard let domain = email.split(separator: "@").last else { return false }
-        return domain.lowercased() == "ahievran.edu.tr"
+    func getRoleString(userRole role: UserRole) -> String{
+        if role == .academician{
+            return "Academician"
+        }
+        else if role == .student{
+            return "Students"
+        }
+        else {
+            return "Industry"
+        }
     }
+    
+    
+ 
     
     func apply(request : RequestModel){
         
@@ -187,7 +182,6 @@ class OpenRequestsViewModel: ObservableObject {
             isNilUser = true
         }else{
             if !(applyMessage == ""){
-                if isAcademicianEmail(email: Auth.auth().currentUser?.email ?? ""){
                     if let userId = Auth.auth().currentUser?.uid{
                         
                         if request.requesterID == userId{
@@ -201,26 +195,7 @@ class OpenRequestsViewModel: ObservableObject {
                         self.showAlert = true
                     }
      
-                }else {
-                    
-                    if let userId = Auth.auth().currentUser?.uid{
-                        
-                        
-                        if request.requesterID == userId{
-                            self.alertMessage = "Kendi talebinize başvuru yapamazsınız."
-                            self.showAlert = true
-                            return
-                        }
-                        
-                        OpenRequestsFireStoreService.shared.addApplyUser(requestId: request.id, userId: Auth.auth().currentUser?.uid ?? "hata", value: self.applyMessage)
-                        
-                        self.alertMessage = "Başvurunuz başarıyla gönderildi. Talep sahibi tarafından değerlendirilmeye alınacaktır."
-                        self.showAlert = true
-                        
-                        
-                    }
-                    
-                }
+                
             }else{
                 self.alertMessage = "Lütfen başvuru mesajınızı boş geçmeyiniz."
                 self.showAlert = true

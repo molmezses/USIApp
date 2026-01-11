@@ -116,7 +116,7 @@ struct StudentLoginView: View {
                                 .padding()
                                 
                                 NavigationLink {
-                                    StudentRegisterEmailView()
+                                    StudentRegisterNameAndUniversityView()
                                         .navigationBarBackButtonHidden()
                                         .environmentObject(authViewModel)
                                 } label: {

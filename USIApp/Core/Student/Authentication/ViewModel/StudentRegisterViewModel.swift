@@ -19,6 +19,10 @@ class StudentRegisterViewModel: ObservableObject{
     @Published var isLoading: Bool = false
     @Published var navigateToStudentTabView: Bool = false
     @Published var showAlert: Bool = false
+    @Published var studentName: String = ""
+    @Published var universityName: String = ""
+    @Published var navigateToEmailView: Bool = false
+
     
     let db = Firestore.firestore().collection("Students")
     
@@ -28,20 +32,20 @@ class StudentRegisterViewModel: ObservableObject{
         return String(email[start...])
     }
     
-    func fetchAllowedStudentDomains() async throws -> [String] {
-        try await withCheckedThrowingContinuation { continuation in
-            Firestore.firestore().collection("Authorities").getDocuments { snapshot, error in
-                if let error = error {
-                    continuation.resume(throwing: error)
-                    return
-                }
-                
-                // Her belge içindeki "student" field'ını alıyoruz
-                let domains = snapshot?.documents.compactMap { $0["student"] as? String } ?? []
-                continuation.resume(returning: domains)
-            }
-        }
-    }
+//    func fetchAllowedStudentDomains() async throws -> [String] {
+//        try await withCheckedThrowingContinuation { continuation in
+//            Firestore.firestore().collection("Authorities").getDocuments { snapshot, error in
+//                if let error = error {
+//                    continuation.resume(throwing: error)
+//                    return
+//                }
+//                
+//                // Her belge içindeki "student" field'ını alıyoruz
+//                let domains = snapshot?.documents.compactMap { $0["student"] as? String } ?? []
+//                continuation.resume(returning: domains)
+//            }
+//        }
+//    }
     
     func validateEmailPassword() async -> Bool {
         // Şifre eşleşme kontrolü
@@ -50,24 +54,19 @@ class StudentRegisterViewModel: ObservableObject{
             self.showAlert = true
             return false
         }
+        return true
+    }
+    
+    func validateStudentNameAndUniversity() {
         
-        let emailDomain = getDomain(from: email)
-        
-        do {
-            let allowedDomains = try await fetchAllowedStudentDomains()
-            
-            guard allowedDomains.contains(emailDomain) else {
-                self.errorMessage = "Bu e-posta uzantısı ile kayıt olamazsınız."
-                self.showAlert = true
-                return false
-            }
-            
-            return true
-        } catch {
-            self.errorMessage = "Domain kontrolü sırasında hata oluştu: \(error.localizedDescription)"
-            self.showAlert = true
-            return false
+        if !studentName.isEmpty, !universityName.isEmpty{
+            self.navigateToEmailView = true
+        } else {
+            errorMessage = "Lütfen tüm alanları doldurun"
+            showAlert = true
+            self.navigateToEmailView = false
         }
+        
     }
     
     func register(authViewModel: AuthViewModel) {
@@ -88,17 +87,10 @@ class StudentRegisterViewModel: ObservableObject{
                     case .success(let session):
                         authViewModel.userSession = session
                         self.db.document(session.id).setData([
-                            "studentEmail": session.email
+                            "studentEmail": session.email,
+                            "studentName": self.studentName,
+                            "universityName": self.universityName
                         ])
-                        
-                        let domain = self.getDomain(from: self.email)
-                        let data: [String: Any] = [
-                            "email": self.email,
-                            "domain": domain,
-                            "id": session.id
-                        ]
-                        
-                        Firestore.firestore().collection("UserDomains").document(session.id).setData(data)
                         
                         self.navigateToStudentTabView = true
                         self.clearFields()

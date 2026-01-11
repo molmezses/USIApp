@@ -19,7 +19,7 @@ class OpenRequestsFireStoreService {
         let docRef = Firestore.firestore()
             .collection("Requests")
             .whereField("requestType", isEqualTo: true)
-            
+        
         
         docRef.getDocuments { snapshot, error in
             if let error = error {
@@ -39,7 +39,7 @@ class OpenRequestsFireStoreService {
                 let data = doc.data()
                 
                 if let statusDict = data["status"] as? [String: String] {
-
+                    
                     let hasApproved = statusDict.values.contains("approved")
                     
                     if hasApproved == false {
@@ -50,7 +50,7 @@ class OpenRequestsFireStoreService {
                     print("status yoksa bu belgeyi atla")
                     return nil
                 }
-
+                
                 if let requesterID = data["requesterID"] as? String,
                    blockedIds.contains(requesterID) {
                     return nil
@@ -62,7 +62,7 @@ class OpenRequestsFireStoreService {
                     description: data["requestMessage"] as? String ?? "",
                     date: data["createdDate"] as? String ?? "",
                     selectedCategories: data["selectedCategories"] as? [String] ?? [],
-                    status: .approved, 
+                    status: .approved,
                     requesterID: data["requesterID"] as? String ?? "",
                     requesterCategories: data["requesterCategories"] as? String ?? "",
                     requesterName: data["requesterName"] as? String ?? "",
@@ -81,8 +81,8 @@ class OpenRequestsFireStoreService {
             completion(.success(requests))
         }
     }
-
-
+    
+    
     
     func stringToRequestStatus(string stringData: String) -> RequestStatus {
         
@@ -99,7 +99,7 @@ class OpenRequestsFireStoreService {
         
     }
     
-
+    
     func addApplyUser(requestId: String,  userId: String, value: String) {
         let db = Firestore.firestore()
         let ref = db.collection("Requests").document(requestId)
@@ -132,25 +132,25 @@ class OpenRequestsFireStoreService {
     }
     
     func fetchApplyUsers(from collection: String, documentId: String, completion: @escaping ([String: String]) -> Void) {
-           let docRef = Firestore.firestore().collection(collection).document(documentId)
-           
-           docRef.getDocument { document, error in
-               if let error = error {
-                   print("Firestore hatası: \(error.localizedDescription)")
-                   completion([:]) 
-                   return
-               }
-               
-               guard let data = document?.data(),
-                     let applyUsers = data["applyUsers"] as? [String: String] else {
-                   print("applyUsers alanı bulunamadı veya format hatalı.")
-                   completion([:])
-                   return
-               }
-               
-               completion(applyUsers)
-           }
-       }
+        let docRef = Firestore.firestore().collection(collection).document(documentId)
+        
+        docRef.getDocument { document, error in
+            if let error = error {
+                print("Firestore hatası: \(error.localizedDescription)")
+                completion([:])
+                return
+            }
+            
+            guard let data = document?.data(),
+                  let applyUsers = data["applyUsers"] as? [String: String] else {
+                print("applyUsers alanı bulunamadı veya format hatalı.")
+                completion([:])
+                return
+            }
+            
+            completion(applyUsers)
+        }
+    }
     
     func sendReport(user: String , requestId: String ,  message: String ,  completion: @escaping (Result<Void, Error>) -> Void){
         let docRef = Firestore.firestore().collection("Reports")
@@ -170,70 +170,45 @@ class OpenRequestsFireStoreService {
         }
     }
     
-    func fetchUserDomain() -> String{
-        if Auth.auth().currentUser != nil{
-            
-            if let user = Auth.auth().currentUser?.email{
-                if user.hasSuffix("@ahievran.edu.tr") || user.hasSuffix("@nisantasi.edu.tr") {
-                    return "Academician"
-                }
-                if user.hasSuffix("@ogr.ahievran.edu.tr") || user.hasSuffix("@ogr.nisantasi.edu.tr"){
-                    return "Students"
-                }else{
-                    return "Industry"
-                }
-            }
-            
-        }
-        
-        return "Industry"
-    }
-    
-    func blockUser(requesterID: String ,completion: @escaping (Result<Void, Error>) -> Void){
+    func blockUser(requesterID: String , userType: UserRole , completion: @escaping (Result<Void, Error>) -> Void){
         
         let docRef = Firestore.firestore()
-        
-        let userType: String = self.fetchUserDomain()
+        let collectionName = self.getRoleString(userRole: userType)
         
         if let currentUserId = Auth.auth().currentUser?.uid{
+            
+            print(Auth.auth().currentUser?.email ?? "asd")
             
             guard (Auth.auth().currentUser?.email) != nil else{
                 completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey : "Engelleyebilmeniz için oturum açmanız gereklidir"])));
                 return
             }
-
             
             
-            if userType == "Academician" {
-                
-                    
-                    let userRef = docRef.collection(userType).document(currentUserId)
-                   
-                   userRef.updateData(["blockedUsers" : FieldValue.arrayUnion([requesterID])])
-                    
-                    completion(.success(()))
-                    
-                
-                
-                
-                
-                        
-            }else {
-                let userRef = docRef.collection(userType).document(currentUserId)
-               
-               userRef.updateData(["blockedUsers" : FieldValue.arrayUnion([requesterID])])
-                
-                completion(.success(()))
-            }
+            
+            
+            
+            let userRef = docRef.collection(collectionName).document(currentUserId)
+            
+            userRef.updateData(["blockedUsers" : FieldValue.arrayUnion([requesterID])])
+            
+            completion(.success(()))
+            
+            
+            
             
             
             
             print("\(AuthService.shared.getCurrentUser()?.email == "") mailli kullanıcı \(requesterID) id li kullanıcıyı eengelledi")
             
             
-        
-        
+            
+            
+        }else{
+            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey : "Engelleyebilmeniz için oturum açmanız gereklidir"])));
         }
+        
+        
         
         
         
@@ -243,8 +218,18 @@ class OpenRequestsFireStoreService {
     }
     
     
-
-
+    func getRoleString(userRole role: UserRole) -> String{
+        if role == .academician{
+            return "Academician"
+        }
+        else if role == .student{
+            return "Students"
+        }
+        else {
+            return "Industry"
+        }
+    }
+    
     
     
 }
